@@ -4,11 +4,11 @@ import { HtmlDefaultBuilder } from "./htmlDefaultBuilder";
 import { htmlAutoLayoutProps } from "./builderImpl/htmlAutoLayout";
 import { formatWithJSX } from "../common/parseJSX";
 import {
-  PluginSettings,
-  HTMLPreview,
   AltNode,
-  HTMLSettings,
   ExportableNode,
+  HTMLPreview,
+  HTMLSettings,
+  PluginSettings,
 } from "types";
 import { renderAndAttachSVG } from "../altNodes/altNodeUtils";
 import { getVisibleNodes } from "../common/nodeVisibility";
@@ -216,42 +216,42 @@ export function getReactComponentName(node: any): string {
   return componentName || "App";
 }
 
-// Get a Svelte-friendly component name
-export function getSvelteElementName(
-  elementType: string,
-  nodeName?: string,
-): string {
-  // For Svelte, use semantic element names where possible
-  if (elementType === "TEXT" || elementType === "p") {
-    return "p";
-  } else if (elementType === "img" || elementType === "IMAGE") {
-    return "img";
-  } else if (
-    nodeName &&
-    (nodeName.toLowerCase().includes("button") ||
-      nodeName.toLowerCase().includes("btn"))
-  ) {
-    return "button";
-  } else if (nodeName && nodeName.toLowerCase().includes("link")) {
-    return "a";
-  } else {
-    return "div"; // Default element
-  }
-}
-
-// Generate semantic class names for Svelte
-export function getSvelteClassName(prefix?: string, nodeType?: string): string {
-  if (!prefix) {
-    return nodeType?.toLowerCase() || "element";
-  }
-
-  // Clean and format the prefix
-  return prefix
-    .replace(/[^a-zA-Z0-9_-]/g, "-")
-    .replace(/-{2,}/g, "-") // Replace multiple hyphens with a single one
-    .replace(/^-+|-+$/g, "") // Remove leading/trailing hyphens
-    .toLowerCase();
-}
+// // Get a Svelte-friendly component name
+// export function getSvelteElementName(
+//   elementType: string,
+//   nodeName?: string,
+// ): string {
+//   // For Svelte, use semantic element names where possible
+//   if (elementType === "TEXT" || elementType === "p") {
+//     return "p";
+//   } else if (elementType === "img" || elementType === "IMAGE") {
+//     return "img";
+//   } else if (
+//     nodeName &&
+//     (nodeName.toLowerCase().includes("button") ||
+//       nodeName.toLowerCase().includes("btn"))
+//   ) {
+//     return "button";
+//   } else if (nodeName && nodeName.toLowerCase().includes("link")) {
+//     return "a";
+//   } else {
+//     return "div"; // Default element
+//   }
+// }
+//
+// // Generate semantic class names for Svelte
+// export function getSvelteClassName(prefix?: string, nodeType?: string): string {
+//   if (!prefix) {
+//     return nodeType?.toLowerCase() || "element";
+//   }
+//
+//   // Clean and format the prefix
+//   return prefix
+//     .replace(/[^a-zA-Z0-9_-]/g, "-")
+//     .replace(/-{2,}/g, "-") // Replace multiple hyphens with a single one
+//     .replace(/^-+|-+$/g, "") // Remove leading/trailing hyphens
+//     .toLowerCase();
+// }
 
 // Generate component code based on the specified mode
 function generateComponentCode(
@@ -325,7 +325,6 @@ export const htmlMain = async (
   previousExecutionCache = [];
   cssCollection = {};
   resetClassNameCounters(); // Reset counters for each new generation
-
   let htmlContent = await htmlWidgetGenerator(sceneNode, settings);
 
   // remove the initial \n that is made in Container.
@@ -351,7 +350,8 @@ export const htmlMain = async (
     // For plain HTML with CSS, include CSS separately
     output.css = getCollectedCSS();
   }
-
+  console.log("zqc", output);
+  // TODO: 添加代码优化功能
   return output;
 };
 
@@ -365,7 +365,7 @@ export const generateHTMLPreview = async (
       ...settings,
       htmlGenerationMode: "html",
     },
-    nodes.length > 1 ? false : true,
+    nodes.length <= 1,
   );
 
   if (nodes.length > 1) {
@@ -389,8 +389,7 @@ const htmlWidgetGenerator = async (
   const promiseOfConvertedCode = getVisibleNodes(sceneNode).map(
     convertNode(settings),
   );
-  const code = (await Promise.all(promiseOfConvertedCode)).join("");
-  return code;
+  return (await Promise.all(promiseOfConvertedCode)).join("");
 };
 
 const convertNode = (settings: HTMLSettings) => async (node: SceneNode) => {
@@ -499,9 +498,9 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
       const content = styledHtml
         .map((style) => {
           const tag =
-            style.openTypeFeatures.SUBS === true
+            style.openTypeFeatures.SUBS
               ? "sub"
-              : style.openTypeFeatures.SUPS === true
+              : style.openTypeFeatures.SUPS
                 ? "sup"
                 : "span";
 
@@ -517,7 +516,7 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
   }
 
   // Standard HTML/CSS approach for HTML, React or Svelte
-  let content = "";
+  let content: string;
   if (styledHtml.length === 1) {
     // For HTML and React modes, we use inline styles
     if (mode === "html" || mode === "jsx") {
@@ -527,9 +526,9 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
     content = styledHtml[0].text;
 
     const additionalTag =
-      styledHtml[0].openTypeFeatures.SUBS === true
+      styledHtml[0].openTypeFeatures.SUBS
         ? "sub"
-        : styledHtml[0].openTypeFeatures.SUPS === true
+        : styledHtml[0].openTypeFeatures.SUPS
           ? "sup"
           : "";
 
@@ -544,9 +543,9 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
       .map((style) => {
         // Always use span for multi-segment text in Svelte mode
         const tag =
-          style.openTypeFeatures.SUBS === true
+          style.openTypeFeatures.SUBS
             ? "sub"
-            : style.openTypeFeatures.SUPS === true
+            : style.openTypeFeatures.SUPS
               ? "sup"
               : "span";
 
@@ -609,7 +608,7 @@ const htmlContainer = async (
     if (nodeHasImageFill(node)) {
       const altNode = node as AltNode<ExportableNode>;
       const hasChildren = "children" in node && node.children.length > 0;
-      let imgUrl = "";
+      let imgUrl: string;
 
       if (
         settings.embedImages &&

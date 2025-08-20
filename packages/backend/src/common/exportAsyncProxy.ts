@@ -14,7 +14,7 @@ export const exportAsyncProxy = async <
   node: SceneNode,
   settings: ExportSettings | ExportSettingsSVGString /*| ExportSettingsREST*/,
 ): Promise<T> => {
-  if (isRunning === false) {
+  if (!isRunning) {
     isRunning = true;
     postConversionStart();
     // force postMessage to run right now.

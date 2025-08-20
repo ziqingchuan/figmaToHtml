@@ -3,11 +3,10 @@ import { HTMLPreview } from "types";
 import {
   Maximize2,
   Minimize2,
-  MonitorSmartphone,
-  Smartphone,
+  // Smartphone,
   Circle,
-  Ruler,
-  Monitor,
+  // Ruler,
+  // Monitor,
 } from "lucide-react";
 import { cn, replaceExternalImagesWithCanvas } from "../lib/utils";
 
@@ -28,7 +27,7 @@ const Preview: React.FC<{
     expanded,
     setExpanded,
     viewMode,
-    setViewMode,
+    // setViewMode,
     bgColor,
     setBgColor,
   } = props;
@@ -56,20 +55,19 @@ const Preview: React.FC<{
       {/* Header with view mode controls */}
       <div className="flex justify-between items-center px-3 py-2 border-b border-border">
         <h3 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-          <MonitorSmartphone size={16} />
-          Preview
+          预览
         </h3>
         <div className="flex items-center gap-1">
           {/* Background Color Toggle - Only show in desktop and mobile modes */}
 
-          <button
-            onClick={() => setBgColor(bgColor === "white" ? "black" : "white")}
-            className="p-1.5 mr-1 rounded-sm hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-500 dark:text-neutral-400 transition-colors"
-            aria-label={`Switch the preview to ${bgColor === "white" ? "black" : "white"} background.\nUseful to avoid black text on black background.`}
-            title={`Switch the preview to ${bgColor === "white" ? "black" : "white"} background.\nUseful to avoid black text on black background.`}
-          >
-            <Circle size={14} fill={bgColor} className="stroke-current" />
-          </button>
+          {/*<button*/}
+          {/*  onClick={() => setBgColor(bgColor === "white" ? "black" : "white")}*/}
+          {/*  className="p-1.5 mr-1 rounded-sm hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-500 dark:text-neutral-400 transition-colors"*/}
+          {/*  aria-label={`Switch the preview to ${bgColor === "white" ? "black" : "white"} background.\nUseful to avoid black text on black background.`}*/}
+          {/*  title={`Switch the preview to ${bgColor === "white" ? "black" : "white"} background.\nUseful to avoid black text on black background.`}*/}
+          {/*>*/}
+          {/*  <Circle size={14} fill={bgColor} className="stroke-current" />*/}
+          {/*</button>*/}
 
           {/* View Mode Toggle */}
           {/* <div className="mr-1 flex bg-neutral-100 dark:bg-neutral-700 rounded-md p-0.5">

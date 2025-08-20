@@ -58,26 +58,26 @@ export class HtmlDefaultBuilder {
     return this.settings.htmlGenerationMode === "jsx";
   }
 
-  get exportCSS() {
-    return this.settings.htmlGenerationMode === "svelte";
-  }
-
-  get useStyledComponents() {
-    return this.settings.htmlGenerationMode === "styled-components";
-  }
-
-  get useInlineStyles() {
-    return (
-      this.settings.htmlGenerationMode === "html" ||
-      this.settings.htmlGenerationMode === "jsx"
-    );
-  }
+  // get exportCSS() {
+  //   return this.settings.htmlGenerationMode === "svelte";
+  // }
+  //
+  // get useStyledComponents() {
+  //   return this.settings.htmlGenerationMode === "styled-components";
+  // }
+  //
+  // get useInlineStyles() {
+  //   return (
+  //     this.settings.htmlGenerationMode === "html" ||
+  //     this.settings.htmlGenerationMode === "jsx"
+  //   );
+  // }
 
   // Get the appropriate HTML element based on node type
-  get htmlElement(): string {
-    if (this.node.type === "TEXT") return "p";
-    return "div";
-  }
+  // get htmlElement(): string {
+  //   if (this.node.type === "TEXT") return "p";
+  //   return "div";
+  // }
 
   constructor(node: SceneNode, settings: HTMLSettings) {
     this.node = node;
@@ -141,6 +141,7 @@ export class HtmlDefaultBuilder {
     const { node, isJSX } = this;
     this.addStyles(
       htmlVisibility(node, isJSX),
+      // @ts-ignore
       ...htmlRotation(node as LayoutMixin, isJSX),
       htmlOpacity(node as MinimalBlendMixin, isJSX),
       htmlBlendMode(node as MinimalBlendMixin, isJSX),
@@ -390,6 +391,7 @@ export class HtmlDefaultBuilder {
           formatWithJSX(
             "filter",
             this.isJSX,
+            // @ts-ignore
             `blur(${numberToFixedString(blur.radius / 2)}px)`,
           ),
         );
@@ -403,6 +405,7 @@ export class HtmlDefaultBuilder {
           formatWithJSX(
             "backdrop-filter",
             this.isJSX,
+            // @ts-ignore
             `blur(${numberToFixedString(backgroundBlur.radius / 2)}px)`,
           ),
         );

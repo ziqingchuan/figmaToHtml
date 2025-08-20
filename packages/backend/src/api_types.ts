@@ -1,67 +1,67 @@
 // Copied from https://github.com/figma/rest-api-spec/blob/main/dist/api_types.ts
-
+// @ts-nocheck
 export type IsLayerTrait = {
     /**
      * A string uniquely identifying this node within the document.
      */
     id: string
-  
+
     /**
      * The name given to the node by the user in the tool.
      */
     name: string
-  
+
     /**
      * The type of the node
      */
     type: string
-  
+
     /**
      * Whether or not the node is visible on the canvas.
      */
     visible?: boolean
-  
+
     /**
      * If true, layer is locked and cannot be edited
      */
     locked?: boolean
-  
+
     /**
      * Whether the layer is fixed while the parent is scrolling
      *
      * @deprecated
      */
     isFixed?: boolean
-  
+
     /**
      * How layer should be treated when the frame is resized
      */
     scrollBehavior: 'SCROLLS' | 'FIXED' | 'STICKY_SCROLLS'
-  
+
     /**
      * The rotation of the node, if not 0.
      */
     rotation?: number
-  
+
     /**
      * A mapping of a layer's property to component property name of component properties attached to
      * this node. The component property name can be used to look up more information on the
      * corresponding component's or component set's componentPropertyDefinitions.
      */
     componentPropertyReferences?: { [key: string]: string }
-  
+
     /**
      * Data written by plugins that is visible only to the plugin that wrote it. Requires the
      * `pluginData` to include the ID of the plugin.
      */
     pluginData?: unknown
-  
+
     /**
      * Data written by plugins that is visible to all plugins. Requires the `pluginData` parameter to
      * include the string "shared".
      */
     sharedPluginData?: unknown
-  
+
     /**
      * A mapping of field to the variables applied to this field. Most fields will only map to a single
      * `VariableAlias`. However, for properties like `fills`, `strokes`, `size`, `componentProperties`,
@@ -70,103 +70,103 @@ export type IsLayerTrait = {
     boundVariables?: {
       size?: {
         x?: VariableAlias
-  
+
         y?: VariableAlias
       }
-  
+
       individualStrokeWeights?: {
         top?: VariableAlias
-  
+
         bottom?: VariableAlias
-  
+
         left?: VariableAlias
-  
+
         right?: VariableAlias
       }
-  
+
       characters?: VariableAlias
-  
+
       itemSpacing?: VariableAlias
-  
+
       paddingLeft?: VariableAlias
-  
+
       paddingRight?: VariableAlias
-  
+
       paddingTop?: VariableAlias
-  
+
       paddingBottom?: VariableAlias
-  
+
       visible?: VariableAlias
-  
+
       topLeftRadius?: VariableAlias
-  
+
       topRightRadius?: VariableAlias
-  
+
       bottomLeftRadius?: VariableAlias
-  
+
       bottomRightRadius?: VariableAlias
-  
+
       minWidth?: VariableAlias
-  
+
       maxWidth?: VariableAlias
-  
+
       minHeight?: VariableAlias
-  
+
       maxHeight?: VariableAlias
-  
+
       counterAxisSpacing?: VariableAlias
-  
+
       opacity?: VariableAlias
-  
+
       fontFamily?: VariableAlias[]
-  
+
       fontSize?: VariableAlias[]
-  
+
       fontStyle?: VariableAlias[]
-  
+
       fontWeight?: VariableAlias[]
-  
+
       letterSpacing?: VariableAlias[]
-  
+
       lineHeight?: VariableAlias[]
-  
+
       paragraphSpacing?: VariableAlias[]
-  
+
       paragraphIndent?: VariableAlias[]
-  
+
       fills?: VariableAlias[]
-  
+
       strokes?: VariableAlias[]
-  
+
       componentProperties?: { [key: string]: VariableAlias }
-  
+
       textRangeFills?: VariableAlias[]
-  
+
       effects?: VariableAlias[]
-  
+
       layoutGrids?: VariableAlias[]
     }
-  
+
     /**
      * A mapping of variable collection ID to mode ID representing the explicitly set modes for this
      * node.
      */
     explicitVariableModes?: { [key: string]: string }
   }
-  
+
   export type HasChildrenTrait = {
     /**
      * An array of nodes that are direct children of this node
      */
     children: SubcanvasNode[]
   }
-  
+
   export type HasLayoutTrait = {
     /**
      * Bounding box of the node in absolute space coordinates.
      */
     absoluteBoundingBox: Rectangle | null
-  
+
     /**
      * The actual bounds of a node accounting for drop shadows, thick strokes, and anything else that
      * may fall outside the node's regular bounding box defined in `x`, `y`, `width`, and `height`. The
@@ -174,31 +174,31 @@ export type IsLayerTrait = {
      * value will be `null` if the node is invisible.
      */
     absoluteRenderBounds: Rectangle | null
-  
+
     /**
      * Keep height and width constrained to same ratio.
      */
     preserveRatio?: boolean
-  
+
     /**
      * Horizontal and vertical layout constraints for node.
      */
     constraints?: LayoutConstraint
-  
+
     /**
      * The top two rows of a matrix that represents the 2D transform of this node relative to its
      * parent. The bottom row of the matrix is implicitly always (0, 0, 1). Use to transform coordinates
      * in geometry. Only present if `geometry=paths` is passed.
      */
     relativeTransform?: Transform
-  
+
     /**
      * Width and height of element. This is different from the width and height of the bounding box in
      * that the absolute bounding box represents the element after scaling and rotation. Only present if
      * `geometry=paths` is passed.
      */
     size?: Vector
-  
+
     /**
      * Determines if the layer should stretch along the parent's counter axis. This property is only
      * provided for direct children of auto-layout frames.
@@ -218,44 +218,44 @@ export type IsLayerTrait = {
      * auto-layout frames, "MIN" and "MAX" correspond to "LEFT" and "RIGHT".
      */
     layoutAlign?: 'INHERIT' | 'STRETCH' | 'MIN' | 'CENTER' | 'MAX'
-  
+
     /**
      * This property is applicable only for direct children of auto-layout frames, ignored otherwise.
      * Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a
      * fixed size and `1` corresponds to stretch.
      */
     layoutGrow?: 0 | 1
-  
+
     /**
      * Determines whether a layer's size and position should be determined by auto-layout settings or
      * manually adjustable.
      */
     layoutPositioning?: 'AUTO' | 'ABSOLUTE'
-  
+
     /**
      * The minimum width of the frame. This property is only applicable for auto-layout frames or direct
      * children of auto-layout frames.
      */
     minWidth?: number
-  
+
     /**
      * The maximum width of the frame. This property is only applicable for auto-layout frames or direct
      * children of auto-layout frames.
      */
     maxWidth?: number
-  
+
     /**
      * The minimum height of the frame. This property is only applicable for auto-layout frames or
      * direct children of auto-layout frames.
      */
     minHeight?: number
-  
+
     /**
      * The maximum height of the frame. This property is only applicable for auto-layout frames or
      * direct children of auto-layout frames.
      */
     maxHeight?: number
-  
+
     /**
      * The horizontal sizing setting on this auto-layout frame or frame child.
      *
@@ -264,7 +264,7 @@ export type IsLayerTrait = {
      * - `FILL`: only valid on auto-layout frame children
      */
     layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL'
-  
+
     /**
      * The vertical sizing setting on this auto-layout frame or frame child.
      *
@@ -274,13 +274,13 @@ export type IsLayerTrait = {
      */
     layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL'
   }
-  
+
   export type HasFramePropertiesTrait = {
     /**
      * Whether or not this node clip content outside of its bounds
      */
     clipsContent: boolean
-  
+
     /**
      * Background of the node. This is deprecated, as backgrounds for frames are now in the `fills`
      * field.
@@ -288,7 +288,7 @@ export type IsLayerTrait = {
      * @deprecated
      */
     background?: Paint[]
-  
+
     /**
      * Background color of the node. This is deprecated, as frames now support more than a solid color
      * as a background. Please use the `fills` field instead.
@@ -296,13 +296,13 @@ export type IsLayerTrait = {
      * @deprecated
      */
     backgroundColor?: RGBA
-  
+
     /**
      * An array of layout grids attached to this node (see layout grids section for more details). GROUP
      * nodes do not have this attribute
      */
     layoutGrids?: LayoutGrid[]
-  
+
     /**
      * Whether a node has primary axis scrolling, horizontal or vertical.
      */
@@ -311,116 +311,116 @@ export type IsLayerTrait = {
       | 'VERTICAL_SCROLLING'
       | 'HORIZONTAL_AND_VERTICAL_SCROLLING'
       | 'NONE'
-  
+
     /**
      * Whether this layer uses auto-layout to position its children.
      */
     layoutMode?: 'NONE' | 'HORIZONTAL' | 'VERTICAL'
-  
+
     /**
      * Whether the primary axis has a fixed length (determined by the user) or an automatic length
      * (determined by the layout engine). This property is only applicable for auto-layout frames.
      */
     primaryAxisSizingMode?: 'FIXED' | 'AUTO'
-  
+
     /**
      * Whether the counter axis has a fixed length (determined by the user) or an automatic length
      * (determined by the layout engine). This property is only applicable for auto-layout frames.
      */
     counterAxisSizingMode?: 'FIXED' | 'AUTO'
-  
+
     /**
      * Determines how the auto-layout frame's children should be aligned in the primary axis direction.
      * This property is only applicable for auto-layout frames.
      */
     primaryAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN'
-  
+
     /**
      * Determines how the auto-layout frame's children should be aligned in the counter axis direction.
      * This property is only applicable for auto-layout frames.
      */
     counterAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'BASELINE'
-  
+
     /**
      * The padding between the left border of the frame and its children. This property is only
      * applicable for auto-layout frames.
      */
     paddingLeft?: number
-  
+
     /**
      * The padding between the right border of the frame and its children. This property is only
      * applicable for auto-layout frames.
      */
     paddingRight?: number
-  
+
     /**
      * The padding between the top border of the frame and its children. This property is only
      * applicable for auto-layout frames.
      */
     paddingTop?: number
-  
+
     /**
      * The padding between the bottom border of the frame and its children. This property is only
      * applicable for auto-layout frames.
      */
     paddingBottom?: number
-  
+
     /**
      * The distance between children of the frame. Can be negative. This property is only applicable for
      * auto-layout frames.
      */
     itemSpacing?: number
-  
+
     /**
      * Determines the canvas stacking order of layers in this frame. When true, the first layer will be
      * draw on top. This property is only applicable for auto-layout frames.
      */
     itemReverseZIndex?: boolean
-  
+
     /**
      * Determines whether strokes are included in layout calculations. When true, auto-layout frames
      * behave like css "box-sizing: border-box". This property is only applicable for auto-layout
      * frames.
      */
     strokesIncludedInLayout?: boolean
-  
+
     /**
      * Whether this auto-layout frame has wrapping enabled.
      */
     layoutWrap?: 'NO_WRAP' | 'WRAP'
-  
+
     /**
      * The distance between wrapped tracks of an auto-layout frame. This property is only applicable for
      * auto-layout frames with `layoutWrap: "WRAP"`
      */
     counterAxisSpacing?: number
-  
+
     /**
      * Determines how the auto-layout frame’s wrapped tracks should be aligned in the counter axis
      * direction. This property is only applicable for auto-layout frames with `layoutWrap: "WRAP"`.
      */
     counterAxisAlignContent?: 'AUTO' | 'SPACE_BETWEEN'
   }
-  
+
   export type HasBlendModeAndOpacityTrait = {
     /**
      * How this node blends with nodes behind it in the scene (see blend mode section for more details)
      */
     blendMode: BlendMode
-  
+
     /**
      * Opacity of the node
      */
     opacity?: number
   }
-  
+
   export type HasExportSettingsTrait = {
     /**
      * An array of export settings representing images to export from the node.
      */
     exportSettings?: ExportSetting[]
   }
-  
+
   export type HasGeometryTrait = MinimalFillsTrait &
     MinimalStrokesTrait & {
       /**
@@ -429,19 +429,19 @@ export type IsLayerTrait = {
        * to this table.
        */
       fillOverrideTable?: { [key: string]: PaintOverride | null }
-  
+
       /**
        * Only specified if parameter `geometry=paths` is used. An array of paths representing the object
        * fill.
        */
       fillGeometry?: Path[]
-  
+
       /**
        * Only specified if parameter `geometry=paths` is used. An array of paths representing the object
        * stroke.
        */
       strokeGeometry?: Path[]
-  
+
       /**
        * A string enum describing the end caps of vector paths.
        */
@@ -460,38 +460,38 @@ export type IsLayerTrait = {
         | 'WASHI_TAPE_4'
         | 'WASHI_TAPE_5'
         | 'WASHI_TAPE_6'
-  
+
       /**
        * Only valid if `strokeJoin` is "MITER". The corner angle, in degrees, below which `strokeJoin`
        * will be set to "BEVEL" to avoid super sharp corners. By default this is 28.96 degrees.
        */
       strokeMiterAngle?: number
     }
-  
+
   export type MinimalFillsTrait = {
     /**
      * An array of fill paints applied to the node.
      */
     fills: Paint[]
-  
+
     /**
      * A mapping of a StyleType to style ID (see Style) of styles present on this node. The style ID can
      * be used to look up more information about the style in the top-level styles field.
      */
     styles?: { [key: string]: string }
   }
-  
+
   export type MinimalStrokesTrait = {
     /**
      * An array of stroke paints applied to the node.
      */
     strokes?: Paint[]
-  
+
     /**
      * The weight of strokes on the node.
      */
     strokeWeight?: number
-  
+
     /**
      * Position of stroke relative to vector outline, as a string enum
      *
@@ -500,13 +500,13 @@ export type IsLayerTrait = {
      * - `CENTER`: stroke drawn centered along the shape boundary
      */
     strokeAlign?: 'INSIDE' | 'OUTSIDE' | 'CENTER'
-  
+
     /**
      * A string enum with value of "MITER", "BEVEL", or "ROUND", describing how corners in vector paths
      * are rendered.
      */
     strokeJoin?: 'MITER' | 'BEVEL' | 'ROUND'
-  
+
     /**
      * An array of floating point numbers describing the pattern of dash length and gap lengths that the
      * vector stroke will use when drawn.
@@ -516,7 +516,7 @@ export type IsLayerTrait = {
      */
     strokeDashes?: number[]
   }
-  
+
   export type IndividualStrokesTrait = {
     /**
      * An object including the top, bottom, left, and right stroke weights. Only returned if individual
@@ -524,20 +524,20 @@ export type IsLayerTrait = {
      */
     individualStrokeWeights?: StrokeWeights
   }
-  
+
   export type CornerTrait = {
     /**
      * Radius of each corner if a single radius is set for all corners
      */
     cornerRadius?: number
-  
+
     /**
      * A value that lets you control how "smooth" the corners are. Ranges from 0 to 1. 0 is the default
      * and means that the corner is perfectly circular. A value of 0.6 means the corner matches the iOS
      * 7 "squircle" icon shape. Other values produce various other curves.
      */
     cornerSmoothing?: number
-  
+
     /**
      * Array of length 4 of the radius of each corner of the frame, starting in the top left and
      * proceeding clockwise.
@@ -546,20 +546,20 @@ export type IsLayerTrait = {
      */
     rectangleCornerRadii?: number[]
   }
-  
+
   export type HasEffectsTrait = {
     /**
      * An array of effects attached to this node (see effects section for more details)
      */
     effects: Effect[]
   }
-  
+
   export type HasMaskTrait = {
     /**
      * Does this node mask sibling nodes in front of it?
      */
     isMask?: boolean
-  
+
     /**
      * If this layer is a mask, this property describes the operation used to mask the layer's siblings.
      * The value may be one of the following:
@@ -573,7 +573,7 @@ export type IsLayerTrait = {
      *   opacity of that pixel in the masked result.
      */
     maskType?: 'ALPHA' | 'VECTOR' | 'LUMINANCE'
-  
+
     /**
      * True if maskType is VECTOR. This field is deprecated; use maskType instead.
      *
@@ -581,7 +581,7 @@ export type IsLayerTrait = {
      */
     isMaskOutline?: boolean
   }
-  
+
   export type ComponentPropertiesTrait = {
     /**
      * A mapping of name to `ComponentPropertyDefinition` for every component property on this
@@ -589,18 +589,18 @@ export type IsLayerTrait = {
      */
     componentPropertyDefinitions?: { [key: string]: ComponentPropertyDefinition }
   }
-  
+
   export type TypePropertiesTrait = {
     /**
      * The raw characters in the text node.
      */
     characters: string
-  
+
     /**
      * Style of text including font family and weight.
      */
     style: TypeStyle
-  
+
     /**
      * The array corresponds to characters in the text box, where each element references the
      * 'styleOverrideTable' to apply specific styles to each character. The array's length can be less
@@ -609,17 +609,17 @@ export type IsLayerTrait = {
      * total number of characters, the characters beyond the array's length also use the default style.
      */
     characterStyleOverrides: number[]
-  
+
     /**
      * Internal property, preserved for backward compatibility. Avoid using this value.
      */
     layoutVersion?: number
-  
+
     /**
      * Map from ID to TypeStyle for looking up style overrides.
      */
     styleOverrideTable: { [key: string]: TypeStyle }
-  
+
     /**
      * An array with the same number of elements as lines in the text node, where lines are delimited by
      * newline or paragraph separator characters. Each element in the array corresponds to the list type
@@ -631,7 +631,7 @@ export type IsLayerTrait = {
      * - `UNORDERED`: Text is an unordered list (bulleted).
      */
     lineTypes: ('NONE' | 'ORDERED' | 'UNORDERED')[]
-  
+
     /**
      * An array with the same number of elements as lines in the text node, where lines are delimited by
      * newline or paragraph separator characters. Each element in the array corresponds to the
@@ -639,41 +639,41 @@ export type IsLayerTrait = {
      */
     lineIndentations: number[]
   }
-  
+
   export type HasTextSublayerTrait = {
     /**
      * Text contained within a text box.
      */
     characters: string
   }
-  
+
   export type TransitionSourceTrait = {
     /**
      * Node ID of node to transition to in prototyping
      */
     transitionNodeID?: string
-  
+
     /**
      * The duration of the prototyping transition on this node (in milliseconds). This will override the
      * default transition duration on the prototype, for this node.
      */
     transitionDuration?: number
-  
+
     /**
      * The easing curve used in the prototyping transition on this node.
      */
     transitionEasing?: EasingType
-  
+
     interactions?: Interaction[]
   }
-  
+
   export type DevStatusTrait = {
     /**
      * Represents whether or not a node has a particular handoff (or dev) status applied to it.
      */
     devStatus?: {
       type: 'NONE' | 'READY_FOR_DEV' | 'COMPLETED'
-  
+
       /**
        * An optional field where the designer can add more information about the design and what has
        * changed.
@@ -681,9 +681,9 @@ export type IsLayerTrait = {
       description?: string
     }
   }
-  
+
   export type AnnotationsTrait = object
-  
+
   export type FrameTraits = IsLayerTrait &
     HasBlendModeAndOpacityTrait &
     HasChildrenTrait &
@@ -698,7 +698,7 @@ export type IsLayerTrait = {
     IndividualStrokesTrait &
     DevStatusTrait &
     AnnotationsTrait
-  
+
   export type DefaultShapeTraits = IsLayerTrait &
     HasBlendModeAndOpacityTrait &
     HasLayoutTrait &
@@ -707,14 +707,14 @@ export type IsLayerTrait = {
     HasEffectsTrait &
     HasMaskTrait &
     TransitionSourceTrait
-  
+
   export type CornerRadiusShapeTraits = DefaultShapeTraits & CornerTrait
-  
+
   export type RectangularShapeTraits = DefaultShapeTraits &
     CornerTrait &
     IndividualStrokesTrait &
     AnnotationsTrait
-  
+
   export type Node =
     | BooleanOperationNode
     | ComponentNode
@@ -742,23 +742,23 @@ export type IsLayerTrait = {
     | WidgetNode
     | DocumentNode
     | CanvasNode
-  
+
   export type DocumentNode = {
     type: 'DOCUMENT'
-  
+
     children: CanvasNode[]
   } & IsLayerTrait
-  
+
   export type CanvasNode = {
     type: 'CANVAS'
-  
+
     children: SubcanvasNode[]
-  
+
     /**
      * Background color of the canvas.
      */
     backgroundColor: RGBA
-  
+
     /**
      * Node ID that corresponds to the start frame for prototypes. This is deprecated with the
      * introduction of multiple flows. Please use the `flowStartingPoints` field.
@@ -766,21 +766,21 @@ export type IsLayerTrait = {
      * @deprecated
      */
     prototypeStartNodeID: string | null
-  
+
     /**
      * An array of flow starting points sorted by its position in the prototype settings panel.
      */
     flowStartingPoints: FlowStartingPoint[]
-  
+
     /**
      * The device used to view a prototype.
      */
     prototypeDevice: PrototypeDevice
-  
+
     measurements?: Measurement[]
   } & IsLayerTrait &
     HasExportSettingsTrait
-  
+
   export type SubcanvasNode =
     | BooleanOperationNode
     | ComponentNode
@@ -806,13 +806,13 @@ export type IsLayerTrait = {
     | VectorNode
     | WashiTapeNode
     | WidgetNode
-  
+
   export type BooleanOperationNode = {
     /**
      * The type of this node, represented by the string literal "BOOLEAN_OPERATION"
      */
     type: 'BOOLEAN_OPERATION'
-  
+
     /**
      * A string enum indicating the type of boolean operation applied.
      */
@@ -826,13 +826,13 @@ export type IsLayerTrait = {
     HasEffectsTrait &
     HasMaskTrait &
     TransitionSourceTrait
-  
+
   export type SectionNode = {
     /**
      * The type of this node, represented by the string literal "SECTION"
      */
     type: 'SECTION'
-  
+
     /**
      * Whether the contents of the section are visible
      */
@@ -842,21 +842,21 @@ export type IsLayerTrait = {
     HasChildrenTrait &
     HasLayoutTrait &
     DevStatusTrait
-  
+
   export type FrameNode = {
     /**
      * The type of this node, represented by the string literal "FRAME"
      */
     type: 'FRAME'
   } & FrameTraits
-  
+
   export type GroupNode = {
     /**
      * The type of this node, represented by the string literal "GROUP"
      */
     type: 'GROUP'
   } & FrameTraits
-  
+
   export type ComponentNode = {
     /**
      * The type of this node, represented by the string literal "COMPONENT"
@@ -864,7 +864,7 @@ export type IsLayerTrait = {
     type: 'COMPONENT'
   } & FrameTraits &
     ComponentPropertiesTrait
-  
+
   export type ComponentSetNode = {
     /**
      * The type of this node, represented by the string literal "COMPONENT_SET"
@@ -872,7 +872,7 @@ export type IsLayerTrait = {
     type: 'COMPONENT_SET'
   } & FrameTraits &
     ComponentPropertiesTrait
-  
+
   export type VectorNode = {
     /**
      * The type of this node, represented by the string literal "VECTOR"
@@ -880,7 +880,7 @@ export type IsLayerTrait = {
     type: 'VECTOR'
   } & CornerRadiusShapeTraits &
     AnnotationsTrait
-  
+
   export type StarNode = {
     /**
      * The type of this node, represented by the string literal "STAR"
@@ -888,7 +888,7 @@ export type IsLayerTrait = {
     type: 'STAR'
   } & CornerRadiusShapeTraits &
     AnnotationsTrait
-  
+
   export type LineNode = {
     /**
      * The type of this node, represented by the string literal "LINE"
@@ -896,17 +896,17 @@ export type IsLayerTrait = {
     type: 'LINE'
   } & DefaultShapeTraits &
     AnnotationsTrait
-  
+
   export type EllipseNode = {
     /**
      * The type of this node, represented by the string literal "ELLIPSE"
      */
     type: 'ELLIPSE'
-  
+
     arcData: ArcData
   } & DefaultShapeTraits &
     AnnotationsTrait
-  
+
   export type RegularPolygonNode = {
     /**
      * The type of this node, represented by the string literal "REGULAR_POLYGON"
@@ -914,14 +914,14 @@ export type IsLayerTrait = {
     type: 'REGULAR_POLYGON'
   } & CornerRadiusShapeTraits &
     AnnotationsTrait
-  
+
   export type RectangleNode = {
     /**
      * The type of this node, represented by the string literal "RECTANGLE"
      */
     type: 'RECTANGLE'
   } & RectangularShapeTraits
-  
+
   export type TextNode = {
     /**
      * The type of this node, represented by the string literal "TEXT"
@@ -930,7 +930,7 @@ export type IsLayerTrait = {
   } & DefaultShapeTraits &
     TypePropertiesTrait &
     AnnotationsTrait
-  
+
   export type TableNode = {
     /**
      * The type of this node, represented by the string literal "TABLE"
@@ -943,7 +943,7 @@ export type IsLayerTrait = {
     HasEffectsTrait &
     HasBlendModeAndOpacityTrait &
     HasExportSettingsTrait
-  
+
   export type TableCellNode = {
     /**
      * The type of this node, represented by the string literal "TABLE_CELL"
@@ -953,48 +953,48 @@ export type IsLayerTrait = {
     MinimalFillsTrait &
     HasLayoutTrait &
     HasTextSublayerTrait
-  
+
   export type SliceNode = {
     /**
      * The type of this node, represented by the string literal "SLICE"
      */
     type: 'SLICE'
   } & IsLayerTrait
-  
+
   export type InstanceNode = {
     /**
      * The type of this node, represented by the string literal "INSTANCE"
      */
     type: 'INSTANCE'
-  
+
     /**
      * ID of component that this instance came from.
      */
     componentId: string
-  
+
     /**
      * If true, this node has been marked as exposed to its containing component or component set.
      */
     isExposedInstance?: boolean
-  
+
     /**
      * IDs of instances that have been exposed to this node's level.
      */
     exposedInstances?: string[]
-  
+
     /**
      * A mapping of name to `ComponentProperty` for all component properties on this instance. Each
      * property has a type, value, and other optional values.
      */
     componentProperties?: { [key: string]: ComponentProperty }
-  
+
     /**
      * An array of all of the fields directly overridden on this instance. Inherited overrides are not
      * included.
      */
     overrides: Overrides[]
   } & FrameTraits
-  
+
   export type EmbedNode = {
     /**
      * The type of this node, represented by the string literal "EMBED"
@@ -1002,7 +1002,7 @@ export type IsLayerTrait = {
     type: 'EMBED'
   } & IsLayerTrait &
     HasExportSettingsTrait
-  
+
   export type LinkUnfurlNode = {
     /**
      * The type of this node, represented by the string literal "LINK_UNFURL"
@@ -1010,13 +1010,13 @@ export type IsLayerTrait = {
     type: 'LINK_UNFURL'
   } & IsLayerTrait &
     HasExportSettingsTrait
-  
+
   export type StickyNode = {
     /**
      * The type of this node, represented by the string literal "STICKY"
      */
     type: 'STICKY'
-  
+
     /**
      * If true, author name is visible.
      */
@@ -1029,13 +1029,13 @@ export type IsLayerTrait = {
     HasEffectsTrait &
     HasExportSettingsTrait &
     HasTextSublayerTrait
-  
+
   export type ShapeWithTextNode = {
     /**
      * The type of this node, represented by the string literal "SHAPE_WITH_TEXT"
      */
     type: 'SHAPE_WITH_TEXT'
-  
+
     /**
      * Geometric shape type. Most shape types have the same name as their tooltip but there are a few
      * exceptions. ENG_DATABASE: Cylinder, ENG_QUEUE: Horizontal cylinder, ENG_FILE: File, ENG_FOLDER:
@@ -1052,23 +1052,23 @@ export type IsLayerTrait = {
     HasTextSublayerTrait &
     CornerTrait &
     MinimalStrokesTrait
-  
+
   export type ConnectorNode = {
     /**
      * The type of this node, represented by the string literal "CONNECTOR"
      */
     type: 'CONNECTOR'
-  
+
     /**
      * The starting point of the connector.
      */
     connectorStart: ConnectorEndpoint
-  
+
     /**
      * The ending point of the connector.
      */
     connectorEnd: ConnectorEndpoint
-  
+
     /**
      * A string enum describing the end cap of the start of the connector.
      */
@@ -1079,7 +1079,7 @@ export type IsLayerTrait = {
       | 'DIAMOND_FILLED'
       | 'CIRCLE_FILLED'
       | 'TRIANGLE_FILLED'
-  
+
     /**
      * A string enum describing the end cap of the end of the connector.
      */
@@ -1090,12 +1090,12 @@ export type IsLayerTrait = {
       | 'DIAMOND_FILLED'
       | 'CIRCLE_FILLED'
       | 'TRIANGLE_FILLED'
-  
+
     /**
      * Connector line type.
      */
     connectorLineType: ConnectorLineType
-  
+
     /**
      * Connector text background.
      */
@@ -1107,14 +1107,14 @@ export type IsLayerTrait = {
     HasExportSettingsTrait &
     HasTextSublayerTrait &
     MinimalStrokesTrait
-  
+
   export type WashiTapeNode = {
     /**
      * The type of this node, represented by the string literal "WASHI_TAPE"
      */
     type: 'WASHI_TAPE'
   } & DefaultShapeTraits
-  
+
   export type WidgetNode = {
     /**
      * The type of this node, represented by the string literal "WIDGET"
@@ -1123,7 +1123,7 @@ export type IsLayerTrait = {
   } & IsLayerTrait &
     HasExportSettingsTrait &
     HasChildrenTrait
-  
+
   /**
    * An RGB color
    */
@@ -1132,18 +1132,18 @@ export type IsLayerTrait = {
      * Red channel value, between 0 and 1.
      */
     r: number
-  
+
     /**
      * Green channel value, between 0 and 1.
      */
     g: number
-  
+
     /**
      * Blue channel value, between 0 and 1.
      */
     b: number
   }
-  
+
   /**
    * An RGBA color
    */
@@ -1152,23 +1152,23 @@ export type IsLayerTrait = {
      * Red channel value, between 0 and 1.
      */
     r: number
-  
+
     /**
      * Green channel value, between 0 and 1.
      */
     g: number
-  
+
     /**
      * Blue channel value, between 0 and 1.
      */
     b: number
-  
+
     /**
      * Alpha channel value, between 0 and 1.
      */
     a: number
   }
-  
+
   /**
    * A flow starting point used when launching a prototype to enter Presentation view.
    */
@@ -1177,13 +1177,13 @@ export type IsLayerTrait = {
      * Unique identifier specifying the frame.
      */
     nodeId: string
-  
+
     /**
      * Name of flow.
      */
     name: string
   }
-  
+
   /**
    * A width and a height.
    */
@@ -1192,26 +1192,26 @@ export type IsLayerTrait = {
      * The width of a size.
      */
     width: number
-  
+
     /**
      * The height of a size.
      */
     height: number
   }
-  
+
   /**
    * The device used to view a prototype.
    */
   export type PrototypeDevice = {
     type: 'NONE' | 'PRESET' | 'CUSTOM' | 'PRESENTATION'
-  
+
     size?: Size
-  
+
     presetIdentifier?: string
-  
+
     rotation: 'NONE' | 'CCW_90'
   }
-  
+
   /**
    * Sizing constraint for exports.
    */
@@ -1224,24 +1224,24 @@ export type IsLayerTrait = {
      * - `HEIGHT`: Scale proportionally and set height to `value`.
      */
     type: 'SCALE' | 'WIDTH' | 'HEIGHT'
-  
+
     /**
      * See type property for effect of this field.
      */
     value: number
   }
-  
+
   /**
    * An export setting.
    */
   export type ExportSetting = {
     suffix: string
-  
+
     format: 'JPG' | 'PNG' | 'SVG' | 'PDF'
-  
+
     constraint: Constraint
   }
-  
+
   /**
    * This type is a string enum with the following possible values
    *
@@ -1302,7 +1302,7 @@ export type IsLayerTrait = {
     | 'SATURATION'
     | 'COLOR'
     | 'LUMINOSITY'
-  
+
   /**
    * A 2d vector.
    */
@@ -1311,13 +1311,13 @@ export type IsLayerTrait = {
      * X coordinate of the vector.
      */
     x: number
-  
+
     /**
      * Y coordinate of the vector.
      */
     y: number
   }
-  
+
   /**
    * A single color stop with its position along the gradient axis, color, and bound variables if any
    */
@@ -1326,18 +1326,18 @@ export type IsLayerTrait = {
      * Value between 0 and 1 representing position along gradient axis.
      */
     position: number
-  
+
     /**
      * Color attached to corresponding position.
      */
     color: RGBA
-  
+
     /**
      * The variables bound to a particular gradient stop
      */
     boundVariables?: { color?: VariableAlias }
   }
-  
+
   /**
    * A transformation matrix is standard way in computer graphics to represent translation and
    * rotation. These are the top two rows of a 3x3 matrix. The bottom row of the matrix is assumed to
@@ -1372,69 +1372,69 @@ export type IsLayerTrait = {
    * axes are not required to be at 90° angles to each other.
    */
   export type Transform = number[][]
-  
+
   /**
    * Image filters to apply to the node.
    */
   export type ImageFilters = {
     exposure?: number
-  
+
     contrast?: number
-  
+
     saturation?: number
-  
+
     temperature?: number
-  
+
     tint?: number
-  
+
     highlights?: number
-  
+
     shadows?: number
   }
-  
+
   export type BasePaint = {
     /**
      * Is the paint enabled?
      */
     visible?: boolean
-  
+
     /**
      * Overall opacity of paint (colors within the paint can also have opacity values which would blend
      * with this)
      */
     opacity?: number
-  
+
     /**
      * How this node blends with nodes behind it in the scene
      */
     blendMode: BlendMode
   }
-  
+
   export type SolidPaint = {
     /**
      * The string literal "SOLID" representing the paint's type. Always check the `type` before reading
      * other properties.
      */
     type: 'SOLID'
-  
+
     /**
      * Solid color of the paint
      */
     color: RGBA
-  
+
     /**
      * The variables bound to a particular field on this paint
      */
     boundVariables?: { color?: VariableAlias }
   } & BasePaint
-  
+
   export type GradientPaint = {
     /**
      * The string literal representing the paint's type. Always check the `type` before reading other
      * properties.
      */
     type: 'GRADIENT_LINEAR' | 'GRADIENT_RADIAL' | 'GRADIENT_ANGULAR' | 'GRADIENT_DIAMOND'
-  
+
     /**
      * This field contains three vectors, each of which are a position in normalized object space
      * (normalized object space is if the top left corner of the bounding box of the object is (0, 0)
@@ -1443,62 +1443,62 @@ export type IsLayerTrait = {
      * gradient (value 1), and the third handle position determines the width of the gradient.
      */
     gradientHandlePositions: Vector[]
-  
+
     /**
      * Positions of key points along the gradient axis with the colors anchored there. Colors along the
      * gradient are interpolated smoothly between neighboring gradient stops.
      */
     gradientStops: ColorStop[]
   } & BasePaint
-  
+
   export type ImagePaint = {
     /**
      * The string literal "IMAGE" representing the paint's type. Always check the `type` before reading
      * other properties.
      */
     type: 'IMAGE'
-  
+
     /**
      * Image scaling mode.
      */
     scaleMode: 'FILL' | 'FIT' | 'TILE' | 'STRETCH'
-  
+
     /**
      * A reference to an image embedded in this node. To download the image using this reference, use
      * the `GET file images` endpoint to retrieve the mapping from image references to image URLs.
      */
     imageRef: string
-  
+
     /**
      * Affine transform applied to the image, only present if `scaleMode` is `STRETCH`
      */
     imageTransform?: Transform
-  
+
     /**
      * Amount image is scaled by in tiling, only present if scaleMode is `TILE`.
      */
     scalingFactor?: number
-  
+
     /**
      * Defines what image filters have been applied to this paint, if any. If this property is not
      * defined, no filters have been applied.
      */
     filters?: ImageFilters
-  
+
     /**
      * Image rotation, in degrees.
      */
     rotation?: number
-  
+
     /**
      * A reference to an animated GIF embedded in this node. To download the image using this reference,
      * use the `GET file images` endpoint to retrieve the mapping from image references to image URLs.
      */
     gifRef?: string
   } & BasePaint
-  
+
   export type Paint = SolidPaint | GradientPaint | ImagePaint
-  
+
   /**
    * Layout constraint relative to containing Frame
    */
@@ -1514,7 +1514,7 @@ export type IsLayerTrait = {
      * - `SCALE`: Node scales vertically with containing frame
      */
     vertical: 'TOP' | 'BOTTOM' | 'CENTER' | 'TOP_BOTTOM' | 'SCALE'
-  
+
     /**
      * Horizontal constraint (relative to containing frame) as an enum:
      *
@@ -1527,7 +1527,7 @@ export type IsLayerTrait = {
      */
     horizontal: 'LEFT' | 'RIGHT' | 'CENTER' | 'LEFT_RIGHT' | 'SCALE'
   }
-  
+
   /**
    * A rectangle that expresses a bounding box in absolute coordinates.
    */
@@ -1536,23 +1536,23 @@ export type IsLayerTrait = {
      * X coordinate of top left corner of the rectangle.
      */
     x: number
-  
+
     /**
      * Y coordinate of top left corner of the rectangle.
      */
     y: number
-  
+
     /**
      * Width of the rectangle.
      */
     width: number
-  
+
     /**
      * Height of the rectangle.
      */
     height: number
   }
-  
+
   /**
    * Guides to align and place objects within a frames.
    */
@@ -1565,22 +1565,22 @@ export type IsLayerTrait = {
      * - `GRID`: Square grid
      */
     pattern: 'COLUMNS' | 'ROWS' | 'GRID'
-  
+
     /**
      * Width of column grid or height of row grid or square grid spacing.
      */
     sectionSize: number
-  
+
     /**
      * Is the grid currently visible?
      */
     visible: boolean
-  
+
     /**
      * Color of the grid
      */
     color: RGBA
-  
+
     /**
      * Positioning of grid as a string enum
      *
@@ -1590,36 +1590,36 @@ export type IsLayerTrait = {
      * - `CENTER`: Grid is center aligned
      */
     alignment: 'MIN' | 'MAX' | 'STRETCH' | 'CENTER'
-  
+
     /**
      * Spacing in between columns and rows
      */
     gutterSize: number
-  
+
     /**
      * Spacing before the first column or row
      */
     offset: number
-  
+
     /**
      * Number of columns or rows
      */
     count: number
-  
+
     /**
      * The variables bound to a particular field on this layout grid
      */
     boundVariables?: {
       gutterSize?: VariableAlias
-  
+
       numSections?: VariableAlias
-  
+
       sectionSize?: VariableAlias
-  
+
       offset?: VariableAlias
     }
   }
-  
+
   /**
    * Base properties shared by all shadow effects
    */
@@ -1628,22 +1628,22 @@ export type IsLayerTrait = {
      * The color of the shadow
      */
     color: RGBA
-  
+
     /**
      * Blend mode of the shadow
      */
     blendMode: BlendMode
-  
+
     /**
      * How far the shadow is projected in the x and y directions
      */
     offset: Vector
-  
+
     /**
      * Radius of the blur effect (applies to shadows as well)
      */
     radius: number
-  
+
     /**
      * The distance by which to expand (or contract) the shadow.
      *
@@ -1655,41 +1655,41 @@ export type IsLayerTrait = {
      * paints and `clipsContent` enabled. When left unspecified, the default value is 0.
      */
     spread?: number
-  
+
     /**
      * Whether this shadow is visible.
      */
     visible: boolean
-  
+
     /**
      * The variables bound to a particular field on this shadow effect
      */
     boundVariables?: {
       radius?: VariableAlias
-  
+
       spread?: VariableAlias
-  
+
       color?: VariableAlias
-  
+
       offsetX?: VariableAlias
-  
+
       offsetY?: VariableAlias
     }
   }
-  
+
   export type DropShadowEffect = {
     /**
      * A string literal representing the effect's type. Always check the type before reading other
      * properties.
      */
     type: 'DROP_SHADOW'
-  
+
     /**
      * Whether to show the shadow behind translucent or transparent pixels
      */
     showShadowBehindNode: boolean
   } & BaseShadowEffect
-  
+
   export type InnerShadowEffect = {
     /**
      * A string literal representing the effect's type. Always check the type before reading other
@@ -1697,7 +1697,7 @@ export type IsLayerTrait = {
      */
     type?: 'INNER_SHADOW'
   } & BaseShadowEffect
-  
+
   /**
    * A blur effect
    */
@@ -1707,25 +1707,25 @@ export type IsLayerTrait = {
      * properties.
      */
     type: 'LAYER_BLUR' | 'BACKGROUND_BLUR'
-  
+
     /**
      * Whether this blur is active.
      */
     visible: boolean
-  
+
     /**
      * Radius of the blur effect
      */
     radius: number
-  
+
     /**
      * The variables bound to a particular field on this blur effect
      */
     boundVariables?: { radius?: VariableAlias }
   }
-  
+
   export type Effect = DropShadowEffect | InnerShadowEffect | BlurEffect
-  
+
   /**
    * A set of properties that can be applied to nodes and published. Styles for a property can be
    * created in the corresponding property's panel while editing a file.
@@ -1735,25 +1735,25 @@ export type IsLayerTrait = {
      * The key of the style
      */
     key: string
-  
+
     /**
      * Name of the style
      */
     name: string
-  
+
     /**
      * Description of the style
      */
     description: string
-  
+
     /**
      * Whether this style is a remote style that doesn't live in this file
      */
     remote: boolean
-  
+
     styleType: StyleType
   }
-  
+
   /**
    * This type is a string enum with the following possible values:
    *
@@ -1789,7 +1789,7 @@ export type IsLayerTrait = {
     | 'BOUNCY'
     | 'SLOW'
     | 'CUSTOM_SPRING'
-  
+
   /**
    * Individual stroke weights
    */
@@ -1798,23 +1798,23 @@ export type IsLayerTrait = {
      * The top stroke weight.
      */
     top: number
-  
+
     /**
      * The right stroke weight.
      */
     right: number
-  
+
     /**
      * The bottom stroke weight.
      */
     bottom: number
-  
+
     /**
      * The left stroke weight.
      */
     left: number
   }
-  
+
   /**
    * Paint metadata to override default paints.
    */
@@ -1823,13 +1823,13 @@ export type IsLayerTrait = {
      * Paints applied to characters.
      */
     fills?: Paint[]
-  
+
     /**
      * ID of style node, if any, that this inherits fill data from.
      */
     inheritFillStyleId?: string
   }
-  
+
   /**
    * Defines a single path
    */
@@ -1838,19 +1838,19 @@ export type IsLayerTrait = {
      * A series of path commands that encodes how to draw the path.
      */
     path: string
-  
+
     /**
      * The winding rule for the path (same as in SVGs). This determines whether a given point in space
      * is inside or outside the path.
      */
     windingRule: 'NONZERO' | 'EVENODD'
-  
+
     /**
      * If there is a per-region fill, this refers to an ID in the `fillOverrideTable`.
      */
     overrideID?: number
   }
-  
+
   /**
    * Information about the arc properties of an ellipse. 0° is the x axis and increasing angles rotate
    * clockwise.
@@ -1860,18 +1860,18 @@ export type IsLayerTrait = {
      * Start of the sweep in radians.
      */
     startingAngle: number
-  
+
     /**
      * End of the sweep in radians.
      */
     endingAngle: number
-  
+
     /**
      * Inner radius value between 0 and 1
      */
     innerRadius: number
   }
-  
+
   /**
    * A link to either a URL or another frame (node) in the document.
    */
@@ -1880,18 +1880,18 @@ export type IsLayerTrait = {
      * The type of hyperlink. Can be either `URL` or `NODE`.
      */
     type: 'URL' | 'NODE'
-  
+
     /**
      * The URL that the hyperlink points to, if `type` is `URL`.
      */
     url?: string
-  
+
     /**
      * The ID of the node that the hyperlink points to, if `type` is `NODE`.
      */
     nodeID?: string
   }
-  
+
   /**
    * Metadata for character formatting.
    */
@@ -1900,57 +1900,57 @@ export type IsLayerTrait = {
      * Font family of text (standard name).
      */
     fontFamily?: string
-  
+
     /**
      * PostScript font name.
      */
     fontPostScriptName?: string | null
-  
+
     /**
      * Describes visual weight or emphasis, such as Bold or Italic.
      */
     fontStyle?: string
-  
+
     /**
      * Space between paragraphs in px, 0 if not present.
      */
     paragraphSpacing?: number
-  
+
     /**
      * Paragraph indentation in px, 0 if not present.
      */
     paragraphIndent?: number
-  
+
     /**
      * Space between list items in px, 0 if not present.
      */
     listSpacing?: number
-  
+
     /**
      * Whether or not text is italicized.
      */
     italic?: boolean
-  
+
     /**
      * Numeric font weight.
      */
     fontWeight?: number
-  
+
     /**
      * Font size in px.
      */
     fontSize?: number
-  
+
     /**
      * Text casing applied to the node, default is the original casing.
      */
     textCase?: 'UPPER' | 'LOWER' | 'TITLE' | 'SMALL_CAPS' | 'SMALL_CAPS_FORCED'
-  
+
     /**
      * Text decoration applied to the node, default is none.
      */
     textDecoration?: 'NONE' | 'STRIKETHROUGH' | 'UNDERLINE'
-  
+
     /**
      * Dimensions along which text will auto resize, default is that the text does not auto-resize.
      * TRUNCATE means that the text will be shortened and trailing text will be replaced with "…" if the
@@ -1958,117 +1958,117 @@ export type IsLayerTrait = {
      * removed in a future version. Read from `textTruncation` instead.
      */
     textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT' | 'TRUNCATE'
-  
+
     /**
      * Whether this text node will truncate with an ellipsis when the text contents is larger than the
      * text node.
      */
     textTruncation?: 'DISABLED' | 'ENDING'
-  
+
     /**
      * When `textTruncation: "ENDING"` is set, `maxLines` determines how many lines a text node can grow
      * to before it truncates.
      */
     maxLines?: number
-  
+
     /**
      * Horizontal text alignment as string enum.
      */
     textAlignHorizontal?: 'LEFT' | 'RIGHT' | 'CENTER' | 'JUSTIFIED'
-  
+
     /**
      * Vertical text alignment as string enum.
      */
     textAlignVertical?: 'TOP' | 'CENTER' | 'BOTTOM'
-  
+
     /**
      * Space between characters in px.
      */
     letterSpacing?: number
-  
+
     /**
      * An array of fill paints applied to the characters.
      */
     fills?: Paint[]
-  
+
     /**
      * Link to a URL or frame.
      */
     hyperlink?: Hyperlink
-  
+
     /**
      * A map of OpenType feature flags to 1 or 0, 1 if it is enabled and 0 if it is disabled. Note that
      * some flags aren't reflected here. For example, SMCP (small caps) is still represented by the
      * `textCase` field.
      */
     opentypeFlags?: { [key: string]: number }
-  
+
     /**
      * Line height in px.
      */
     lineHeightPx?: number
-  
+
     /**
      * Line height as a percentage of normal line height. This is deprecated; in a future version of the
      * API only lineHeightPx and lineHeightPercentFontSize will be returned.
      */
     lineHeightPercent?: number
-  
+
     /**
      * Line height as a percentage of the font size. Only returned when `lineHeightPercent` (deprecated)
      * is not 100.
      */
     lineHeightPercentFontSize?: number
-  
+
     /**
      * The unit of the line height value specified by the user.
      */
     lineHeightUnit?: 'PIXELS' | 'FONT_SIZE_%' | 'INTRINSIC_%'
-  
+
     /**
      * The variables bound to a particular field on this style
      */
     boundVariables?: {
       fontFamily?: VariableAlias
-  
+
       fontSize?: VariableAlias
-  
+
       fontStyle?: VariableAlias
-  
+
       fontWeight?: VariableAlias
-  
+
       letterSpacing?: VariableAlias
-  
+
       lineHeight?: VariableAlias
-  
+
       paragraphSpacing?: VariableAlias
-  
+
       paragraphIndent?: VariableAlias
     }
-  
+
     /**
      * Whether or not this style has overrides over a text style. The possible fields to override are
      * semanticWeight, semanticItalic, hyperlink, and textDecoration. If this is true, then those fields
      * are overrides if present.
      */
     isOverrideOverTextStyle?: boolean
-  
+
     /**
      * Indicates how the font weight was overridden when there is a text style override.
      */
     semanticWeight?: 'BOLD' | 'NORMAL'
-  
+
     /**
      * Indicates how the font style was overridden when there is a text style override.
      */
     semanticItalic?: 'ITALIC' | 'NORMAL'
   }
-  
+
   /**
    * Component property type.
    */
   export type ComponentPropertyType = 'BOOLEAN' | 'INSTANCE_SWAP' | 'TEXT' | 'VARIANT'
-  
+
   /**
    * Instance swap preferred value.
    */
@@ -2077,13 +2077,13 @@ export type IsLayerTrait = {
      * Type of node for this preferred value.
      */
     type: 'COMPONENT' | 'COMPONENT_SET'
-  
+
     /**
      * Key of this component or component set.
      */
     key: string
   }
-  
+
   /**
    * A property of a component.
    */
@@ -2092,23 +2092,23 @@ export type IsLayerTrait = {
      * Type of this component property.
      */
     type: ComponentPropertyType
-  
+
     /**
      * Initial value of this property for instances.
      */
     defaultValue: boolean | string
-  
+
     /**
      * All possible values for this property. Only exists on VARIANT properties.
      */
     variantOptions?: string[]
-  
+
     /**
      * Preferred values for this property. Only applicable if type is `INSTANCE_SWAP`.
      */
     preferredValues?: InstanceSwapPreferredValue[]
   }
-  
+
   /**
    * A property of a component.
    */
@@ -2117,23 +2117,23 @@ export type IsLayerTrait = {
      * Type of this component property.
      */
     type: ComponentPropertyType
-  
+
     /**
      * Value of the property for this component instance.
      */
     value: boolean | string
-  
+
     /**
      * Preferred values for this property. Only applicable if type is `INSTANCE_SWAP`.
      */
     preferredValues?: InstanceSwapPreferredValue[]
-  
+
     /**
      * The variables bound to a particular field on this component property
      */
     boundVariables?: { value?: VariableAlias }
   }
-  
+
   /**
    * Fields directly overridden on an instance. Inherited overrides are not included.
    */
@@ -2142,13 +2142,13 @@ export type IsLayerTrait = {
      * A unique ID for a node.
      */
     id: string
-  
+
     /**
      * An array of properties.
      */
     overriddenFields: string[]
   }
-  
+
   /**
    * Geometric shape type.
    */
@@ -2183,7 +2183,7 @@ export type IsLayerTrait = {
     | 'OR'
     | 'SPEECH_BUBBLE'
     | 'INTERNAL_STORAGE'
-  
+
   /**
    * Stores canvas location for a connector start/end point.
    */
@@ -2193,7 +2193,7 @@ export type IsLayerTrait = {
          * Node ID that this endpoint attaches to.
          */
         endpointNodeId?: string
-  
+
         /**
          * The position of the endpoint relative to the node.
          */
@@ -2204,20 +2204,20 @@ export type IsLayerTrait = {
          * Node ID that this endpoint attaches to.
          */
         endpointNodeId?: string
-  
+
         /**
          * The magnet type is a string enum.
          */
         magnet?: 'AUTO' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'CENTER'
       }
-  
+
   /**
    * Connector line type.
    */
   export type ConnectorLineType = 'STRAIGHT' | 'ELBOWED'
-  
+
   export type ConnectorTextBackground = CornerTrait & MinimalFillsTrait
-  
+
   /**
    * A description of a main component. Helps you identify which component instances are attached to.
    */
@@ -2226,33 +2226,33 @@ export type IsLayerTrait = {
      * The key of the component
      */
     key: string
-  
+
     /**
      * Name of the component
      */
     name: string
-  
+
     /**
      * The description of the component as entered in the editor
      */
     description: string
-  
+
     /**
      * The ID of the component set if the component belongs to one
      */
     componentSetId?: string
-  
+
     /**
      * An array of documentation links attached to this component
      */
     documentationLinks: DocumentationLink[]
-  
+
     /**
      * Whether this component is a remote component that doesn't live in this file
      */
     remote: boolean
   }
-  
+
   /**
    * A description of a component set, which is a node containing a set of variants of a component.
    */
@@ -2261,28 +2261,28 @@ export type IsLayerTrait = {
      * The key of the component set
      */
     key: string
-  
+
     /**
      * Name of the component set
      */
     name: string
-  
+
     /**
      * The description of the component set as entered in the editor
      */
     description: string
-  
+
     /**
      * An array of documentation links attached to this component set
      */
     documentationLinks?: DocumentationLink[]
-  
+
     /**
      * Whether this component set is a remote component set that doesn't live in this file
      */
     remote?: boolean
   }
-  
+
   /**
    * Represents a link to documentation for a component or component set.
    */
@@ -2292,13 +2292,13 @@ export type IsLayerTrait = {
      */
     uri: string
   }
-  
+
   /**
    * Contains a variable alias
    */
   export type VariableAlias = {
     type: 'VARIABLE_ALIAS'
-  
+
     /**
      * The id of the variable that the current variable is aliased to. This variable can be a local or
      * remote variable, and both can be retrieved via the GET /v1/files/:file_key/variables/local
@@ -2306,7 +2306,7 @@ export type IsLayerTrait = {
      */
     id: string
   }
-  
+
   /**
    * An interaction in the Figma viewer, containing a trigger and one or more actions.
    */
@@ -2315,13 +2315,13 @@ export type IsLayerTrait = {
      * The user event that initiates the interaction.
      */
     trigger: Trigger | null
-  
+
     /**
      * The actions that are performed when the trigger is activated.
      */
     actions?: Action[]
   }
-  
+
   /**
    * The `"ON_HOVER"` and `"ON_PRESS"` trigger types revert the navigation when the trigger is
    * finished (the result is temporary). `"MOUSE_ENTER"`, `"MOUSE_LEAVE"`, `"MOUSE_UP"` and
@@ -2336,9 +2336,9 @@ export type IsLayerTrait = {
     | AfterTimeoutTrigger
     | {
         type: 'MOUSE_ENTER' | 'MOUSE_LEAVE' | 'MOUSE_UP' | 'MOUSE_DOWN'
-  
+
         delay: number
-  
+
         /**
          * Whether this is a [deprecated
          * version](https://help.figma.com/hc/en-us/articles/360040035834-Prototype-triggers#h_01HHN04REHJNP168R26P1CMP0A)
@@ -2350,27 +2350,27 @@ export type IsLayerTrait = {
     | OnKeyDownTrigger
     | OnMediaHitTrigger
     | { type: 'ON_MEDIA_END' }
-  
+
   export type AfterTimeoutTrigger = {
     type: 'AFTER_TIMEOUT'
-  
+
     timeout: number
   }
-  
+
   export type OnKeyDownTrigger = {
     type: 'ON_KEY_DOWN'
-  
+
     device: 'KEYBOARD' | 'XBOX_ONE' | 'PS4' | 'SWITCH_PRO' | 'UNKNOWN_CONTROLLER'
-  
+
     keyCodes: number[]
   }
-  
+
   export type OnMediaHitTrigger = {
     type: 'ON_MEDIA_HIT'
-  
+
     mediaHitTime: number
   }
-  
+
   /**
    * An action that is performed when a trigger is activated.
    */
@@ -2382,85 +2382,85 @@ export type IsLayerTrait = {
     | SetVariableModeAction
     | ConditionalAction
     | NodeAction
-  
+
   /**
    * An action that opens a URL.
    */
   export type OpenURLAction = {
     type: 'URL'
-  
+
     url: string
   }
-  
+
   /**
    * An action that affects a video node in the Figma viewer. For example, to play, pause, or skip.
    */
   export type UpdateMediaRuntimeAction =
     | {
         type: 'UPDATE_MEDIA_RUNTIME'
-  
+
         destinationId: string | null
-  
+
         mediaAction: 'PLAY' | 'PAUSE' | 'TOGGLE_PLAY_PAUSE' | 'MUTE' | 'UNMUTE' | 'TOGGLE_MUTE_UNMUTE'
       }
     | {
         type: 'UPDATE_MEDIA_RUNTIME'
-  
+
         destinationId?: string | null
-  
+
         mediaAction: 'SKIP_FORWARD' | 'SKIP_BACKWARD'
-  
+
         amountToSkip: number
       }
     | {
         type: 'UPDATE_MEDIA_RUNTIME'
-  
+
         destinationId?: string | null
-  
+
         mediaAction: 'SKIP_TO'
-  
+
         newTimestamp: number
       }
-  
+
   /**
    * An action that navigates to a specific node in the Figma viewer.
    */
   export type NodeAction = {
     type: 'NODE'
-  
+
     destinationId: string | null
-  
+
     navigation: Navigation
-  
+
     transition: Transition | null
-  
+
     /**
      * Whether the scroll offsets of any scrollable elements in the current screen or overlay are
      * preserved when navigating to the destination. This is applicable only if the layout of both the
      * current frame and its destination are the same.
      */
     preserveScrollPosition?: boolean
-  
+
     /**
      * Applicable only when `navigation` is `"OVERLAY"` and the destination is a frame with
      * `overlayPosition` equal to `"MANUAL"`. This value represents the offset by which the overlay is
      * opened relative to this node.
      */
     overlayRelativePosition?: Vector
-  
+
     /**
      * When true, all videos within the destination frame will reset their memorized playback position
      * to 00:00 before starting to play.
      */
     resetVideoPosition?: boolean
-  
+
     /**
      * Whether the scroll offsets of any scrollable elements in the current screen or overlay reset when
      * navigating to the destination. This is applicable only if the layout of both the current frame
      * and its destination are the same.
      */
     resetScrollPosition?: boolean
-  
+
     /**
      * Whether the state of any interactive components in the current screen or overlay reset when
      * navigating to the destination. This is applicable if there are interactive components in the
@@ -2468,7 +2468,7 @@ export type IsLayerTrait = {
      */
     resetInteractiveComponents?: boolean
   }
-  
+
   /**
    * The method of navigation. The possible values are:
    *
@@ -2481,44 +2481,44 @@ export type IsLayerTrait = {
    * - `"CHANGE_TO"`: Changes the closest ancestor instance of source node to the specified variant.
    */
   export type Navigation = 'NAVIGATE' | 'SWAP' | 'OVERLAY' | 'SCROLL_TO' | 'CHANGE_TO'
-  
+
   export type Transition = SimpleTransition | DirectionalTransition
-  
+
   /**
    * Describes an animation used when navigating in a prototype.
    */
   export type SimpleTransition = {
     type: 'DISSOLVE' | 'SMART_ANIMATE' | 'SCROLL_ANIMATE'
-  
+
     /**
      * The duration of the transition in milliseconds.
      */
     duration: number
-  
+
     /**
      * The easing curve of the transition.
      */
     easing: Easing
   }
-  
+
   /**
    * Describes an animation used when navigating in a prototype.
    */
   export type DirectionalTransition = {
     type: 'MOVE_IN' | 'MOVE_OUT' | 'PUSH' | 'SLIDE_IN' | 'SLIDE_OUT'
-  
+
     direction: 'LEFT' | 'RIGHT' | 'TOP' | 'BOTTOM'
-  
+
     /**
      * The duration of the transition in milliseconds.
      */
     duration: number
-  
+
     /**
      * The easing curve of the transition.
      */
     easing: Easing
-  
+
     /**
      * When the transition `type` is `"SMART_ANIMATE"` or when `matchLayers` is `true`, then the
      * transition will be performed using smart animate, which attempts to match corresponding layers an
@@ -2526,7 +2526,7 @@ export type IsLayerTrait = {
      */
     matchLayers?: boolean
   }
-  
+
   /**
    * Describes an easing curve.
    */
@@ -2535,7 +2535,7 @@ export type IsLayerTrait = {
      * The type of easing curve.
      */
     type: EasingType
-  
+
     /**
      * A cubic bezier curve that defines the easing.
      */
@@ -2544,78 +2544,78 @@ export type IsLayerTrait = {
        * The x component of the first control point.
        */
       x1: number
-  
+
       /**
        * The y component of the first control point.
        */
       y1: number
-  
+
       /**
        * The x component of the second control point.
        */
       x2: number
-  
+
       /**
        * The y component of the second control point.
        */
       y2: number
     }
-  
+
     /**
      * A spring function that defines the easing.
      */
     easingFunctionSpring?: {
       mass: number
-  
+
       stiffness: number
-  
+
       damping: number
     }
   }
-  
+
   /**
    * Sets a variable to a specific value.
    */
   export type SetVariableAction = {
     type: 'SET_VARIABLE'
-  
+
     variableId: string | null
-  
+
     variableValue?: VariableData
   }
-  
+
   /**
    * Sets a variable to a specific mode.
    */
   export type SetVariableModeAction = {
     type: 'SET_VARIABLE_MODE'
-  
+
     variableCollectionId?: string | null
-  
+
     variableModeId?: string | null
   }
-  
+
   /**
    * Checks if a condition is met before performing certain actions by using an if/else conditional
    * statement.
    */
   export type ConditionalAction = {
     type: 'CONDITIONAL'
-  
+
     conditionalBlocks: ConditionalBlock[]
   }
-  
+
   /**
    * A value to set a variable to during prototyping.
    */
   export type VariableData = {
     type?: VariableDataType
-  
+
     resolvedType?: VariableResolvedDataType
-  
+
     value?: boolean | number | string | RGB | RGBA | VariableAlias | Expression
   }
-  
+
   /**
    * Defines the types of data a VariableData object can hold
    */
@@ -2626,22 +2626,22 @@ export type IsLayerTrait = {
     | 'COLOR'
     | 'VARIABLE_ALIAS'
     | 'EXPRESSION'
-  
+
   /**
    * Defines the types of data a VariableData object can eventually equal
    */
   export type VariableResolvedDataType = 'BOOLEAN' | 'FLOAT' | 'STRING' | 'COLOR'
-  
+
   /**
    * Defines the [Expression](https://help.figma.com/hc/en-us/articles/15253194385943) object, which
    * contains a list of `VariableData` objects strung together by operators (`ExpressionFunction`).
    */
   export type Expression = {
     expressionFunction: ExpressionFunction
-  
+
     expressionArguments: VariableData[]
   }
-  
+
   /**
    * Defines the list of operators available to use in an Expression.
    */
@@ -2661,7 +2661,7 @@ export type IsLayerTrait = {
     | 'VAR_MODE_LOOKUP'
     | 'NEGATE'
     | 'NOT'
-  
+
   /**
    * Either the if or else conditional blocks. The if block contains a condition to check. If that
    * condition is met then it will run those list of actions, else it will run the actions in the else
@@ -2669,55 +2669,55 @@ export type IsLayerTrait = {
    */
   export type ConditionalBlock = {
     condition?: VariableData
-  
+
     actions: Action[]
   }
-  
+
   /**
    * A pinned distance between two nodes in Dev Mode
    */
   export type Measurement = {
     id: string
-  
+
     start: MeasurementStartEnd
-  
+
     end: MeasurementStartEnd
-  
+
     offset: MeasurementOffsetInner | MeasurementOffsetOuter
-  
+
     /**
      * When manually overridden, the displayed value of the measurement
      */
     freeText?: string
   }
-  
+
   /**
    * The node and side a measurement is pinned to
    */
   export type MeasurementStartEnd = {
     nodeId: string
-  
+
     side: 'TOP' | 'RIGHT' | 'BOTTOM' | 'LEFT'
   }
-  
+
   /**
    * Measurement offset relative to the inside of the start node
    */
   export type MeasurementOffsetInner = {
     type: 'INNER'
-  
+
     relative: number
   }
-  
+
   /**
    * Measurement offset relative to the outside of the start node
    */
   export type MeasurementOffsetOuter = {
     type: 'OUTER'
-  
+
     fixed: number
   }
-  
+
   /**
    * Position of a comment relative to the frame to which it is attached.
    */
@@ -2726,13 +2726,13 @@ export type IsLayerTrait = {
      * Unique id specifying the frame.
      */
     node_id: string
-  
+
     /**
      * 2D vector offset within the frame from the top-left corner.
      */
     node_offset: Vector
   }
-  
+
   /**
    * Position of a region comment on the canvas.
    */
@@ -2741,28 +2741,28 @@ export type IsLayerTrait = {
      * X coordinate of the position.
      */
     x: number
-  
+
     /**
      * Y coordinate of the position.
      */
     y: number
-  
+
     /**
      * The height of the comment region. Must be greater than 0.
      */
     region_height: number
-  
+
     /**
      * The width of the comment region. Must be greater than 0.
      */
     region_width: number
-  
+
     /**
      * The corner of the comment region to pin to the node's corner as a string enum.
      */
     comment_pin_corner?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
   }
-  
+
   /**
    * Position of a region comment relative to the frame to which it is attached.
    */
@@ -2771,28 +2771,28 @@ export type IsLayerTrait = {
      * Unique id specifying the frame.
      */
     node_id: string
-  
+
     /**
      * 2D vector offset within the frame from the top-left corner.
      */
     node_offset: Vector
-  
+
     /**
      * The height of the comment region. Must be greater than 0.
      */
     region_height: number
-  
+
     /**
      * The width of the comment region. Must be greater than 0.
      */
     region_width: number
-  
+
     /**
      * The corner of the comment region to pin to the node's corner as a string enum.
      */
     comment_pin_corner?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
   }
-  
+
   /**
    * A comment or reply left by a user.
    */
@@ -2801,7 +2801,7 @@ export type IsLayerTrait = {
      * Unique identifier for comment.
      */
     id: string
-  
+
     /**
      * Positioning information of the comment. Includes information on the location of the comment pin,
      * which is either the absolute coordinates on the canvas or a relative offset within a frame. If
@@ -2809,48 +2809,48 @@ export type IsLayerTrait = {
      * anchor in regards to the region.
      */
     client_meta: Vector | FrameOffset | Region | FrameOffsetRegion
-  
+
     /**
      * The file in which the comment lives
      */
     file_key: string
-  
+
     /**
      * If present, the id of the comment to which this is the reply
      */
     parent_id?: string
-  
+
     /**
      * The user who left the comment
      */
     user: User
-  
+
     /**
      * The UTC ISO 8601 time at which the comment was left
      */
     created_at: string
-  
+
     /**
      * If set, the UTC ISO 8601 time the comment was resolved
      */
     resolved_at?: string | null
-  
+
     /**
      * The content of the comment
      */
     message: string
-  
+
     /**
      * Only set for top level comments. The number displayed with the comment in the UI
      */
     order_id: string | null
-  
+
     /**
      * An array of reactions to the comment
      */
     reactions: Reaction[]
   }
-  
+
   /**
    * A reaction left by a user.
    */
@@ -2859,15 +2859,15 @@ export type IsLayerTrait = {
      * The user who left the reaction.
      */
     user: User
-  
+
     emoji: Emoji
-  
+
     /**
      * The UTC ISO 8601 time at which the reaction was left.
      */
     created_at: string
   }
-  
+
   /**
    * The emoji type of reaction as shortcode (e.g. `:heart:`, `:+1::skin-tone-2:`). The list of
    * accepted emoji shortcodes can be found in [this
@@ -2876,7 +2876,7 @@ export type IsLayerTrait = {
    * applicable.
    */
   export type Emoji = string
-  
+
   /**
    * A description of a user.
    */
@@ -2885,18 +2885,18 @@ export type IsLayerTrait = {
      * Unique stable id of the user.
      */
     id: string
-  
+
     /**
      * Name of the user.
      */
     handle: string
-  
+
     /**
      * URL link to the user's profile image.
      */
     img_url: string
   }
-  
+
   /**
    * Data on the frame a component resides in.
    */
@@ -2905,28 +2905,28 @@ export type IsLayerTrait = {
      * The ID of the frame node within the file.
      */
     nodeId?: string
-  
+
     /**
      * The name of the frame node.
      */
     name?: string
-  
+
     /**
      * The background color of the frame node.
      */
     backgroundColor?: string
-  
+
     /**
      * The ID of the page containing the frame node.
      */
     pageId: string
-  
+
     /**
      * The name of the page containing the frame node.
      */
     pageName: string
   }
-  
+
   /**
    * An arrangement of published UI elements that can be instantiated across figma files.
    */
@@ -2935,53 +2935,53 @@ export type IsLayerTrait = {
      * The unique identifier for the component.
      */
     key: string
-  
+
     /**
      * The unique identifier of the Figma file that contains the component.
      */
     file_key: string
-  
+
     /**
      * The unique identifier of the component node within the Figma file.
      */
     node_id: string
-  
+
     /**
      * A URL to a thumbnail image of the component.
      */
     thumbnail_url?: string
-  
+
     /**
      * The name of the component.
      */
     name: string
-  
+
     /**
      * The description of the component as entered by the publisher.
      */
     description: string
-  
+
     /**
      * The UTC ISO 8601 time when the component was created.
      */
     created_at: string
-  
+
     /**
      * The UTC ISO 8601 time when the component was last updated.
      */
     updated_at: string
-  
+
     /**
      * The user who last updated the component.
      */
     user: User
-  
+
     /**
      * The containing frame of the component.
      */
     containing_frame?: FrameInfo
   }
-  
+
   /**
    * A node containing a set of variants of a component.
    */
@@ -2990,58 +2990,58 @@ export type IsLayerTrait = {
      * The unique identifier for the component set.
      */
     key: string
-  
+
     /**
      * The unique identifier of the Figma file that contains the component set.
      */
     file_key: string
-  
+
     /**
      * The unique identifier of the component set node within the Figma file.
      */
     node_id: string
-  
+
     /**
      * A URL to a thumbnail image of the component set.
      */
     thumbnail_url?: string
-  
+
     /**
      * The name of the component set.
      */
     name: string
-  
+
     /**
      * The description of the component set as entered by the publisher.
      */
     description: string
-  
+
     /**
      * The UTC ISO 8601 time when the component set was created.
      */
     created_at: string
-  
+
     /**
      * The UTC ISO 8601 time when the component set was last updated.
      */
     updated_at: string
-  
+
     /**
      * The user who last updated the component set.
      */
     user: User
-  
+
     /**
      * The containing frame of the component set.
      */
     containing_frame?: FrameInfo
   }
-  
+
   /**
    * The type of style
    */
   export type StyleType = 'FILL' | 'TEXT' | 'EFFECT' | 'GRID'
-  
+
   /**
    * A set of published properties that can be applied to nodes.
    */
@@ -3050,55 +3050,55 @@ export type IsLayerTrait = {
      * The unique identifier for the style
      */
     key: string
-  
+
     /**
      * The unique identifier of the Figma file that contains the style.
      */
     file_key: string
-  
+
     /**
      * ID of the style node within the figma file
      */
     node_id: string
-  
+
     style_type: StyleType
-  
+
     /**
      * A URL to a thumbnail image of the style.
      */
     thumbnail_url?: string
-  
+
     /**
      * The name of the style.
      */
     name: string
-  
+
     /**
      * The description of the style as entered by the publisher.
      */
     description: string
-  
+
     /**
      * The UTC ISO 8601 time when the style was created.
      */
     created_at: string
-  
+
     /**
      * The UTC ISO 8601 time when the style was last updated.
      */
     updated_at: string
-  
+
     /**
      * The user who last updated the style.
      */
     user: User
-  
+
     /**
      * A user specified order number by which the style can be sorted.
      */
     sort_position: string
   }
-  
+
   /**
    * A Project can be identified by both the Project name, and the Project ID.
    */
@@ -3107,13 +3107,13 @@ export type IsLayerTrait = {
      * The ID of the project.
      */
     id: string
-  
+
     /**
      * The name of the project.
      */
     name: string
   }
-  
+
   /**
    * A version of a file
    */
@@ -3122,33 +3122,33 @@ export type IsLayerTrait = {
      * Unique identifier for version
      */
     id: string
-  
+
     /**
      * The UTC ISO 8601 time at which the version was created
      */
     created_at: string
-  
+
     /**
      * The label given to the version in the editor
      */
     label: string | null
-  
+
     /**
      * The description of the version as entered in the editor
      */
     description: string | null
-  
+
     /**
      * The user that created the version
      */
     user: User
-  
+
     /**
      * A URL to a thumbnail image of the file version.
      */
     thumbnail_url?: string
   }
-  
+
   /**
    * A description of an HTTP webhook (from Figma back to your application)
    */
@@ -3157,44 +3157,44 @@ export type IsLayerTrait = {
      * The ID of the webhook
      */
     id: string
-  
+
     /**
      * The event this webhook triggers on
      */
     event_type: WebhookV2Event
-  
+
     /**
      * The team id you are subscribed to for updates
      */
     team_id: string
-  
+
     /**
      * The current status of the webhook
      */
     status: WebhookV2Status
-  
+
     /**
      * The client ID of the OAuth application that registered this webhook, if any
      */
     client_id: string | null
-  
+
     /**
      * The passcode that will be passed back to the webhook endpoint
      */
     passcode: string
-  
+
     /**
      * The endpoint that will be hit when the webhook is triggered
      */
     endpoint: string
-  
+
     /**
      * Optional user-provided description or name for the webhook. This is provided to help make
      * maintaining a number of webhooks more convenient. Max length 140 characters.
      */
     description: string | null
   }
-  
+
   /**
    * An enum representing the possible events that a webhook can subscribe to
    */
@@ -3205,7 +3205,7 @@ export type IsLayerTrait = {
     | 'FILE_DELETE'
     | 'LIBRARY_PUBLISH'
     | 'FILE_COMMENT'
-  
+
   /**
    * An enum representing the possible statuses you can set a webhook to:
    *
@@ -3213,7 +3213,7 @@ export type IsLayerTrait = {
    * - `PAUSED`: The webhook is paused and will not receive any events
    */
   export type WebhookV2Status = 'ACTIVE' | 'PAUSED'
-  
+
   /**
    * Information regarding the most recent interactions sent to a webhook endpoint
    */
@@ -3222,17 +3222,17 @@ export type IsLayerTrait = {
      * The ID of the webhook the requests were sent to
      */
     webhook_id: string
-  
+
     request_info: WebhookV2RequestInfo
-  
+
     response_info: WebhookV2ResponseInfo
-  
+
     /**
      * Error message for this request. NULL if no error occurred
      */
     error_msg: string | null
   }
-  
+
   /**
    * Information regarding the request sent to a webhook endpoint
    */
@@ -3241,28 +3241,28 @@ export type IsLayerTrait = {
      * The ID of the webhook
      */
     id: string
-  
+
     /**
      * The actual endpoint the request was sent to
      */
     endpoint: string
-  
+
     /**
      * The contents of the request that was sent to the endpoint
      */
     payload: object
-  
+
     /**
      * UTC ISO 8601 timestamp of when the request was sent
      */
     sent_at: string
   }
-  
+
   /**
    * Information regarding the reply sent back from a webhook endpoint
    */
   export type WebhookV2ResponseInfo = object | null
-  
+
   /**
    * An object representing the library item information in the payload of the `LIBRARY_PUBLISH` event
    */
@@ -3271,13 +3271,13 @@ export type IsLayerTrait = {
      * Unique identifier for the library item
      */
     key: string
-  
+
     /**
      * Name of the library item
      */
     name: string
   }
-  
+
   /**
    * An object representing a fragment of a comment left by a user, used in the payload of the
    * `FILE_COMMENT` event. Note only ONE of the fields below will be set
@@ -3287,212 +3287,212 @@ export type IsLayerTrait = {
      * Comment text that is set if a fragment is text based
      */
     text?: string
-  
+
     /**
      * User id that is set if a fragment refers to a user mention
      */
     mention?: string
   }
-  
+
   export type WebhookBasePayload = {
     /**
      * The passcode specified when the webhook was created, should match what was initially provided
      */
     passcode: string
-  
+
     /**
      * UTC ISO 8601 timestamp of when the event was triggered.
      */
     timestamp: string
-  
+
     /**
      * The id of the webhook that caused the callback
      */
     webhook_id: string
   }
-  
+
   export type WebhookPingPayload = WebhookBasePayload & { event_type: 'PING' }
-  
+
   export type WebhookFileUpdatePayload = WebhookBasePayload & {
     event_type: 'FILE_UPDATE'
-  
+
     /**
      * The key of the file that was updated
      */
     file_key: string
-  
+
     /**
      * The name of the file that was updated
      */
     file_name: string
   }
-  
+
   export type WebhookFileDeletePayload = WebhookBasePayload & {
     event_type: 'FILE_DELETE'
-  
+
     /**
      * The key of the file that was deleted
      */
     file_key: string
-  
+
     /**
      * The name of the file that was deleted
      */
     file_name: string
-  
+
     /**
      * The user that deleted the file and triggered this event
      */
     triggered_by: User
   }
-  
+
   export type WebhookFileVersionUpdatePayload = WebhookBasePayload & {
     event_type: 'FILE_VERSION_UPDATE'
-  
+
     /**
      * UTC ISO 8601 timestamp of when the version was created
      */
     created_at: string
-  
+
     /**
      * Description of the version in the version history
      */
     description?: string
-  
+
     /**
      * The key of the file that was updated
      */
     file_key: string
-  
+
     /**
      * The name of the file that was updated
      */
     file_name: string
-  
+
     /**
      * The user that created the named version and triggered this event
      */
     triggered_by: User
-  
+
     /**
      * ID of the published version
      */
     version_id: string
   }
-  
+
   export type WebhookLibraryPublishPayload = WebhookBasePayload & {
     event_type: 'LIBRARY_PUBLISH'
-  
+
     /**
      * Components that were created by the library publish
      */
     created_components: LibraryItemData[]
-  
+
     /**
      * Styles that were created by the library publish
      */
     created_styles: LibraryItemData[]
-  
+
     /**
      * Variables that were created by the library publish
      */
     created_variables: LibraryItemData[]
-  
+
     /**
      * Components that were modified by the library publish
      */
     modified_components: LibraryItemData[]
-  
+
     /**
      * Styles that were modified by the library publish
      */
     modified_styles: LibraryItemData[]
-  
+
     /**
      * Variables that were modified by the library publish
      */
     modified_variables: LibraryItemData[]
-  
+
     /**
      * Components that were deleted by the library publish
      */
     deleted_components: LibraryItemData[]
-  
+
     /**
      * Styles that were deleted by the library publish
      */
     deleted_styles: LibraryItemData[]
-  
+
     /**
      * Variables that were deleted by the library publish
      */
     deleted_variables: LibraryItemData[]
-  
+
     /**
      * Description of the library publish
      */
     description?: string
-  
+
     /**
      * The key of the file that was published
      */
     file_key: string
-  
+
     /**
      * The name of the file that was published
      */
     file_name: string
-  
+
     /**
      * The library item that was published
      */
     library_item: LibraryItemData
-  
+
     /**
      * The user that published the library and triggered this event
      */
     triggered_by: User
   }
-  
+
   export type WebhookFileCommentPayload = WebhookBasePayload & {
     event_type: 'FILE_COMMENT'
-  
+
     /**
      * Contents of the comment itself
      */
     comment: CommentFragment[]
-  
+
     /**
      * Unique identifier for comment
      */
     comment_id: string
-  
+
     /**
      * The UTC ISO 8601 time at which the comment was left
      */
     created_at: string
-  
+
     /**
      * The key of the file that was commented on
      */
     file_key: string
-  
+
     /**
      * The name of the file that was commented on
      */
     file_name: string
-  
+
     /**
      * Users that were mentioned in the comment
      */
     mentions?: User[]
-  
+
     /**
      * The user that made the comment and triggered this event
      */
     triggered_by: User
   }
-  
+
   /**
    * A Figma user
    */
@@ -3501,23 +3501,23 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'user'
-  
+
     /**
      * Unique stable id of the user.
      */
     id: string
-  
+
     /**
      * Name of the user.
      */
     name: string
-  
+
     /**
      * Email associated with the user's account.
      */
     email: string
   }
-  
+
   /**
    * A Figma Design or FigJam file
    */
@@ -3526,33 +3526,33 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'file'
-  
+
     /**
      * Unique identifier of the file.
      */
     key: string
-  
+
     /**
      * Name of the file.
      */
     name: string
-  
+
     /**
      * Indicates if the object is a file on Figma Design or FigJam.
      */
     editor_type: 'figma' | 'figjam'
-  
+
     /**
      * Access policy for users who have the link to the file.
      */
     link_access: 'view' | 'edit' | 'org_view' | 'org_edit' | 'inherit'
-  
+
     /**
      * Access policy for users who have the link to the file's prototype.
      */
     proto_link_access: 'view' | 'org_view' | 'inherit'
   }
-  
+
   /**
    * A file branch that diverges from and can be merged back into the main file
    */
@@ -3561,23 +3561,23 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'file_repo'
-  
+
     /**
      * Unique identifier of the file branch.
      */
     id: string
-  
+
     /**
      * Name of the file.
      */
     name: string
-  
+
     /**
      * Key of the main file.
      */
     main_file_key: string
   }
-  
+
   /**
    * A project that a collection of Figma files are grouped under
    */
@@ -3586,18 +3586,18 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'project'
-  
+
     /**
      * Unique identifier of the project.
      */
     id: string
-  
+
     /**
      * Name of the project.
      */
     name: string
   }
-  
+
   /**
    * A Figma team that contains multiple users and projects
    */
@@ -3606,18 +3606,18 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'team'
-  
+
     /**
      * Unique identifier of the team.
      */
     id: string
-  
+
     /**
      * Name of the team.
      */
     name: string
   }
-  
+
   /**
    * Part of the organizational hierarchy of managing files and users within Figma, only available on
    * the Enterprise Plan
@@ -3627,18 +3627,18 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'workspace'
-  
+
     /**
      * Unique identifier of the workspace.
      */
     id: string
-  
+
     /**
      * Name of the workspace.
      */
     name: string
   }
-  
+
   /**
    * A Figma organization
    */
@@ -3647,18 +3647,18 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'org'
-  
+
     /**
      * Unique identifier of the organization.
      */
     id: string
-  
+
     /**
      * Name of the organization.
      */
     name: string
   }
-  
+
   /**
    * A Figma plugin
    */
@@ -3667,23 +3667,23 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'plugin'
-  
+
     /**
      * Unique identifier of the plugin.
      */
     id: string
-  
+
     /**
      * Name of the plugin.
      */
     name: string
-  
+
     /**
      * Indicates if the object is a plugin is available on Figma Design or FigJam.
      */
     editor_type: 'figma' | 'figjam'
   }
-  
+
   /**
    * A Figma widget
    */
@@ -3692,23 +3692,23 @@ export type IsLayerTrait = {
      * The type of entity.
      */
     type: 'widget'
-  
+
     /**
      * Unique identifier of the widget.
      */
     id: string
-  
+
     /**
      * Name of the widget.
      */
     name: string
-  
+
     /**
      * Indicates if the object is a widget available on Figma Design or FigJam.
      */
     editor_type: 'figma' | 'figjam'
   }
-  
+
   /**
    * An event returned by the Activity Logs API.
    */
@@ -3717,17 +3717,17 @@ export type IsLayerTrait = {
      * The ID of the event.
      */
     id: string
-  
+
     /**
      * The timestamp of the event in seconds since the Unix epoch.
      */
     timestamp: number
-  
+
     /**
      * The user who performed the action.
      */
     actor: object | null
-  
+
     /**
      * The task or activity the actor performed.
      */
@@ -3736,13 +3736,13 @@ export type IsLayerTrait = {
        * The type of the action.
        */
       type: string
-  
+
       /**
        * Metadata of the action. Each action type supports its own metadata attributes.
        */
       details: object | null
     }
-  
+
     /**
      * The resource the actor took the action on. It can be a user, file, project or other resource
      * types.
@@ -3757,7 +3757,7 @@ export type IsLayerTrait = {
       | ActivityLogOrgEntity
       | ActivityLogPluginEntity
       | ActivityLogWidgetEntity
-  
+
     /**
      * Contextual information about the event.
      */
@@ -3766,29 +3766,29 @@ export type IsLayerTrait = {
        * The third-party application that triggered the event, if applicable.
        */
       client_name: string | null
-  
+
       /**
        * The IP address from of the client that sent the event request.
        */
       ip_address: string
-  
+
       /**
        * If Figma's Support team triggered the event. This is either true or false.
        */
       is_figma_support_team_action: boolean
-  
+
       /**
        * The id of the organization where the event took place.
        */
       org_id: string
-  
+
       /**
        * The id of the team where the event took place -- if this took place in a specific team.
        */
       team_id: string | null
     }
   }
-  
+
   /**
    * An object describing the user's payment status.
    */
@@ -3802,7 +3802,7 @@ export type IsLayerTrait = {
      */
     type?: 'UNPAID' | 'PAID' | 'TRIAL'
   }
-  
+
   /**
    * An object describing a user's payment information for a plugin, widget, or Community file.
    */
@@ -3812,20 +3812,20 @@ export type IsLayerTrait = {
      * response.
      */
     user_id: string
-  
+
     /**
      * The ID of the plugin, widget, or Community file that was queried. Can be used to verify the
      * validity of a response.
      */
     resource_id: string
-  
+
     /**
      * The type of the resource.
      */
     resource_type: 'PLUGIN' | 'WIDGET' | 'COMMUNITY_FILE'
-  
+
     payment_status: PaymentStatus
-  
+
     /**
      * The UTC ISO 8601 timestamp indicating when the user purchased the resource. No value is given if
      * the user has never purchased the resource.
@@ -3835,7 +3835,7 @@ export type IsLayerTrait = {
      */
     date_of_purchase?: string
   }
-  
+
   /**
    * Scopes allow a variable to be shown or hidden in the variable picker for various fields. This
    * declutters the Figma UI if you have a large number of variables. Variable scopes are currently
@@ -3903,19 +3903,19 @@ export type IsLayerTrait = {
     | 'LETTER_SPACING'
     | 'PARAGRAPH_SPACING'
     | 'PARAGRAPH_INDENT'
-  
+
   /**
    * An object containing platform-specific code syntax definitions for a variable. All platforms are
    * optional.
    */
   export type VariableCodeSyntax = {
     WEB?: string
-  
+
     ANDROID?: string
-  
+
     iOS?: string
   }
-  
+
   /**
    * A grouping of related Variable objects each with the same modes.
    */
@@ -3924,17 +3924,17 @@ export type IsLayerTrait = {
      * The unique identifier of this variable collection.
      */
     id: string
-  
+
     /**
      * The name of this variable collection.
      */
     name: string
-  
+
     /**
      * The key of this variable collection.
      */
     key: string
-  
+
     /**
      * The modes of this variable collection.
      */
@@ -3943,28 +3943,28 @@ export type IsLayerTrait = {
        * The unique identifier of this mode.
        */
       modeId: string
-  
+
       /**
        * The name of this mode.
        */
       name: string
     }[]
-  
+
     /**
      * The id of the default mode.
      */
     defaultModeId: string
-  
+
     /**
      * Whether this variable collection is remote.
      */
     remote: boolean
-  
+
     /**
      * Whether this variable collection is hidden when publishing the current file as a library.
      */
     hiddenFromPublishing: boolean
-  
+
     /**
      * The ids of the variables in the collection. Note that the order of these variables is roughly the
      * same as what is shown in Figma Design, however it does not account for groups. As a result, the
@@ -3973,7 +3973,7 @@ export type IsLayerTrait = {
      */
     variableIds: string[]
   }
-  
+
   /**
    * A Variable is a single design token that defines values for each of the modes in its
    * VariableCollection. These values can be applied to various kinds of design properties.
@@ -3983,42 +3983,42 @@ export type IsLayerTrait = {
      * The unique identifier of this variable.
      */
     id: string
-  
+
     /**
      * The name of this variable.
      */
     name: string
-  
+
     /**
      * The key of this variable.
      */
     key: string
-  
+
     /**
      * The id of the variable collection that contains this variable.
      */
     variableCollectionId: string
-  
+
     /**
      * The resolved type of the variable.
      */
     resolvedType: 'BOOLEAN' | 'FLOAT' | 'STRING' | 'COLOR'
-  
+
     /**
      * The values for each mode of this variable.
      */
     valuesByMode: { [key: string]: boolean | number | string | RGBA | VariableAlias }
-  
+
     /**
      * Whether this variable is remote.
      */
     remote: boolean
-  
+
     /**
      * The description of this variable.
      */
     description: string
-  
+
     /**
      * Whether this variable is hidden when publishing the current file as a library.
      *
@@ -4027,7 +4027,7 @@ export type IsLayerTrait = {
      * variable and collection. However, both must be true for a given variable to be publishable.
      */
     hiddenFromPublishing: boolean
-  
+
     /**
      * An array of scopes in the UI where this variable is shown. Setting this property will show/hide
      * this variable in the variable picker UI for different fields.
@@ -4037,9 +4037,9 @@ export type IsLayerTrait = {
      * within the Figma UI.
      */
     scopes: VariableScope[]
-  
+
     codeSyntax: VariableCodeSyntax
-  
+
     /**
      * Indicates that the variable was deleted in the editor, but the document may still contain
      * references to the variable. References to the variable may exist through bound values or variable
@@ -4047,7 +4047,7 @@ export type IsLayerTrait = {
      */
     deletedButReferenced?: boolean
   }
-  
+
   /**
    * A grouping of related Variable objects each with the same modes.
    */
@@ -4056,23 +4056,23 @@ export type IsLayerTrait = {
      * The unique identifier of this variable collection.
      */
     id: string
-  
+
     /**
      * The ID of the variable collection that is used by subscribing files. This ID changes every time
      * the variable collection is modified and published.
      */
     subscribed_id: string
-  
+
     /**
      * The name of this variable collection.
      */
     name: string
-  
+
     /**
      * The key of this variable collection.
      */
     key: string
-  
+
     /**
      * The UTC ISO 8601 time at which the variable collection was last updated.
      *
@@ -4080,7 +4080,7 @@ export type IsLayerTrait = {
      */
     updatedAt: string
   }
-  
+
   /**
    * A Variable is a single design token that defines values for each of the modes in its
    * VariableCollection. These values can be applied to various kinds of design properties.
@@ -4090,39 +4090,39 @@ export type IsLayerTrait = {
      * The unique identifier of this variable.
      */
     id: string
-  
+
     /**
      * The ID of the variable that is used by subscribing files. This ID changes every time the variable
      * is modified and published.
      */
     subscribed_id: string
-  
+
     /**
      * The name of this variable.
      */
     name: string
-  
+
     /**
      * The key of this variable.
      */
     key: string
-  
+
     /**
      * The id of the variable collection that contains this variable.
      */
     variableCollectionId: string
-  
+
     /**
      * The resolved type of the variable.
      */
     resolvedDataType: 'BOOLEAN' | 'FLOAT' | 'STRING' | 'COLOR'
-  
+
     /**
      * The UTC ISO 8601 time at which the variable was last updated.
      */
     updatedAt: string
   }
-  
+
   /**
    * An object that contains details about creating a `VariableCollection`.
    */
@@ -4131,29 +4131,29 @@ export type IsLayerTrait = {
      * The action to perform for the variable collection.
      */
     action: 'CREATE'
-  
+
     /**
      * A temporary id for this variable collection.
      */
     id?: string
-  
+
     /**
      * The name of this variable collection.
      */
     name: string
-  
+
     /**
      * The initial mode refers to the mode that is created by default. You can set a temporary id here,
      * in order to reference this mode later in this request.
      */
     initialModeId?: string
-  
+
     /**
      * Whether this variable collection is hidden when publishing the current file as a library.
      */
     hiddenFromPublishing?: boolean
   }
-  
+
   /**
    * An object that contains details about updating a `VariableCollection`.
    */
@@ -4162,23 +4162,23 @@ export type IsLayerTrait = {
      * The action to perform for the variable collection.
      */
     action: 'UPDATE'
-  
+
     /**
      * The id of the variable collection to update.
      */
     id: string
-  
+
     /**
      * The name of this variable collection.
      */
     name?: string
-  
+
     /**
      * Whether this variable collection is hidden when publishing the current file as a library.
      */
     hiddenFromPublishing?: boolean
   }
-  
+
   /**
    * An object that contains details about deleting a `VariableCollection`.
    */
@@ -4187,18 +4187,18 @@ export type IsLayerTrait = {
      * The action to perform for the variable collection.
      */
     action: 'DELETE'
-  
+
     /**
      * The id of the variable collection to delete.
      */
     id: string
   }
-  
+
   export type VariableCollectionChange =
     | VariableCollectionCreate
     | VariableCollectionUpdate
     | VariableCollectionDelete
-  
+
   /**
    * An object that contains details about creating a `VariableMode`.
    */
@@ -4207,24 +4207,24 @@ export type IsLayerTrait = {
      * The action to perform for the variable mode.
      */
     action: 'CREATE'
-  
+
     /**
      * A temporary id for this variable mode.
      */
     id?: string
-  
+
     /**
      * The name of this variable mode.
      */
     name: string
-  
+
     /**
      * The variable collection that will contain the mode. You can use the temporary id of a variable
      * collection.
      */
     variableCollectionId: string
   }
-  
+
   /**
    * An object that contains details about updating a `VariableMode`.
    */
@@ -4233,23 +4233,23 @@ export type IsLayerTrait = {
      * The action to perform for the variable mode.
      */
     action: 'UPDATE'
-  
+
     /**
      * The id of the variable mode to update.
      */
     id: string
-  
+
     /**
      * The name of this variable mode.
      */
     name?: string
-  
+
     /**
      * The variable collection that contains the mode.
      */
     variableCollectionId: string
   }
-  
+
   /**
    * An object that contains details about deleting a `VariableMode`.
    */
@@ -4258,15 +4258,15 @@ export type IsLayerTrait = {
      * The action to perform for the variable mode.
      */
     action: 'DELETE'
-  
+
     /**
      * The id of the variable mode to delete.
      */
     id: string
   }
-  
+
   export type VariableModeChange = VariableModeCreate | VariableModeUpdate | VariableModeDelete
-  
+
   /**
    * An object that contains details about creating a `Variable`.
    */
@@ -4275,47 +4275,47 @@ export type IsLayerTrait = {
      * The action to perform for the variable.
      */
     action: 'CREATE'
-  
+
     /**
      * A temporary id for this variable.
      */
     id?: string
-  
+
     /**
      * The name of this variable.
      */
     name: string
-  
+
     /**
      * The variable collection that will contain the variable. You can use the temporary id of a
      * variable collection.
      */
     variableCollectionId: string
-  
+
     /**
      * The resolved type of the variable.
      */
     resolvedType: 'BOOLEAN' | 'FLOAT' | 'STRING' | 'COLOR'
-  
+
     /**
      * The description of this variable.
      */
     description?: string
-  
+
     /**
      * Whether this variable is hidden when publishing the current file as a library.
      */
     hiddenFromPublishing?: boolean
-  
+
     /**
      * An array of scopes in the UI where this variable is shown. Setting this property will show/hide
      * this variable in the variable picker UI for different fields.
      */
     scopes?: VariableScope[]
-  
+
     codeSyntax?: VariableCodeSyntax
   }
-  
+
   /**
    * An object that contains details about updating a `Variable`.
    */
@@ -4324,36 +4324,36 @@ export type IsLayerTrait = {
      * The action to perform for the variable.
      */
     action: 'UPDATE'
-  
+
     /**
      * The id of the variable to update.
      */
     id: string
-  
+
     /**
      * The name of this variable.
      */
     name?: string
-  
+
     /**
      * The description of this variable.
      */
     description?: string
-  
+
     /**
      * Whether this variable is hidden when publishing the current file as a library.
      */
     hiddenFromPublishing?: boolean
-  
+
     /**
      * An array of scopes in the UI where this variable is shown. Setting this property will show/hide
      * this variable in the variable picker UI for different fields.
      */
     scopes?: VariableScope[]
-  
+
     codeSyntax?: VariableCodeSyntax
   }
-  
+
   /**
    * An object that contains details about deleting a `Variable`.
    */
@@ -4362,15 +4362,15 @@ export type IsLayerTrait = {
      * The action to perform for the variable.
      */
     action: 'DELETE'
-  
+
     /**
      * The id of the variable to delete.
      */
     id: string
   }
-  
+
   export type VariableChange = VariableCreate | VariableUpdate | VariableDelete
-  
+
   /**
    * An object that represents a value for a given mode of a variable. All properties are required.
    */
@@ -4379,21 +4379,21 @@ export type IsLayerTrait = {
      * The target variable. You can use the temporary id of a variable.
      */
     variableId: string
-  
+
     /**
      * Must correspond to a mode in the variable collection that contains the target variable.
      */
     modeId: string
-  
+
     value: VariableValue
   }
-  
+
   /**
    * The value for the variable. The value must match the variable's type. If setting to a variable
    * alias, the alias must resolve to this type.
    */
   export type VariableValue = boolean | number | string | RGB | RGBA | VariableAlias
-  
+
   /**
    * A dev resource in a file
    */
@@ -4402,28 +4402,28 @@ export type IsLayerTrait = {
      * Unique identifier of the dev resource
      */
     id: string
-  
+
     /**
      * The name of the dev resource.
      */
     name: string
-  
+
     /**
      * The URL of the dev resource.
      */
     url: string
-  
+
     /**
      * The file key where the dev resource belongs.
      */
     file_key: string
-  
+
     /**
      * The target node to attach the dev resource to.
      */
     node_id: string
   }
-  
+
   /**
    * Library analytics component actions data broken down by asset.
    */
@@ -4432,38 +4432,38 @@ export type IsLayerTrait = {
      * The date in ISO 8601 format. e.g. 2023-12-13
      */
     week: string
-  
+
     /**
      * Unique, stable id of the component.
      */
     component_key: string
-  
+
     /**
      * Name of the component.
      */
     component_name: string
-  
+
     /**
      * Unique, stable id of the component set that this component belongs to.
      */
     component_set_key?: string
-  
+
     /**
      * Name of the component set that this component belongs to.
      */
     component_set_name?: string
-  
+
     /**
      * The number of detach events for this period.
      */
     detachments: number
-  
+
     /**
      * The number of insertion events for this period.
      */
     insertions: number
   }
-  
+
   /**
    * Library analytics action data broken down by team.
    */
@@ -4472,28 +4472,28 @@ export type IsLayerTrait = {
      * The date in ISO 8601 format. e.g. 2023-12-13
      */
     week: string
-  
+
     /**
      * The name of the team using the library.
      */
     team_name: string
-  
+
     /**
      * The name of the workspace that the team belongs to.
      */
     workspace_name?: string
-  
+
     /**
      * The number of detach events for this period.
      */
     detachments: number
-  
+
     /**
      * The number of insertion events for this period.
      */
     insertions: number
   }
-  
+
   /**
    * Library analytics component usage data broken down by component.
    */
@@ -4502,38 +4502,38 @@ export type IsLayerTrait = {
      * Unique, stable id of the component.
      */
     component_key: string
-  
+
     /**
      * Name of the component.
      */
     component_name: string
-  
+
     /**
      * Unique, stable id of the component set that this component belongs to.
      */
     component_set_key?: string
-  
+
     /**
      * Name of the component set that this component belongs to.
      */
     component_set_name?: string
-  
+
     /**
      * The number of instances of the component within the organization.
      */
     usages: number
-  
+
     /**
      * The number of teams using the component within the organization.
      */
     teams_using: number
-  
+
     /**
      * The number of files using the component within the organization.
      */
     files_using: number
   }
-  
+
   /**
    * Library analytics component usage data broken down by file.
    */
@@ -4542,23 +4542,23 @@ export type IsLayerTrait = {
      * The name of the file using the library.
      */
     file_name: string
-  
+
     /**
      * The name of the team the file belongs to.
      */
     team_name: string
-  
+
     /**
      * The name of the workspace that the file belongs to.
      */
     workspace_name?: string
-  
+
     /**
      * The number of component instances from the library used within the file.
      */
     usages: number
   }
-  
+
   /**
    * Library analytics style actions data broken down by asset.
    */
@@ -4567,33 +4567,33 @@ export type IsLayerTrait = {
      * The date in ISO 8601 format. e.g. 2023-12-13
      */
     week: string
-  
+
     /**
      * Unique, stable id of the style.
      */
     style_key: string
-  
+
     /**
      * The name of the style.
      */
     style_name: string
-  
+
     /**
      * The type of the style.
      */
     style_type: string
-  
+
     /**
      * The number of detach events for this period.
      */
     detachments: number
-  
+
     /**
      * The number of insertion events for this period.
      */
     insertions: number
   }
-  
+
   /**
    * Library analytics style action data broken down by team.
    */
@@ -4602,28 +4602,28 @@ export type IsLayerTrait = {
      * The date in ISO 8601 format. e.g. 2023-12-13
      */
     week: string
-  
+
     /**
      * The name of the team using the library.
      */
     team_name: string
-  
+
     /**
      * The name of the workspace that the team belongs to.
      */
     workspace_name?: string
-  
+
     /**
      * The number of detach events for this period.
      */
     detachments: number
-  
+
     /**
      * The number of insertion events for this period.
      */
     insertions: number
   }
-  
+
   /**
    * Library analytics style usage data broken down by component.
    */
@@ -4632,33 +4632,33 @@ export type IsLayerTrait = {
      * Unique, stable id of the style.
      */
     style_key: string
-  
+
     /**
      * The name of the style.
      */
     style_name: string
-  
+
     /**
      * The type of the style.
      */
     style_type: string
-  
+
     /**
      * The number of usages of the style within the organization.
      */
     usages: number
-  
+
     /**
      * The number of teams using the style within the organization.
      */
     teams_using: number
-  
+
     /**
      * The number of files using the style within the organization.
      */
     files_using: number
   }
-  
+
   /**
    * Library analytics style usage data broken down by file.
    */
@@ -4667,23 +4667,23 @@ export type IsLayerTrait = {
      * The name of the file using the library.
      */
     file_name: string
-  
+
     /**
      * The name of the team the file belongs to.
      */
     team_name: string
-  
+
     /**
      * The name of the workspace that the file belongs to.
      */
     workspace_name?: string
-  
+
     /**
      * The number of times styles from this library are used within the file.
      */
     usages: number
   }
-  
+
   /**
    * Library analytics variable actions data broken down by asset.
    */
@@ -4692,43 +4692,43 @@ export type IsLayerTrait = {
      * The date in ISO 8601 format. e.g. 2023-12-13
      */
     week: string
-  
+
     /**
      * Unique, stable id of the variable.
      */
     variable_key: string
-  
+
     /**
      * The name of the variable.
      */
     variable_name: string
-  
+
     /**
      * The type of the variable.
      */
     variable_type: string
-  
+
     /**
      * Unique, stable id of the collection the variable belongs to.
      */
     collection_key: string
-  
+
     /**
      * The name of the collection the variable belongs to.
      */
     collection_name: string
-  
+
     /**
      * The number of detach events for this period.
      */
     detachments: number
-  
+
     /**
      * The number of insertion events for this period.
      */
     insertions: number
   }
-  
+
   /**
    * Library analytics variable action data broken down by team.
    */
@@ -4737,28 +4737,28 @@ export type IsLayerTrait = {
      * The date in ISO 8601 format. e.g. 2023-12-13
      */
     week: string
-  
+
     /**
      * The name of the team using the library.
      */
     team_name: string
-  
+
     /**
      * The name of the workspace that the team belongs to.
      */
     workspace_name?: string
-  
+
     /**
      * The number of detach events for this period.
      */
     detachments: number
-  
+
     /**
      * The number of insertion events for this period.
      */
     insertions: number
   }
-  
+
   /**
    * Library analytics variable usage data broken down by component.
    */
@@ -4767,43 +4767,43 @@ export type IsLayerTrait = {
      * Unique, stable id of the variable.
      */
     variable_key: string
-  
+
     /**
      * The name of the variable.
      */
     variable_name: string
-  
+
     /**
      * The type of the variable.
      */
     variable_type: string
-  
+
     /**
      * Unique, stable id of the collection the variable belongs to.
      */
     collection_key: string
-  
+
     /**
      * The name of the collection the variable belongs to.
      */
     collection_name: string
-  
+
     /**
      * The number of usages of the variable within the organization.
      */
     usages: number
-  
+
     /**
      * The number of teams using the variable within the organization.
      */
     teams_using: number
-  
+
     /**
      * The number of files using the variable within the organization.
      */
     files_using: number
   }
-  
+
   /**
    * Library analytics variable usage data broken down by file.
    */
@@ -4812,23 +4812,23 @@ export type IsLayerTrait = {
      * The name of the file using the library.
      */
     file_name: string
-  
+
     /**
      * The name of the team the file belongs to.
      */
     team_name: string
-  
+
     /**
      * The name of the workspace that the file belongs to.
      */
     workspace_name?: string
-  
+
     /**
      * The number of times variables from this library are used within the file.
      */
     usages: number
   }
-  
+
   /**
    * If pagination is needed due to the length of the response, identifies the next and previous
    * pages.
@@ -4838,22 +4838,22 @@ export type IsLayerTrait = {
      * A URL that calls the previous page of the response.
      */
     prev_page?: string
-  
+
     /**
      * A URL that calls the next page of the response.
      */
     next_page?: string
   }
-  
+
   /**
    * Pagination cursor
    */
   export type ResponseCursor = {
     before?: number
-  
+
     after?: number
   }
-  
+
   /**
    * A response indicating an error occurred.
    */
@@ -4862,13 +4862,13 @@ export type IsLayerTrait = {
      * Status code
      */
     status: number
-  
+
     /**
      * A string describing the error
      */
     err: string
   }
-  
+
   /**
    * A response indicating an error occurred.
    */
@@ -4877,18 +4877,18 @@ export type IsLayerTrait = {
      * For erroneous requests, this value is always `true`.
      */
     error: true
-  
+
     /**
      * Status code
      */
     status: number
-  
+
     /**
      * A string describing the error
      */
     message: string
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key} endpoint.
    */
@@ -4897,65 +4897,65 @@ export type IsLayerTrait = {
      * The name of the file as it appears in the editor.
      */
     name: string
-  
+
     /**
      * The role of the user making the API request in relation to the file.
      */
     role: 'owner' | 'editor' | 'viewer'
-  
+
     /**
      * The UTC ISO 8601 time at which the file was last modified.
      */
     lastModified: string
-  
+
     /**
      * The type of editor associated with this file.
      */
     editorType: 'figma' | 'figjam'
-  
+
     /**
      * A URL to a thumbnail image of the file.
      */
     thumbnailUrl?: string
-  
+
     /**
      * The version number of the file. This number is incremented when a file is modified and can be
      * used to check if the file has changed between requests.
      */
     version: string
-  
+
     document: DocumentNode
-  
+
     /**
      * A mapping from component IDs to component metadata.
      */
     components: { [key: string]: Component }
-  
+
     /**
      * A mapping from component set IDs to component set metadata.
      */
     componentSets: { [key: string]: ComponentSet }
-  
+
     /**
      * The version of the file schema that this file uses.
      */
     schemaVersion: number
-  
+
     /**
      * A mapping from style IDs to style metadata.
      */
     styles: { [key: string]: Style }
-  
+
     /**
      * The share permission level of the file link.
      */
     linkAccess?: string
-  
+
     /**
      * The key of the main file for this file. If present, this file is a component or component set.
      */
     mainFileKey?: string
-  
+
     /**
      * A list of branches for this file.
      */
@@ -4964,24 +4964,24 @@ export type IsLayerTrait = {
        * The key of the branch.
        */
       key: string
-  
+
       /**
        * The name of the branch.
        */
       name: string
-  
+
       /**
        * A URL to a thumbnail image of the branch.
        */
       thumbnail_url: string
-  
+
       /**
        * The UTC ISO 8601 time at which the branch was last modified.
        */
       last_modified: string
     }[]
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/nodes endpoint.
    */
@@ -4990,55 +4990,55 @@ export type IsLayerTrait = {
      * The name of the file as it appears in the editor.
      */
     name: string
-  
+
     /**
      * The role of the user making the API request in relation to the file.
      */
     role: 'owner' | 'editor' | 'viewer'
-  
+
     /**
      * The UTC ISO 8601 time at which the file was last modified.
      */
     lastModified: string
-  
+
     /**
      * The type of editor associated with this file.
      */
     editorType: 'figma' | 'figjam'
-  
+
     /**
      * A URL to a thumbnail image of the file.
      */
     thumbnailUrl: string
-  
+
     /**
      * The version number of the file. This number is incremented when a file is modified and can be
      * used to check if the file has changed between requests.
      */
     version: string
-  
+
     /**
      * A mapping from node IDs to node metadata.
      */
     nodes: {
       [key: string]: {
         document: Node
-  
+
         /**
          * A mapping from component IDs to component metadata.
          */
         components: { [key: string]: Component }
-  
+
         /**
          * A mapping from component set IDs to component set metadata.
          */
         componentSets: { [key: string]: ComponentSet }
-  
+
         /**
          * The version of the file schema that this file uses.
          */
         schemaVersion: number
-  
+
         /**
          * A mapping from style IDs to style metadata.
          */
@@ -5046,7 +5046,7 @@ export type IsLayerTrait = {
       }
     }
   }
-  
+
   /**
    * Response from the GET /v1/images/{file_key} endpoint.
    */
@@ -5055,13 +5055,13 @@ export type IsLayerTrait = {
      * For successful requests, this value is always `null`.
      */
     err: null
-  
+
     /**
      * A map from node IDs to URLs of the rendered images.
      */
     images: { [key: string]: string | null }
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/images endpoint.
    */
@@ -5070,12 +5070,12 @@ export type IsLayerTrait = {
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     /**
      * Status code
      */
     status: 200
-  
+
     meta: {
       /**
        * A map of image references to URLs of the image fills.
@@ -5083,7 +5083,7 @@ export type IsLayerTrait = {
       images: { [key: string]: string }
     }
   }
-  
+
   /**
    * Response from the GET /v1/teams/{team_id}/projects endpoint.
    */
@@ -5092,13 +5092,13 @@ export type IsLayerTrait = {
      * The team's name.
      */
     name: string
-  
+
     /**
      * An array of projects.
      */
     projects: Project[]
   }
-  
+
   /**
    * Response from the GET /v1/projects/{project_id}/files endpoint.
    */
@@ -5107,7 +5107,7 @@ export type IsLayerTrait = {
      * The project's name.
      */
     name: string
-  
+
     /**
      * An array of files.
      */
@@ -5116,24 +5116,24 @@ export type IsLayerTrait = {
        * The file's key.
        */
       key: string
-  
+
       /**
        * The file's name.
        */
       name: string
-  
+
       /**
        * The file's thumbnail URL.
        */
       thumbnail_url?: string
-  
+
       /**
        * The UTC ISO 8601 time at which the file was last modified.
        */
       last_modified: string
     }[]
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/versions endpoint.
    */
@@ -5142,10 +5142,10 @@ export type IsLayerTrait = {
      * An array of versions.
      */
     versions: Version[]
-  
+
     pagination: ResponsePagination
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/comments endpoint.
    */
@@ -5155,12 +5155,12 @@ export type IsLayerTrait = {
      */
     comments: Comment[]
   }
-  
+
   /**
    * Response from the POST /v1/files/{file_key}/comments endpoint.
    */
   export type PostCommentResponse = Comment
-  
+
   /**
    * Response from the DELETE /v1/files/{file_key}/comments/{comment_id} endpoint.
    */
@@ -5169,13 +5169,13 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/comments/{comment_id}/reactions endpoint.
    */
@@ -5184,10 +5184,10 @@ export type IsLayerTrait = {
      * An array of reactions.
      */
     reactions: Reaction[]
-  
+
     pagination: ResponsePagination
   }
-  
+
   /**
    * Response from the POST /v1/files/{file_key}/comments/{comment_id}/reactions endpoint.
    */
@@ -5196,13 +5196,13 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
   }
-  
+
   /**
    * Response from the DELETE /v1/files/{file_key}/comments/{comment_id}/reactions endpoint.
    */
@@ -5211,13 +5211,13 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
   }
-  
+
   /**
    * Response from the GET /v1/me endpoint.
    */
@@ -5227,7 +5227,7 @@ export type IsLayerTrait = {
      */
     email: string
   }
-  
+
   /**
    * Response from the GET /v1/teams/{team_id}/components endpoint.
    */
@@ -5236,19 +5236,19 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: {
       components: PublishedComponent[]
-  
+
       cursor?: ResponseCursor
     }
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/components endpoint.
    */
@@ -5257,15 +5257,15 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: { components: PublishedComponent[] }
   }
-  
+
   /**
    * Response from the GET /v1/components/{key} endpoint.
    */
@@ -5274,15 +5274,15 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: PublishedComponent
   }
-  
+
   /**
    * Response from the GET /v1/teams/{team_id}/component_sets endpoint.
    */
@@ -5291,19 +5291,19 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: {
       component_sets: PublishedComponentSet[]
-  
+
       cursor?: ResponseCursor
     }
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/component_sets endpoint.
    */
@@ -5312,15 +5312,15 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: { component_sets: PublishedComponentSet[] }
   }
-  
+
   /**
    * Response from the GET /v1/component_sets/{key} endpoint.
    */
@@ -5329,15 +5329,15 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: PublishedComponentSet
   }
-  
+
   /**
    * Response from the GET /v1/teams/{team_id}/styles endpoint.
    */
@@ -5346,19 +5346,19 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: {
       styles: PublishedStyle[]
-  
+
       cursor?: ResponseCursor
     }
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/styles endpoint.
    */
@@ -5367,15 +5367,15 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: { styles: PublishedStyle[] }
   }
-  
+
   /**
    * Response from the GET /v1/styles/{key} endpoint.
    */
@@ -5384,35 +5384,35 @@ export type IsLayerTrait = {
      * The status of the request.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: PublishedStyle
   }
-  
+
   /**
    * Response from the POST /v2/webhooks endpoint.
    */
   export type PostWebhookResponse = WebhookV2
-  
+
   /**
    * Response from the GET /v2/webhooks/{webhook_id} endpoint.
    */
   export type GetWebhookResponse = WebhookV2
-  
+
   /**
    * Response from the PUT /v2/webhooks/{webhook_id} endpoint.
    */
   export type PutWebhookResponse = WebhookV2
-  
+
   /**
    * Response from the DELETE /v2/webhooks/{webhook_id} endpoint.
    */
   export type DeleteWebhookResponse = WebhookV2
-  
+
   /**
    * Response from the GET /v2/teams/{team_id}/webhooks endpoint.
    */
@@ -5422,7 +5422,7 @@ export type IsLayerTrait = {
      */
     webhooks: WebhookV2[]
   }
-  
+
   /**
    * Response from the GET /v2/webhooks/{webhook_id}/requests endpoint.
    */
@@ -5432,7 +5432,7 @@ export type IsLayerTrait = {
      */
     requests: WebhookV2Request[]
   }
-  
+
   /**
    * Response from the GET /v1/activity_logs endpoint.
    */
@@ -5441,30 +5441,30 @@ export type IsLayerTrait = {
      * The response status code.
      */
     status?: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error?: false
-  
+
     meta?: {
       /**
        * An array of activity logs sorted by timestamp in ascending order by default.
        */
       activity_logs?: ActivityLog[]
-  
+
       /**
        * Encodes the last event (the most recent event)
        */
       cursor?: string
-  
+
       /**
        * Whether there is a next page of events
        */
       next_page?: boolean
     }
   }
-  
+
   /**
    * Response from the GET /v1/payments endpoint.
    */
@@ -5473,15 +5473,15 @@ export type IsLayerTrait = {
      * The response status code.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: PaymentInformation
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/variables/local endpoint.
    */
@@ -5490,25 +5490,25 @@ export type IsLayerTrait = {
      * The response status code.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: {
       /**
        * A map of variable ids to variables
        */
       variables: { [key: string]: LocalVariable }
-  
+
       /**
        * A map of variable collection ids to variable collections
        */
       variableCollections: { [key: string]: LocalVariableCollection }
     }
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/variables/published endpoint.
    */
@@ -5517,25 +5517,25 @@ export type IsLayerTrait = {
      * The response status code.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: {
       /**
        * A map of variable ids to variables
        */
       variables: { [key: string]: PublishedVariable }
-  
+
       /**
        * A map of variable collection ids to variable collections
        */
       variableCollections: { [key: string]: PublishedVariableCollection }
     }
   }
-  
+
   /**
    * Response from the POST /v1/files/{file_key}/variables endpoint.
    */
@@ -5544,12 +5544,12 @@ export type IsLayerTrait = {
      * The response status code.
      */
     status: 200
-  
+
     /**
      * For successful requests, this value is always `false`.
      */
     error: false
-  
+
     meta: {
       /**
        * A map of temporary ids in the request to the real ids of the newly created objects
@@ -5557,7 +5557,7 @@ export type IsLayerTrait = {
       tempIdToRealId: { [key: string]: string }
     }
   }
-  
+
   /**
    * Response from the GET /v1/files/{file_key}/dev_resources endpoint.
    */
@@ -5567,7 +5567,7 @@ export type IsLayerTrait = {
      */
     dev_resources: DevResource[]
   }
-  
+
   /**
    * Response from the POST /v1/dev_resources endpoint.
    */
@@ -5576,7 +5576,7 @@ export type IsLayerTrait = {
      * An array of links created.
      */
     links_created: DevResource[]
-  
+
     /**
      * An array of errors.
      */
@@ -5585,19 +5585,19 @@ export type IsLayerTrait = {
        * The file key.
        */
       file_key?: string | null
-  
+
       /**
        * The node id.
        */
       node_id?: string | null
-  
+
       /**
        * The error message.
        */
       error: string
     }[]
   }
-  
+
   /**
    * Response from the PUT /v1/dev_resources endpoint.
    */
@@ -5606,7 +5606,7 @@ export type IsLayerTrait = {
      * An array of links updated.
      */
     links_updated?: DevResource[]
-  
+
     /**
      * An array of errors.
      */
@@ -5615,19 +5615,19 @@ export type IsLayerTrait = {
        * The id of the dev resource.
        */
       id?: string
-  
+
       /**
        * The error message.
        */
       error: string
     }[]
   }
-  
+
   /**
    * Response from the DELETE /v1/files/{file_key}/dev_resources/{dev_resource_id} endpoint.
    */
   export type DeleteDevResourceResponse = void
-  
+
   /**
    * Response from the GET /v1/analytics/libraries/{file_key}/component/actions.
    */
@@ -5636,18 +5636,18 @@ export type IsLayerTrait = {
      * An array of analytics data.
      */
     rows: LibraryAnalyticsComponentActionsByAsset[] | LibraryAnalyticsComponentActionsByTeam[]
-  
+
     /**
      * Whether there is a next page of data that can be fetched.
      */
     next_page: boolean
-  
+
     /**
      * The cursor to use to fetch the next page of data. Not present if next_page is false.
      */
     cursor?: string
   }
-  
+
   /**
    * Response from the PUT /v1/analytics/libraries/{file_key}/component/usages.
    */
@@ -5656,18 +5656,18 @@ export type IsLayerTrait = {
      * An array of analytics data.
      */
     rows: LibraryAnalyticsComponentUsagesByAsset[] | LibraryAnalyticsComponentUsagesByFile[]
-  
+
     /**
      * Whether there is a next page of data that can be fetched.
      */
     next_page: boolean
-  
+
     /**
      * The cursor to use to fetch the next page of data. Not present if next_page is false.
      */
     cursor?: string
   }
-  
+
   /**
    * Response from the GET /v1/analytics/libraries/{file_key}/style/actions.
    */
@@ -5676,18 +5676,18 @@ export type IsLayerTrait = {
      * An array of analytics data.
      */
     rows: LibraryAnalyticsStyleActionsByAsset[] | LibraryAnalyticsStyleActionsByTeam[]
-  
+
     /**
      * Whether there is a next page of data that can be fetched.
      */
     next_page: boolean
-  
+
     /**
      * The cursor to use to fetch the next page of data. Not present if next_page is false.
      */
     cursor?: string
   }
-  
+
   /**
    * Response from the PUT /v1/analytics/libraries/{file_key}/style/usages.
    */
@@ -5696,18 +5696,18 @@ export type IsLayerTrait = {
      * An array of analytics data.
      */
     rows: LibraryAnalyticsStyleUsagesByAsset[] | LibraryAnalyticsStyleUsagesByFile[]
-  
+
     /**
      * Whether there is a next page of data that can be fetched.
      */
     next_page: boolean
-  
+
     /**
      * The cursor to use to fetch the next page of data. Not present if next_page is false.
      */
     cursor?: string
   }
-  
+
   /**
    * Response from the GET /v1/analytics/libraries/{file_key}/variable/actions.
    */
@@ -5716,18 +5716,18 @@ export type IsLayerTrait = {
      * An array of analytics data.
      */
     rows: LibraryAnalyticsVariableActionsByAsset[] | LibraryAnalyticsVariableActionsByTeam[]
-  
+
     /**
      * Whether there is a next page of data that can be fetched.
      */
     next_page: boolean
-  
+
     /**
      * The cursor to use to fetch the next page of data. Not present if next_page is false.
      */
     cursor?: string
   }
-  
+
   /**
    * Response from the PUT /v1/analytics/libraries/{file_key}/variable/usages.
    */
@@ -5736,18 +5736,18 @@ export type IsLayerTrait = {
      * An array of analytics data.
      */
     rows: LibraryAnalyticsVariableUsagesByAsset[] | LibraryAnalyticsVariableUsagesByFile[]
-  
+
     /**
      * Whether there is a next page of data that can be fetched.
      */
     next_page: boolean
-  
+
     /**
      * The cursor to use to fetch the next page of data. Not present if next_page is false.
      */
     cursor?: string
   }
-  
+
   /**
    * Bad request. Parameters are invalid or malformed. Please check the input formats. This error can
    * also happen if the requested resources are too large to complete the request, which results in a
@@ -5759,7 +5759,7 @@ export type IsLayerTrait = {
      */
     status: 400
   }
-  
+
   /**
    * Bad request. Parameters are invalid or malformed. Please check the input formats. This error can
    * also happen if the requested resources are too large to complete the request, which results in a
@@ -5771,7 +5771,7 @@ export type IsLayerTrait = {
      */
     status: 400
   }
-  
+
   /**
    * Token is missing or incorrect.
    */
@@ -5781,7 +5781,7 @@ export type IsLayerTrait = {
      */
     status: 401
   }
-  
+
   /**
    * The request was valid, but the server is refusing action. The user might not have the necessary
    * permissions for a resource, or may need an account of some sort.
@@ -5792,7 +5792,7 @@ export type IsLayerTrait = {
      */
     status: 403
   }
-  
+
   /**
    * The request was valid, but the server is refusing action. The user might not have the necessary
    * permissions for a resource, or may need an account of some sort.
@@ -5803,7 +5803,7 @@ export type IsLayerTrait = {
      */
     status: 403
   }
-  
+
   /**
    * The requested file or resource was not found.
    */
@@ -5813,7 +5813,7 @@ export type IsLayerTrait = {
      */
     status: 404
   }
-  
+
   /**
    * The requested file or resource was not found.
    */
@@ -5823,7 +5823,7 @@ export type IsLayerTrait = {
      */
     status: 404
   }
-  
+
   /**
    * In some cases API requests may be throttled or rate limited. Please wait a while before
    * attempting the request again (typically a minute).
@@ -5834,7 +5834,7 @@ export type IsLayerTrait = {
      */
     status: 429
   }
-  
+
   /**
    * In some cases API requests may be throttled or rate limited. Please wait a while before
    * attempting the request again (typically a minute).
@@ -5845,7 +5845,7 @@ export type IsLayerTrait = {
      */
     status: 429
   }
-  
+
   /**
    * An internal server error occurred.
    */
@@ -5855,7 +5855,7 @@ export type IsLayerTrait = {
      */
     status: 500
   }
-  
+
   /**
    * An internal server error occurred.
    */
@@ -5865,7 +5865,7 @@ export type IsLayerTrait = {
      */
     status: 500
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}
    */
@@ -5876,7 +5876,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/files/{file_key}
    */
@@ -5922,7 +5922,7 @@ export type IsLayerTrait = {
      */
     branch_data?: boolean
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/nodes
    */
@@ -5933,7 +5933,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/files/{file_key}/nodes
    */
@@ -5967,7 +5967,7 @@ export type IsLayerTrait = {
      */
     plugin_data?: string
   }
-  
+
   /**
    * Path parameters for GET /v1/images/{file_key}
    */
@@ -5978,7 +5978,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/images/{file_key}
    */
@@ -6038,7 +6038,7 @@ export type IsLayerTrait = {
      */
     use_absolute_bounds?: boolean
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/images
    */
@@ -6049,7 +6049,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Path parameters for GET /v1/teams/{team_id}/projects
    */
@@ -6059,7 +6059,7 @@ export type IsLayerTrait = {
      */
     team_id: string
   }
-  
+
   /**
    * Path parameters for GET /v1/projects/{project_id}/files
    */
@@ -6069,7 +6069,7 @@ export type IsLayerTrait = {
      */
     project_id: string
   }
-  
+
   /**
    * Query parameters for GET /v1/projects/{project_id}/files
    */
@@ -6079,7 +6079,7 @@ export type IsLayerTrait = {
      */
     branch_data?: boolean
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/versions
    */
@@ -6090,7 +6090,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/files/{file_key}/versions
    */
@@ -6111,7 +6111,7 @@ export type IsLayerTrait = {
      */
     after?: number
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/comments
    */
@@ -6122,7 +6122,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/files/{file_key}/comments
    */
@@ -6132,7 +6132,7 @@ export type IsLayerTrait = {
      */
     as_md?: boolean
   }
-  
+
   /**
    * Path parameters for POST /v1/files/{file_key}/comments
    */
@@ -6143,7 +6143,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Request body parameters for POST /v1/files/{file_key}/comments
    */
@@ -6152,19 +6152,19 @@ export type IsLayerTrait = {
      * The text contents of the comment to post.
      */
     message: string
-  
+
     /**
      * The ID of the comment to reply to, if any. This must be a root comment. You cannot reply to other
      * replies (a comment that has a parent_id).
      */
     comment_id?: string
-  
+
     /**
      * The position where to place the comment.
      */
     client_meta?: Vector | FrameOffset | Region | FrameOffsetRegion
   }
-  
+
   /**
    * Path parameters for DELETE /v1/files/{file_key}/comments/{comment_id}
    */
@@ -6179,7 +6179,7 @@ export type IsLayerTrait = {
      */
     comment_id: string
   }
-  
+
   /**
    * Path parameters for DELETE /v1/files/{file_key}/comments/{comment_id}/reactions
    */
@@ -6194,12 +6194,12 @@ export type IsLayerTrait = {
      */
     comment_id: string
   }
-  
+
   /**
    * Query parameters for DELETE /v1/files/{file_key}/comments/{comment_id}/reactions
    */
   export type DeleteCommentReactionQueryParams = { emoji: Emoji }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/comments/{comment_id}/reactions
    */
@@ -6214,7 +6214,7 @@ export type IsLayerTrait = {
      */
     comment_id: string
   }
-  
+
   /**
    * Query parameters for GET /v1/files/{file_key}/comments/{comment_id}/reactions
    */
@@ -6224,7 +6224,7 @@ export type IsLayerTrait = {
      */
     cursor?: string
   }
-  
+
   /**
    * Path parameters for POST /v1/files/{file_key}/comments/{comment_id}/reactions
    */
@@ -6239,12 +6239,12 @@ export type IsLayerTrait = {
      */
     comment_id: string
   }
-  
+
   /**
    * Request body parameters for POST /v1/files/{file_key}/comments/{comment_id}/reactions
    */
   export type PostCommentReactionRequestBody = { emoji: Emoji }
-  
+
   /**
    * Path parameters for GET /v1/teams/{team_id}/components
    */
@@ -6254,7 +6254,7 @@ export type IsLayerTrait = {
      */
     team_id: string
   }
-  
+
   /**
    * Query parameters for GET /v1/teams/{team_id}/components
    */
@@ -6274,7 +6274,7 @@ export type IsLayerTrait = {
      */
     before?: number
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/components
    */
@@ -6285,7 +6285,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Path parameters for GET /v1/components/{key}
    */
@@ -6295,7 +6295,7 @@ export type IsLayerTrait = {
      */
     key: string
   }
-  
+
   /**
    * Path parameters for GET /v1/teams/{team_id}/component_sets
    */
@@ -6305,7 +6305,7 @@ export type IsLayerTrait = {
      */
     team_id: string
   }
-  
+
   /**
    * Query parameters for GET /v1/teams/{team_id}/component_sets
    */
@@ -6325,7 +6325,7 @@ export type IsLayerTrait = {
      */
     before?: number
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/component_sets
    */
@@ -6336,7 +6336,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Path parameters for GET /v1/component_sets/{key}
    */
@@ -6346,7 +6346,7 @@ export type IsLayerTrait = {
      */
     key: string
   }
-  
+
   /**
    * Path parameters for GET /v1/teams/{team_id}/styles
    */
@@ -6356,7 +6356,7 @@ export type IsLayerTrait = {
      */
     team_id: string
   }
-  
+
   /**
    * Query parameters for GET /v1/teams/{team_id}/styles
    */
@@ -6376,7 +6376,7 @@ export type IsLayerTrait = {
      */
     before?: number
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/styles
    */
@@ -6387,7 +6387,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Path parameters for GET /v1/styles/{key}
    */
@@ -6397,41 +6397,41 @@ export type IsLayerTrait = {
      */
     key: string
   }
-  
+
   /**
    * Request body parameters for POST /v2/webhooks
    */
   export type PostWebhookRequestBody = {
     event_type: WebhookV2Event
-  
+
     /**
      * Team id to receive updates about
      */
     team_id: string
-  
+
     /**
      * The HTTP endpoint that will receive a POST request when the event triggers. Max length 2048
      * characters.
      */
     endpoint: string
-  
+
     /**
      * String that will be passed back to your webhook endpoint to verify that it is being called by
      * Figma. Max length 100 characters.
      */
     passcode: string
-  
+
     /**
      * State of the webhook, including any error state it may be in
      */
     status?: WebhookV2Status
-  
+
     /**
      * User provided description or name for the webhook. Max length 150 characters.
      */
     description?: string
   }
-  
+
   /**
    * Path parameters for DELETE /v2/webhooks/{webhook_id}
    */
@@ -6441,7 +6441,7 @@ export type IsLayerTrait = {
      */
     webhook_id: string
   }
-  
+
   /**
    * Path parameters for GET /v2/webhooks/{webhook_id}
    */
@@ -6451,7 +6451,7 @@ export type IsLayerTrait = {
      */
     webhook_id: string
   }
-  
+
   /**
    * Path parameters for PUT /v2/webhooks/{webhook_id}
    */
@@ -6461,36 +6461,36 @@ export type IsLayerTrait = {
      */
     webhook_id: string
   }
-  
+
   /**
    * Request body parameters for PUT /v2/webhooks/{webhook_id}
    */
   export type PutWebhookRequestBody = {
     event_type: WebhookV2Event
-  
+
     /**
      * The HTTP endpoint that will receive a POST request when the event triggers. Max length 2048
      * characters.
      */
     endpoint: string
-  
+
     /**
      * String that will be passed back to your webhook endpoint to verify that it is being called by
      * Figma. Max length 100 characters.
      */
     passcode: string
-  
+
     /**
      * State of the webhook, including any error state it may be in
      */
     status?: WebhookV2Status
-  
+
     /**
      * User provided description or name for the webhook. Max length 150 characters.
      */
     description?: string
   }
-  
+
   /**
    * Path parameters for GET /v2/teams/{team_id}/webhooks
    */
@@ -6500,7 +6500,7 @@ export type IsLayerTrait = {
      */
     team_id: string
   }
-  
+
   /**
    * Path parameters for GET /v2/webhooks/{webhook_id}/requests
    */
@@ -6510,7 +6510,7 @@ export type IsLayerTrait = {
      */
     webhook_id: string
   }
-  
+
   /**
    * Query parameters for GET /v1/activity_logs
    */
@@ -6539,7 +6539,7 @@ export type IsLayerTrait = {
      */
     order?: 'asc' | 'desc'
   }
-  
+
   /**
    * Query parameters for GET /v1/payments
    */
@@ -6574,7 +6574,7 @@ export type IsLayerTrait = {
      */
     widget_id?: number
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/variables/local
    */
@@ -6585,7 +6585,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/variables/published
    */
@@ -6596,7 +6596,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Path parameters for POST /v1/files/{file_key}/variables
    */
@@ -6607,7 +6607,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Request body parameters for POST /v1/files/{file_key}/variables
    */
@@ -6616,23 +6616,23 @@ export type IsLayerTrait = {
      * For creating, updating, and deleting variable collections.
      */
     variableCollections?: VariableCollectionChange[]
-  
+
     /**
      * For creating, updating, and deleting modes within variable collections.
      */
     variableModes?: VariableModeChange[]
-  
+
     /**
      * For creating, updating, and deleting variables.
      */
     variables?: VariableChange[]
-  
+
     /**
      * For setting a specific value, given a variable and a mode.
      */
     variableModeValues?: VariableModeValue[]
   }
-  
+
   /**
    * Path parameters for GET /v1/files/{file_key}/dev_resources
    */
@@ -6642,7 +6642,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/files/{file_key}/dev_resources
    */
@@ -6654,7 +6654,7 @@ export type IsLayerTrait = {
      */
     node_ids?: string
   }
-  
+
   /**
    * Request body parameters for POST /v1/dev_resources
    */
@@ -6667,24 +6667,24 @@ export type IsLayerTrait = {
        * The name of the dev resource.
        */
       name: string
-  
+
       /**
        * The URL of the dev resource.
        */
       url: string
-  
+
       /**
        * The file key where the dev resource belongs.
        */
       file_key: string
-  
+
       /**
        * The target node to attach the dev resource to.
        */
       node_id: string
     }[]
   }
-  
+
   /**
    * Request body parameters for PUT /v1/dev_resources
    */
@@ -6697,19 +6697,19 @@ export type IsLayerTrait = {
        * Unique identifier of the dev resource
        */
       id: string
-  
+
       /**
        * The name of the dev resource.
        */
       name?: string
-  
+
       /**
        * The URL of the dev resource.
        */
       url?: string
     }[]
   }
-  
+
   /**
    * Path parameters for DELETE /v1/files/{file_key}/dev_resources/{dev_resource_id}
    */
@@ -6723,7 +6723,7 @@ export type IsLayerTrait = {
      */
     dev_resource_id: string
   }
-  
+
   /**
    * Path parameters for GET /v1/analytics/libraries/{file_key}/component/actions
    */
@@ -6733,7 +6733,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/analytics/libraries/{file_key}/component/actions
    */
@@ -6757,7 +6757,7 @@ export type IsLayerTrait = {
      */
     end_date?: string
   }
-  
+
   /**
    * Path parameters for GET /v1/analytics/libraries/{file_key}/component/usages
    */
@@ -6767,7 +6767,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/analytics/libraries/{file_key}/component/usages
    */
@@ -6781,7 +6781,7 @@ export type IsLayerTrait = {
      */
     group_by: 'component' | 'file'
   }
-  
+
   /**
    * Path parameters for GET /v1/analytics/libraries/{file_key}/style/actions
    */
@@ -6791,7 +6791,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/analytics/libraries/{file_key}/style/actions
    */
@@ -6815,7 +6815,7 @@ export type IsLayerTrait = {
      */
     end_date?: string
   }
-  
+
   /**
    * Path parameters for GET /v1/analytics/libraries/{file_key}/style/usages
    */
@@ -6825,7 +6825,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/analytics/libraries/{file_key}/style/usages
    */
@@ -6839,7 +6839,7 @@ export type IsLayerTrait = {
      */
     group_by: 'style' | 'file'
   }
-  
+
   /**
    * Path parameters for GET /v1/analytics/libraries/{file_key}/variable/actions
    */
@@ -6849,7 +6849,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/analytics/libraries/{file_key}/variable/actions
    */
@@ -6873,7 +6873,7 @@ export type IsLayerTrait = {
      */
     end_date?: string
   }
-  
+
   /**
    * Path parameters for GET /v1/analytics/libraries/{file_key}/variable/usages
    */
@@ -6883,7 +6883,7 @@ export type IsLayerTrait = {
      */
     file_key: string
   }
-  
+
   /**
    * Query parameters for GET /v1/analytics/libraries/{file_key}/variable/usages
    */

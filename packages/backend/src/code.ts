@@ -3,7 +3,7 @@ import {
   retrieveGenericSolidUIColors,
 } from "./common/retrieveUI/retrieveColors";
 import {
-  addWarning,
+  // addWarning,
   clearWarnings,
   warnings,
 } from "./common/commonConversionWarnings";

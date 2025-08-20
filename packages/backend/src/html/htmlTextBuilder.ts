@@ -19,9 +19,9 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
   }
 
   // Override htmlElement to ensure text nodes use paragraph elements
-  get htmlElement(): string {
-    return "p";
-  }
+  // get htmlElement(): string {
+  //   return "p";
+  // }
 
   getTextSegments(node: TextNode): {
     style: string;
@@ -125,13 +125,13 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
     });
   }
 
-  fontSize(node: TextNode, isUI = false): this {
-    if (node.fontSize !== figma.mixed) {
-      const value = isUI ? Math.min(node.fontSize, 24) : node.fontSize;
-      this.addStyles(formatWithJSX("font-size", this.isJSX, value));
-    }
-    return this;
-  }
+  // fontSize(node: TextNode, isUI = false): this {
+  //   if (node.fontSize !== figma.mixed) {
+  //     const value = isUI ? Math.min(node.fontSize, 24) : node.fontSize;
+  //     this.addStyles(formatWithJSX("font-size", this.isJSX, value));
+  //   }
+  //   return this;
+  // }
 
   textTrim(): this {
     if ("leadingTrim" in this.node && this.node.leadingTrim === "CAP_HEIGHT") {
@@ -253,11 +253,12 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
       const effects = (this.node as TextNode).effects;
       const blurEffect = effects.find(
         (effect) =>
-          effect.type === "LAYER_BLUR" &&
-          effect.visible !== false &&
+          effect.type === "LAYER_BLUR" && effect.visible &&
           effect.radius > 0,
       );
+      // @ts-ignore
       if (blurEffect && blurEffect.radius) {
+        // @ts-ignore
         return `blur(${blurEffect.radius}px)`;
       }
     }
@@ -271,7 +272,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
     if (this.node && (this.node as TextNode).effects) {
       const effects = (this.node as TextNode).effects;
       const dropShadow = effects.find(
-        (effect) => effect.type === "DROP_SHADOW" && effect.visible !== false,
+        (effect) => effect.type === "DROP_SHADOW" && effect.visible,
       );
       if (dropShadow) {
         const ds = dropShadow as DropShadowEffect; // Type narrow the effect.

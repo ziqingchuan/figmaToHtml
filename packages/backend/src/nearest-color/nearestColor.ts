@@ -68,9 +68,9 @@ function nearestColor(needle: RGB | string, colors: Array<ColorSpec>): string {
  * @return {Array.<ColorSpec>} An array of {@link ColorSpec} objects
  *     representing the same colors passed in.
  */
-function mapColors(colors: Array<string>): Array<ColorSpec> {
-  return colors.map((color) => createColorSpec(color));
-}
+// function mapColors(colors: Array<string>): Array<ColorSpec> {
+//   return colors.map((color) => createColorSpec(color));
+// }
 
 /**
  * Provides a matcher to find the nearest color based on the provided list of
@@ -123,12 +123,12 @@ function mapColors(colors: Array<string>): Array<ColorSpec> {
  *
  * nearestColor.from(invalidColors); // => throws
  */
-export const nearestColorFrom = (
-  availableColors: Array<string>,
-): ((hex: string | RGB) => string) => {
-  const colors = mapColors(availableColors);
-  return (hex: string | RGB) => nearestColor(hex, colors);
-};
+// export const nearestColorFrom = (
+//   availableColors: Array<string>,
+// ): ((hex: string | RGB) => string) => {
+//   const colors = mapColors(availableColors);
+//   return (hex: string | RGB) => nearestColor(hex, colors);
+// };
 
 /**
  * Parses a color from a string.
@@ -203,9 +203,9 @@ function parseColor(source: RGB | string): RGB {
  *   rgb: { r: 136, g: 0, b: 0 }
  * }
  */
-function createColorSpec(input: string): ColorSpec {
-  return {
-    source: input,
-    rgb: parseColor(input),
-  };
-}
+// function createColorSpec(input: string): ColorSpec {
+//   return {
+//     source: input,
+//     rgb: parseColor(input),
+//   };
+// }

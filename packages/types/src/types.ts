@@ -1,6 +1,7 @@
 import "@figma/plugin-typings";
 // Settings
-export type Framework = "Flutter" | "SwiftUI" | "HTML" | "Tailwind" | "Compose";
+// export type Framework = "Flutter" | "SwiftUI" | "HTML" | "Tailwind" | "Compose";
+export type Framework = "HTML" ;
 export interface HTMLSettings {
   showLayerNames: boolean;
   embedImages: boolean;
@@ -48,7 +49,7 @@ export interface ConversionData {
 }
 
 export type Warning = string;
-export type Warnings = Set<Warning>;
+// export type Warnings = Set<Warning>;
 
 export interface Message {
   type: string;
@@ -90,23 +91,23 @@ export type ExportableNode = SceneNode & ExportMixin & MinimalFillsMixin;
 
 // Styles & Conversions
 
-export type LayoutMode =
-  | ""
-  | "Absolute"
-  | "TopStart"
-  | "TopCenter"
-  | "TopEnd"
-  | "CenterStart"
-  | "Center"
-  | "CenterEnd"
-  | "BottomStart"
-  | "BottomCenter"
-  | "BottomEnd";
+// export type LayoutMode =
+//   | ""
+//   | "Absolute"
+//   | "TopStart"
+//   | "TopCenter"
+//   | "TopEnd"
+//   | "CenterStart"
+//   | "Center"
+//   | "CenterEnd"
+//   | "BottomStart"
+//   | "BottomCenter"
+//   | "BottomEnd";
 
-export interface BoundingRect {
-  x: number;
-  y: number;
-}
+// export interface BoundingRect {
+//   x: number;
+//   y: number;
+// }
 
 interface AllSides {
   all: number;
@@ -143,16 +144,16 @@ export type StyledTextSegmentSubset = Omit<
   "listSpacing" | "paragraphIndent" | "paragraphSpacing" | "textStyleOverrides"
 >;
 
-export type FontWeightNumber =
-  | "100"
-  | "200"
-  | "300"
-  | "400"
-  | "500"
-  | "600"
-  | "700"
-  | "800"
-  | "900";
+// export type FontWeightNumber =
+//   | "100"
+//   | "200"
+//   | "300"
+//   | "400"
+//   | "500"
+//   | "600"
+//   | "700"
+//   | "800"
+//   | "900";
 
 export interface RGB {
   r: number;
@@ -185,20 +186,20 @@ export interface HTMLPreview {
   content: string;
 }
 
-export interface TailwindTextConversion {
-  name: string;
-  attr: string;
-  full: string;
-  style: string;
-  contrastBlack: number;
-}
-
-export type TailwindColorType = "text" | "bg" | "border" | "outline";
-
-export type SwiftUIModifier = [
-  string,
-  string | SwiftUIModifier | SwiftUIModifier[],
-];
+// export interface TailwindTextConversion {
+//   name: string;
+//   attr: string;
+//   full: string;
+//   style: string;
+//   contrastBlack: number;
+// }
+//
+// export type TailwindColorType = "text" | "bg" | "border" | "outline";
+//
+// export type SwiftUIModifier = [
+//   string,
+//   string | SwiftUIModifier | SwiftUIModifier[],
+// ];
 
 // UI
 

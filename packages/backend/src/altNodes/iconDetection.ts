@@ -104,7 +104,7 @@ function checkChildrenRecursively(children: ReadonlyArray<SceneNode>): {
   let hasValidContent = false;
 
   for (const child of children) {
-    if (child.visible === false) {
+    if (!child.visible) {
       continue; // Skip invisible children
     }
 
@@ -152,8 +152,8 @@ function checkChildrenRecursively(children: ReadonlyArray<SceneNode>): {
  */
 export function isLikelyIcon(node: SceneNode, logDetails = false): boolean {
   const info: string[] = [`Node: ${node.name} (${node.type}, ID: ${node.id})`];
-  let result = false;
-  let reason = "";
+  let result: boolean;
+  let reason: string;
 
   // --- 1. Initial Filtering (Disallowed Types First) ---
   if (DISALLOWED_ICON_TYPES.has(node.type)) {
@@ -202,7 +202,7 @@ export function isLikelyIcon(node: SceneNode, logDetails = false): boolean {
         result = false;
       } else {
         const visibleChildren = node.children.filter(
-          (child) => child.visible !== false,
+          (child) => child.visible,
         );
 
         if (visibleChildren.length === 0) {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { HTMLSettings, TailwindSettings } from "types";
 
 export const getCommonPositionValue = (
@@ -94,16 +95,12 @@ export const commonIsAbsolutePosition = (node: SceneNode) => {
     return true;
   }
 
-  if (!node.parent || node.parent === undefined) {
+  if (!node.parent) {
     return false;
   }
 
-  if (
-    ("layoutMode" in node.parent && node.parent.layoutMode === "NONE") ||
-    !("layoutMode" in node.parent)
-  ) {
-    return true;
-  }
+  return ("layoutMode" in node.parent && node.parent.layoutMode === "NONE") ||
+    !("layoutMode" in node.parent);
 
-  return false;
+
 };

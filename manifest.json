@@ -1,6 +1,6 @@
 {
-  "name": "Figma to Code [HTML, Tailwind, Flutter, SwiftUI]",
-  "id": "842128343887142055",
+  "name": "figma-to-code",
+  "id": "1539124463849863689",
   "api": "1.0.0",
   "main": "apps/plugin/dist/code.js",
   "ui": "apps/plugin/dist/index.html",

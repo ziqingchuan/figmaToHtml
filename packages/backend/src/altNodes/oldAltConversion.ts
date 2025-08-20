@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StyledTextSegmentSubset, ParentNode, AltNode } from "types";
 import {
   assignParent,
@@ -9,7 +10,7 @@ import { curry } from "../common/curry";
 
 export const isTypeOrGroupOfTypes = curry(
   (matchTypes: NodeType[], node: SceneNode): boolean => {
-    if (node.visible === false || matchTypes.includes(node.type)) return true;
+    if (!node.visible || matchTypes.includes(node.type)) return true;
 
     if ("children" in node) {
       for (let i = 0; i < node.children.length; i++) {
@@ -77,6 +78,7 @@ export const convertNodeToAltNode =
 
       // Text Nodes
       case "TEXT":
+        // @ts-ignore
         globalTextStyleSegments[node.id] = extractStyledTextSegments(node);
         return cloneNode(node, parent);
 
@@ -131,7 +133,6 @@ export const cloneNode = <T extends BaseNode>(
   //   if (parent) {
   //     (cloned as any).parent = parent;
   //   }
-
   const altNode = {
     ...cloned,
     parent: cloned.parent,

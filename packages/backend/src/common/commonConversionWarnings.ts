@@ -2,7 +2,7 @@ import { Warning } from "types";
 
 export const warnings = new Set<Warning>();
 export const addWarning = (warning: Warning) => {
-  if (warnings.has(warning) === false) {
+  if (!warnings.has(warning)) {
     console.warn(warning);
   }
   warnings.add(warning);

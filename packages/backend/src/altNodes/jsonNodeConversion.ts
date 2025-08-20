@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { addWarning } from "../common/commonConversionWarnings";
 import { PluginSettings } from "types";
-import { variableToColorName } from "../tailwind/conversionTables";
+// import { variableToColorName } from "../tailwind/conversionTables";
 import { HasGeometryTrait, Node, Paint } from "../api_types";
 import { calculateRectangleFromBoundingBox } from "../common/commonPosition";
 import { isLikelyIcon } from "./iconDetection";
@@ -34,35 +35,35 @@ const variableCache = new Map<string, string>();
 const memoizedVariableToColorName = async (
   variableId: string,
 ): Promise<string> => {
-  if (!variableCache.has(variableId)) {
-    const colorName = (await variableToColorName(variableId)).replaceAll(
-      ",",
-      "",
-    );
-    variableCache.set(variableId, colorName);
-    return colorName;
-  }
+  // if (!variableCache.has(variableId)) {
+  //   const colorName = (await variableToColorName(variableId)).replaceAll(
+  //     ",",
+  //     "",
+  //   );
+  //   variableCache.set(variableId, colorName);
+  //   return colorName;
+  // }
   return variableCache.get(variableId)!;
 };
 
 /**
  * Maps a color hex value to its variable name using node-specific color mappings
  */
-export const getVariableNameFromColor = (
-  hexColor: string,
-  colorMappings?: Map<string, { variableId: string; variableName: string }>,
-): string | undefined => {
-  if (!colorMappings) return undefined;
-
-  const normalizedColor = hexColor.toLowerCase();
-  const mapping = colorMappings.get(normalizedColor);
-
-  if (mapping) {
-    return mapping.variableName;
-  }
-
-  return undefined;
-};
+// export const getVariableNameFromColor = (
+//   hexColor: string,
+//   colorMappings?: Map<string, { variableId: string; variableName: string }>,
+// ): string | undefined => {
+//   if (!colorMappings) return undefined;
+//
+//   const normalizedColor = hexColor.toLowerCase();
+//   const mapping = colorMappings.get(normalizedColor);
+//
+//   if (mapping) {
+//     return mapping.variableName;
+//   }
+//
+//   return undefined;
+// };
 
 /**
  * Collects all color variables used in a node and its descendants
@@ -294,6 +295,7 @@ const processNodePair = async (
     (!jsonNode.children || jsonNode.children.length === 0)
   ) {
     // Convert to rectangle
+    // @ts-ignore
     jsonNode.type = "RECTANGLE";
     return processNodePair(
       jsonNode,

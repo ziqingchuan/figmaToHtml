@@ -2,7 +2,7 @@ import {
   ConversionMessage,
   ConversionStartMessage,
   EmptyMessage,
-  ErrorMessage,
+  // ErrorMessage,
   PluginSettings,
   SettingsChangedMessage,
 } from "types";
@@ -19,8 +19,8 @@ export const postConversionComplete = (
   conversionData: ConversionMessage | Omit<ConversionMessage, "type">,
 ) => postBackendMessage({ ...conversionData, type: "code" });
 
-export const postError = (error: string) =>
-  postBackendMessage({ type: "error", error } as ErrorMessage);
+// export const postError = (error: string) =>
+//   postBackendMessage({ type: "error", error } as ErrorMessage);
 
 export const postSettingsChanged = (settings: PluginSettings) =>
   postBackendMessage({
