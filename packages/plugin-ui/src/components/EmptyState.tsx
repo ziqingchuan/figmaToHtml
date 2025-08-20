@@ -1,5 +1,4 @@
 import React from "react";
-
 const PluginHomepage = () => {
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-neutral-900 rounded-lg text-center">
