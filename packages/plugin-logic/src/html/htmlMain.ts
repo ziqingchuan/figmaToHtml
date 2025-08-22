@@ -92,6 +92,7 @@ export const htmlMain = async (
   console.log("代码：", output);
   // TODO: 添加代码优化功能
   const jsonNodes = parseHTMLToNodes(output.html);
+  console.log("jsonNodes：", jsonNodes);
   output.html = parseNodesToHTML(jsonNodes);
   return output;
 };

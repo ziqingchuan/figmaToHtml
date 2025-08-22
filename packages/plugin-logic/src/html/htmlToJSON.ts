@@ -1,3 +1,5 @@
+import { generateSemanticClassName } from "./classNameGenerate";
+
 interface Node {
   tag: 'div' | 'span' | 'img';
   content?: string;
@@ -13,41 +15,42 @@ export const parseHTMLToNodes = (htmlString: string): Node[] => {
   let index = 0;
   const nodes: Node[] = [];
 
-  // 主解析函数
+  // 用于跟踪父元素信息
+  const parentStack: { tag: string; className: string }[] = [];
+
   function parse(): Node[] {
     const result: Node[] = [];
     while (index < htmlString.length) {
       if (htmlString[index] === '<') {
         if (htmlString[index + 1] === '/') {
-          // 结束标签
           index = htmlString.indexOf('>', index) + 1;
+          parentStack.pop(); // 弹出父元素
           return result;
         } else {
-          // 开始标签
           const node = parseElement();
-          if (node) result.push(node);
+          if (node) {
+            result.push(node);
+            // 如果有子元素，推入父元素信息
+            if (node.children && node.children.length > 0) {
+              parentStack.push({ tag: node.tag, className: node.className });
+            }
+          }
         }
       } else {
-        // 文本内容
         index++;
       }
     }
     return result;
   }
 
-  // 解析单个元素
   function parseElement(): Node | null {
-
-    // 跳过 <
     index++;
 
-    // 获取标签名
     const tagEnd = htmlString.indexOf(' ', index);
     const tagName = htmlString.slice(index, tagEnd).toLowerCase();
     index = tagEnd + 1;
 
     if (tagName !== 'div' && tagName !== 'span' && tagName !== 'img') {
-      // 跳过非目标标签
       index = htmlString.indexOf('>', index) + 1;
       return null;
     }
@@ -63,25 +66,17 @@ export const parseHTMLToNodes = (htmlString: string): Node[] => {
       const attrName = htmlString.slice(index, attrNameEnd).trim();
       index = attrNameEnd + 1;
 
-      // 处理属性值
       const quoteChar = htmlString[index];
       index++;
       const attrValueEnd = htmlString.indexOf(quoteChar, index);
       const attrValue = htmlString.slice(index, attrValueEnd);
       index = attrValueEnd + 1;
-      // console.log('name:', attrName, 'value:', attrValue)
-      if (attrName.includes('style')) {
-        style = attrValue;
-      }
-      if(attrName.includes('src')) {
-        src = attrValue;
-      }
-      if (attrName.includes('data-svg-wrapper')) {
-        isSVG = true;
-      }
+
+      if (attrName.includes('style')) style = attrValue;
+      if (attrName.includes('src')) src = attrValue;
+      if (attrName.includes('data-svg-wrapper')) isSVG = true;
     }
 
-    // 跳过 >
     index++;
 
     // 解析内容
@@ -90,27 +85,21 @@ export const parseHTMLToNodes = (htmlString: string): Node[] => {
     const children: Node[] = [];
 
     if (isSVG) {
-      // 查找svg开始标签
       const svgStart = htmlString.indexOf('<svg', index);
       if (svgStart !== -1) {
-        // 查找svg结束标签
         const svgEnd = htmlString.indexOf('</svg>', svgStart) + 6;
         SVGContent = htmlString.slice(svgStart, svgEnd);
         index = svgEnd;
       }
     }
 
-    // 解析非SVG内容
     while (index < htmlString.length) {
       if (htmlString.startsWith('</', index)) {
-        // 结束标签
         break;
       } else if (htmlString[index] === '<') {
-        // 子元素
         const childNodes = parse();
         children.push(...childNodes);
       } else {
-        // 文本内容
         const textEnd = htmlString.indexOf('<', index);
         if (textEnd === -1) break;
 
@@ -124,30 +113,31 @@ export const parseHTMLToNodes = (htmlString: string): Node[] => {
       }
     }
 
-    // 清理内容
     content = content.trim();
 
-    // @ts-ignore
+    // 获取父元素信息用于上下文语义
+    const parentInfo = parentStack[parentStack.length - 1];
+
+    // 生成语义化类名
+    const className = generateSemanticClassName(tagName, style, content, parentInfo);
+
     return {
-      tag: tagName as 'div' | 'span',
+      tag: tagName as 'div' | 'span' | 'img',
       content: content || undefined,
       style,
       isSVG,
       SVGContent: SVGContent || undefined,
       children,
-      className: `style-${Math.random().toString(36).substr(2, 9)}`,
+      className,
       src: src || undefined
     };
   }
 
-  // 处理根节点的所有子节点
   while (index < htmlString.length) {
     if (htmlString[index] === '<') {
       if (htmlString[index + 1] === '/') {
-        // 跳过结束标签
         index = htmlString.indexOf('>', index) + 1;
       } else {
-        // 解析元素
         const node = parseElement();
         if (node) nodes.push(node);
       }
@@ -157,4 +147,5 @@ export const parseHTMLToNodes = (htmlString: string): Node[] => {
   }
 
   return nodes;
-}
+};
+
