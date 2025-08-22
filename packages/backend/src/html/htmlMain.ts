@@ -2,7 +2,7 @@ import { indentString } from "../common/indentString";
 import { HtmlTextBuilder } from "./htmlTextBuilder";
 import { HtmlDefaultBuilder } from "./htmlDefaultBuilder";
 import { htmlAutoLayoutProps } from "./builderImpl/htmlAutoLayout";
-import { formatWithJSX } from "../common/parseJSX";
+import { format } from "../common/formatTool";
 import {
   AltNode,
   ExportableNode,
@@ -18,8 +18,8 @@ import {
   nodeHasImageFill,
 } from "../common/images";
 import { addWarning } from "../common/commonConversionWarnings";
-
-const selfClosingTags = ["img"];
+import { parseHTMLToNodes } from "./htmlToJSON";
+import { parseNodesToHTML } from "./jsonToHTML";
 
 export let isPreviewGlobal = false;
 
@@ -30,13 +30,6 @@ export interface HtmlOutput {
   html: string;
   css?: string;
 }
-
-// Define HTML generation modes for better type safety
-export type HtmlGenerationMode =
-  | "html"
-  | "jsx"
-  | "styled-components"
-  | "svelte";
 
 // CSS Collection for external stylesheet or styled-components
 interface CSSCollection {
@@ -53,88 +46,9 @@ export let cssCollection: CSSCollection = {};
 // Instance counters for class name generation - we keep this but primarily as a fallback
 const classNameCounters: Map<string, number> = new Map();
 
-// Generate a class name - prefer direct uniqueId, but fall back to counter-based if needed
-export function generateUniqueClassName(prefix = "figma"): string {
-  // Sanitize the prefix to ensure valid CSS class
-  const sanitizedPrefix =
-    prefix.replace(/[^a-zA-Z0-9_-]/g, "").replace(/^[0-9_-]/, "f") || // Ensure it doesn't start with a number or special char
-    "figma";
-
-  // Most of the time, we'll just use the prefix directly as it's pre-generated to be unique
-  // But keep the counter logic as a fallback
-  const count = classNameCounters.get(sanitizedPrefix) || 0;
-  classNameCounters.set(sanitizedPrefix, count + 1);
-
-  // Only add suffix if this isn't the first instance
-  return count === 0
-    ? sanitizedPrefix
-    : `${sanitizedPrefix}_${count.toString().padStart(2, "0")}`;
-}
-
 // Reset all class name counters - call this at the start of processing
 export function resetClassNameCounters(): void {
   classNameCounters.clear();
-}
-
-// Convert styles to CSS format
-export function stylesToCSS(styles: string[], isJSX: boolean): string[] {
-  return styles
-    .map((style) => {
-      // Skip empty styles
-      if (!style.trim()) return "";
-
-      // Handle JSX format if needed
-      if (isJSX) {
-        return style.replace(/^([a-zA-Z0-9]+):/, (match, prop) => {
-          // Convert camelCase to kebab-case for CSS
-          return (
-            prop
-              .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2")
-              .toLowerCase() + ":"
-          );
-        });
-      }
-      return style;
-    })
-    .filter(Boolean); // Remove empty entries
-}
-
-// Get proper component name from node info
-export function getComponentName(
-  node: any,
-  className?: string,
-  nodeType = "div",
-): string {
-  // Start with Styled prefix
-  let name = "Styled";
-
-  // Use uniqueName if available, otherwise use name
-  const nodeName: string = node.uniqueName || node.name;
-
-  // Try to use node name first
-  if (nodeName && nodeName.length > 0) {
-    // Clean up the node name and capitalize first letter
-    const cleanName = nodeName
-      .replace(/[^a-zA-Z0-9]/g, "")
-      .replace(/^[a-z]/, (match) => match.toUpperCase());
-
-    name += cleanName || nodeType.charAt(0).toUpperCase() + nodeType.slice(1);
-  }
-  // Fall back to className if provided
-  else if (className) {
-    const parts = className.split("-");
-    if (parts.length > 0 && parts[0]) {
-      name += parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-    } else {
-      name += nodeType.charAt(0).toUpperCase() + nodeType.slice(1);
-    }
-  }
-  // Last resort
-  else {
-    name += nodeType.charAt(0).toUpperCase() + nodeType.slice(1);
-  }
-
-  return name;
 }
 
 // Get the collected CSS as a string with improved formatting
@@ -152,169 +66,6 @@ export function getCollectedCSS(): string {
     .join("\n\n");
 }
 
-// Generate styled-components with improved naming and formatting
-export function generateStyledComponents(): string {
-  const components: string[] = [];
-
-  Object.entries(cssCollection).forEach(
-    ([className, { styles, nodeName, nodeType, element }]) => {
-      // Skip if no styles
-      if (!styles.length) return;
-
-      // Determine base HTML element - defaults to div
-      const baseElement = element || (nodeType === "TEXT" ? "p" : "div");
-      const componentName = getComponentName(
-        { name: nodeName },
-        className,
-        baseElement,
-      );
-
-      const styledComponent = `const ${componentName} = styled.${baseElement}\`
-  ${styles.join(";\n  ")}${styles.length ? ";" : ""}
-\`;`;
-
-      components.push(styledComponent);
-    },
-  );
-
-  if (components.length === 0) {
-    return "";
-  }
-
-  return `${components.join("\n\n")}`;
-}
-
-// Get a valid React component name from a layer name
-export function getReactComponentName(node: any): string {
-  // Use uniqueName if available, otherwise use name
-  const name: string = node?.uniqueName || node?.name;
-
-  // Default name if nothing valid is provided
-  if (!name || name.trim() === "") {
-    return "App";
-  }
-
-  // Convert to PascalCase
-  let componentName = name
-    .replace(/[^a-zA-Z0-9_]/g, " ") // Replace non-alphanumeric chars with spaces
-    .split(/\s+/) // Split by spaces
-    .map((part) =>
-      part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : "",
-    )
-    .join("");
-
-  // Ensure it starts with uppercase letter (React component convention)
-  componentName =
-    componentName.charAt(0).toUpperCase() + componentName.slice(1);
-
-  // Ensure it's a valid identifier - if it starts with a number, prefix with 'Component'
-  if (/^[0-9]/.test(componentName)) {
-    componentName = "Component" + componentName;
-  }
-
-  // If we ended up with nothing valid, use the default
-  return componentName || "App";
-}
-
-// // Get a Svelte-friendly component name
-// export function getSvelteElementName(
-//   elementType: string,
-//   nodeName?: string,
-// ): string {
-//   // For Svelte, use semantic element names where possible
-//   if (elementType === "TEXT" || elementType === "p") {
-//     return "p";
-//   } else if (elementType === "img" || elementType === "IMAGE") {
-//     return "img";
-//   } else if (
-//     nodeName &&
-//     (nodeName.toLowerCase().includes("button") ||
-//       nodeName.toLowerCase().includes("btn"))
-//   ) {
-//     return "button";
-//   } else if (nodeName && nodeName.toLowerCase().includes("link")) {
-//     return "a";
-//   } else {
-//     return "div"; // Default element
-//   }
-// }
-//
-// // Generate semantic class names for Svelte
-// export function getSvelteClassName(prefix?: string, nodeType?: string): string {
-//   if (!prefix) {
-//     return nodeType?.toLowerCase() || "element";
-//   }
-//
-//   // Clean and format the prefix
-//   return prefix
-//     .replace(/[^a-zA-Z0-9_-]/g, "-")
-//     .replace(/-{2,}/g, "-") // Replace multiple hyphens with a single one
-//     .replace(/^-+|-+$/g, "") // Remove leading/trailing hyphens
-//     .toLowerCase();
-// }
-
-// Generate component code based on the specified mode
-function generateComponentCode(
-  html: string,
-  sceneNode: Array<SceneNode>,
-  mode: HtmlGenerationMode,
-): string {
-  switch (mode) {
-    case "styled-components":
-      return generateReactComponent(html, sceneNode);
-    case "svelte":
-      return generateSvelteComponent(html);
-    case "html":
-    case "jsx":
-    default:
-      return html;
-  }
-}
-
-// Generate React component from HTML, with optional styled-components
-function generateReactComponent(
-  html: string,
-  sceneNode: Array<SceneNode>,
-): string {
-  const styledComponentsCode = generateStyledComponents();
-
-  const componentName = getReactComponentName(sceneNode[0]);
-
-  const imports = [
-    'import React from "react";',
-    'import styled from "styled-components";',
-  ];
-
-  return `${imports.join("\n")}
-${styledComponentsCode ? `\n${styledComponentsCode}` : ""}
-
-export const ${componentName} = () => {
-  return (
-${indentString(html, 4)}
-  );
-};`;
-}
-
-// Generate Svelte component from the collected styles and HTML
-function generateSvelteComponent(html: string): string {
-  // Build CSS classes similar to styled-components but for Svelte
-  const cssRules: string[] = [];
-
-  Object.entries(cssCollection).forEach(([className, { styles }]) => {
-    if (!styles.length) return;
-
-    // Always use class selector to avoid conflicts
-    cssRules.push(
-      `.${className} {\n  ${styles.join(";\n  ")}${styles.length ? ";" : ""}\n}`,
-    );
-  });
-
-  return `${html}
-
-<style>
-${cssRules.join("\n\n")}
-</style>`;
-}
 
 export const htmlMain = async (
   sceneNode: Array<SceneNode>,
@@ -335,23 +86,14 @@ export const htmlMain = async (
   // Always return an object with html property
   const output: HtmlOutput = { html: htmlContent };
 
-  // Handle different HTML generation modes
-  const mode = settings.htmlGenerationMode || "html";
-
-  if (mode !== "html") {
-    // Generate component code for non-html modes
-    output.html = generateComponentCode(htmlContent, sceneNode, mode);
-
-    // For svelte mode, we don't need separate CSS as it's included in the component
-    if (mode === "svelte" && Object.keys(cssCollection).length > 0) {
-      // CSS is already included in the Svelte component
-    }
-  } else if (Object.keys(cssCollection).length > 0) {
+  if (Object.keys(cssCollection).length > 0) {
     // For plain HTML with CSS, include CSS separately
     output.css = getCollectedCSS();
   }
-  console.log("zqc", output);
+  console.log("代码：", output);
   // TODO: 添加代码优化功能
+  const jsonNodes = parseHTMLToNodes(output.html);
+  output.html = parseNodesToHTML(jsonNodes);
   return output;
 };
 
@@ -484,44 +226,10 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
   const styledHtml = layoutBuilder.getTextSegments(node);
   previousExecutionCache.push(...styledHtml);
 
-  const mode = settings.htmlGenerationMode || "html";
-
-  // For styled-components mode
-  if (mode === "styled-components") {
-    const componentName = layoutBuilder.cssClassName
-      ? getComponentName(node, layoutBuilder.cssClassName, "p")
-      : getComponentName(node, undefined, "p");
-
-    if (styledHtml.length === 1) {
-      return `\n<${componentName}>${styledHtml[0].text}</${componentName}>`;
-    } else {
-      const content = styledHtml
-        .map((style) => {
-          const tag =
-            style.openTypeFeatures.SUBS
-              ? "sub"
-              : style.openTypeFeatures.SUPS
-                ? "sup"
-                : "span";
-
-          if (style.componentName) {
-            return `<${style.componentName}>${style.text}</${style.componentName}>`;
-          }
-          return `<${tag}>${style.text}</${tag}>`;
-        })
-        .join("");
-
-      return `\n<${componentName}>${content}</${componentName}>`;
-    }
-  }
-
   // Standard HTML/CSS approach for HTML, React or Svelte
   let content: string;
   if (styledHtml.length === 1) {
-    // For HTML and React modes, we use inline styles
-    if (mode === "html" || mode === "jsx") {
-      layoutBuilder.addStyles(styledHtml[0].style);
-    }
+    layoutBuilder.addStyles(styledHtml[0].style);
 
     content = styledHtml[0].text;
 
@@ -534,9 +242,6 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
 
     if (additionalTag) {
       content = `<${additionalTag}>${content}</${additionalTag}>`;
-    } else if (mode === "svelte" && styledHtml[0].className) {
-      // Use span just like styled-components for consistency
-      content = `<span class="${styledHtml[0].className}">${content}</span>`;
     }
   } else {
     content = styledHtml
@@ -549,18 +254,13 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
               ? "sup"
               : "span";
 
-        // Use class name for Svelte with same approach as styled-components
-        if (mode === "svelte" && style.className) {
-          return `<span class="${style.className}">${style.text}</span>`;
-        }
-
         return `<${tag} style="${style.style}">${style.text}</${tag}>`;
       })
       .join("");
   }
-
+// 输出: "Hello world&nbsp;&nbsp;with&nbsp;&nbsp;multiple&nbsp;&nbsp;&nbsp;spaces"
   // Always use div as container to be consistent with styled-components
-  return `\n<div${layoutBuilder.build()}>${content}</div>`;
+  return `\n<span${layoutBuilder.build()}>${content.replace(/\s\s/g, "&nbsp;&nbsp;")}</span>`;
 };
 
 const htmlFrame = async (
@@ -570,7 +270,7 @@ const htmlFrame = async (
   const childrenStr = await htmlWidgetGenerator(node.children, settings);
 
   if (node.layoutMode !== "NONE") {
-    const rowColumn = htmlAutoLayoutProps(node, settings);
+    const rowColumn = htmlAutoLayoutProps(node);
     return await htmlContainer(node, childrenStr, rowColumn, settings);
   }
 
@@ -622,9 +322,8 @@ const htmlContainer = async (
 
       if (hasChildren) {
         builder.addStyles(
-          formatWithJSX(
+          format(
             "background-image",
-            settings.htmlGenerationMode === "jsx",
             `url(${imgUrl})`,
           ),
         );
@@ -635,27 +334,10 @@ const htmlContainer = async (
     }
 
     const build = builder.build(additionalStyles);
-    const mode = settings.htmlGenerationMode || "html";
-
-    // For styled-components mode
-    if (mode === "styled-components" && builder.cssClassName) {
-      const componentName = getComponentName(node, builder.cssClassName);
-
-      if (children) {
-        return `\n<${componentName}>${indentString(children)}\n</${componentName}>`;
-      } else {
-        return `\n<${componentName} ${src}/>`;
-      }
-    }
 
     // Standard HTML approach for HTML, React, or Svelte
     if (children) {
       return `\n<${tag}${build}${src}>${indentString(children)}\n</${tag}>`;
-    } else if (
-      selfClosingTags.includes(tag) ||
-      settings.htmlGenerationMode === "jsx"
-    ) {
-      return `\n<${tag}${build}${src} />`;
     } else {
       return `\n<${tag}${build}${src}></${tag}>`;
     }
@@ -689,11 +371,11 @@ const htmlLine = (node: LineNode, settings: HTMLSettings): string => {
   return `\n<div${builder.build()}></div>`;
 };
 
-export const htmlCodeGenTextStyles = (settings: HTMLSettings) => {
+export const htmlCodeGenTextStyles = () => {
   const result = previousExecutionCache
     .map(
       (style) =>
-        `// ${style.text}\n${style.style.split(settings.htmlGenerationMode === "jsx" ? "," : ";").join(";\n")}`,
+        `// ${style.text}\n${style.style.split(";").join(";\n")}`,
     )
     .join("\n---\n");
 

@@ -1,4 +1,4 @@
-import { formatWithJSX } from "../common/parseJSX";
+import { format } from "../common/formatTool";
 import { htmlShadow } from "./builderImpl/htmlShadow";
 import {
   htmlVisibility,
@@ -19,7 +19,6 @@ import {
 } from "../common/commonPosition";
 import {
   numberToFixedString,
-  stringToClassName,
 } from "../common/numToAutoFixed";
 import { commonStroke } from "../common/commonStroke";
 import {
@@ -28,25 +27,14 @@ import {
   formatStyleAttribute,
 } from "../common/commonFormatAttributes";
 import { HTMLSettings } from "types";
-import {
-  cssCollection,
-  generateUniqueClassName,
-  stylesToCSS,
-} from "./htmlMain";
 
 export class HtmlDefaultBuilder {
   styles: Array<string>;
   data: Array<string>;
   node: SceneNode;
   settings: HTMLSettings;
-  cssClassName: string | null = null;
 
   get name() {
-    if (this.settings.htmlGenerationMode === "styled-components") {
-      return this.settings.showLayerNames
-        ? (this.node as any).uniqueName || this.node.name
-        : "";
-    }
     return this.settings.showLayerNames ? this.node.name : "";
   }
 
@@ -54,62 +42,11 @@ export class HtmlDefaultBuilder {
     return this.node.visible;
   }
 
-  get isJSX() {
-    return this.settings.htmlGenerationMode === "jsx";
-  }
-
-  // get exportCSS() {
-  //   return this.settings.htmlGenerationMode === "svelte";
-  // }
-  //
-  // get useStyledComponents() {
-  //   return this.settings.htmlGenerationMode === "styled-components";
-  // }
-  //
-  // get useInlineStyles() {
-  //   return (
-  //     this.settings.htmlGenerationMode === "html" ||
-  //     this.settings.htmlGenerationMode === "jsx"
-  //   );
-  // }
-
-  // Get the appropriate HTML element based on node type
-  // get htmlElement(): string {
-  //   if (this.node.type === "TEXT") return "p";
-  //   return "div";
-  // }
-
   constructor(node: SceneNode, settings: HTMLSettings) {
     this.node = node;
     this.settings = settings;
     this.styles = [];
     this.data = [];
-
-    // For both Svelte and styled-components, use sequential class names
-    if (
-      this.settings.htmlGenerationMode === "svelte" ||
-      this.settings.htmlGenerationMode === "styled-components"
-    ) {
-      // Use uniqueName (which already has _01, _02 suffixes) if available
-      let baseClassName =
-        (this.node as any).uniqueName ||
-        this.node.name ||
-        this.node.type.toLowerCase();
-
-      // Clean the name and create a valid CSS class name
-      baseClassName = baseClassName
-        .replace(/[^a-zA-Z0-9\s_-]/g, "")
-        .replace(/\s+/g, "-")
-        .toLowerCase();
-
-      // Make sure it's valid
-      if (!/^[a-z]/i.test(baseClassName)) {
-        baseClassName = `${this.node.type.toLowerCase()}-${baseClassName}`;
-      }
-
-      // Generate unique class name with simple counter suffix
-      this.cssClassName = generateUniqueClassName(baseClassName);
-    }
   }
 
   commonPositionStyles(): this {
@@ -128,7 +65,7 @@ export class HtmlDefaultBuilder {
       );
     }
     this.shadow();
-    this.border(this.settings);
+    this.border();
     this.blur();
     return this;
   }
@@ -138,20 +75,20 @@ export class HtmlDefaultBuilder {
   };
 
   blend(): this {
-    const { node, isJSX } = this;
+    const { node } = this;
     this.addStyles(
-      htmlVisibility(node, isJSX),
+      htmlVisibility(node),
       // @ts-ignore
-      ...htmlRotation(node as LayoutMixin, isJSX),
-      htmlOpacity(node as MinimalBlendMixin, isJSX),
-      htmlBlendMode(node as MinimalBlendMixin, isJSX),
+      ...htmlRotation(node as LayoutMixin),
+      htmlOpacity(node as MinimalBlendMixin),
+      htmlBlendMode(node as MinimalBlendMixin),
     );
     return this;
   }
 
-  border(settings: HTMLSettings): this {
+  border(): this {
     const { node } = this;
-    this.addStyles(...htmlBorderRadius(node, this.isJSX));
+    this.addStyles(...htmlBorderRadius(node));
 
     const commonBorder = commonStroke(node);
     if (!commonBorder) {
@@ -188,21 +125,19 @@ export class HtmlDefaultBuilder {
         node.type === "COMPONENT"
       ) {
         this.addStyles(
-          formatWithJSX("outline", this.isJSX, consolidateBorders(weight)),
+          format("outline", consolidateBorders(weight)),
         );
         if (strokeAlign === "CENTER") {
           this.addStyles(
-            formatWithJSX(
+            format(
               "outline-offset",
-              this.isJSX,
               `${numberToFixedString(-weight / 2)}px`,
             ),
           );
         } else if (strokeAlign === "INSIDE") {
           this.addStyles(
-            formatWithJSX(
+            format(
               "outline-offset",
-              this.isJSX,
               `${numberToFixedString(-weight)}px`,
             ),
           );
@@ -210,43 +145,39 @@ export class HtmlDefaultBuilder {
       } else {
         // Default: use regular border on autolayout + strokeAlign: inside
         this.addStyles(
-          formatWithJSX("border", this.isJSX, consolidateBorders(weight)),
+          format("border", consolidateBorders(weight)),
         );
       }
     } else {
       // For non-uniform borders, always use individual border properties
       if (commonBorder.left !== 0) {
         this.addStyles(
-          formatWithJSX(
+          format(
             "border-left",
-            this.isJSX,
             consolidateBorders(commonBorder.left),
           ),
         );
       }
       if (commonBorder.top !== 0) {
         this.addStyles(
-          formatWithJSX(
+          format(
             "border-top",
-            this.isJSX,
             consolidateBorders(commonBorder.top),
           ),
         );
       }
       if (commonBorder.right !== 0) {
         this.addStyles(
-          formatWithJSX(
+          format(
             "border-right",
-            this.isJSX,
             consolidateBorders(commonBorder.right),
           ),
         );
       }
       if (commonBorder.bottom !== 0) {
         this.addStyles(
-          formatWithJSX(
+          format(
             "border-bottom",
-            this.isJSX,
             consolidateBorders(commonBorder.bottom),
           ),
         );
@@ -256,19 +187,33 @@ export class HtmlDefaultBuilder {
   }
 
   position(): this {
-    const { node, isJSX } = this;
+    const { node } = this;
     const isAbsolutePosition = commonIsAbsolutePosition(node);
     if (isAbsolutePosition) {
       const { x, y } = getCommonPositionValue(node, this.settings);
+      if(x && y) {
+        this.addStyles(
+          format("left", x),
+          format("top", y),
+          format("position", "absolute"),
+        );
+      } else if(y && !x) {
+        this.addStyles(
+          format("top", y),
+          format("position", "absolute"),
+        );
+      } else if(x && !y) {
+        this.addStyles(
+          format("left", x),
+          format("position", "absolute"),
+        );
+      } else {
+        this.addStyles(format("position", "absolute"));
+      }
 
-      this.addStyles(
-        formatWithJSX("left", isJSX, x),
-        formatWithJSX("top", isJSX, y),
-        formatWithJSX("position", isJSX, "absolute"),
-      );
     } else {
       if (node.type === "GROUP" || (node as any).isRelative) {
-        this.addStyles(formatWithJSX("position", isJSX, "relative"));
+        this.addStyles(format("position", "relative"));
       }
     }
 
@@ -281,9 +226,8 @@ export class HtmlDefaultBuilder {
   ): this {
     if (property === "text") {
       this.addStyles(
-        formatWithJSX(
+        format(
           "text",
-          this.isJSX,
           htmlColorFromFills(paintArray as any),
         ),
       );
@@ -292,14 +236,14 @@ export class HtmlDefaultBuilder {
 
     const backgroundValues = buildBackgroundValues(paintArray as any);
     if (backgroundValues) {
-      this.addStyles(formatWithJSX("background", this.isJSX, backgroundValues));
+      this.addStyles(format("background", backgroundValues));
 
       // Add blend mode property if multiple fills exist with different blend modes
       if (paintArray !== figma.mixed) {
         const blendModes = this.buildBackgroundBlendModes(paintArray);
         if (blendModes) {
           this.addStyles(
-            formatWithJSX("background-blend-mode", this.isJSX, blendModes),
+            format("background-blend-mode", blendModes),
           );
         }
       }
@@ -331,28 +275,27 @@ export class HtmlDefaultBuilder {
   }
 
   shadow(): this {
-    const { node, isJSX } = this;
+    const { node } = this;
     if ("effects" in node) {
       const shadow = htmlShadow(node);
       if (shadow) {
-        this.addStyles(formatWithJSX("box-shadow", isJSX, htmlShadow(node)));
+        this.addStyles(format("box-shadow", htmlShadow(node)));
       }
     }
     return this;
   }
 
   size(): this {
-    const { node, settings } = this;
-    const { width, height, constraints } = htmlSizePartial(
-      node,
-      settings.htmlGenerationMode === "jsx",
-    );
+    const { node } = this;
+    const { width, height, constraints } = htmlSizePartial(node);
 
     if (node.type === "TEXT") {
       switch (node.textAutoResize) {
         case "WIDTH_AND_HEIGHT":
           break;
         case "HEIGHT":
+          // console.log("width", width);
+          // console.log("height", height);
           this.addStyles(width);
           break;
         case "NONE":
@@ -373,9 +316,9 @@ export class HtmlDefaultBuilder {
   }
 
   autoLayoutPadding(): this {
-    const { node, isJSX } = this;
+    const { node } = this;
     if ("paddingLeft" in node) {
-      this.addStyles(...htmlPadding(node, isJSX));
+      this.addStyles(...htmlPadding(node));
     }
     return this;
   }
@@ -388,9 +331,8 @@ export class HtmlDefaultBuilder {
       );
       if (blur) {
         this.addStyles(
-          formatWithJSX(
+          format(
             "filter",
-            this.isJSX,
             // @ts-ignore
             `blur(${numberToFixedString(blur.radius / 2)}px)`,
           ),
@@ -402,9 +344,8 @@ export class HtmlDefaultBuilder {
       );
       if (backgroundBlur) {
         this.addStyles(
-          formatWithJSX(
+          format(
             "backdrop-filter",
-            this.isJSX,
             // @ts-ignore
             `blur(${numberToFixedString(backgroundBlur.radius / 2)}px)`,
           ),
@@ -422,30 +363,11 @@ export class HtmlDefaultBuilder {
   build(additionalStyle: Array<string> = []): string {
     this.addStyles(...additionalStyle);
 
-    // Different handling based on generation mode
-    const mode = this.settings.htmlGenerationMode || "html";
-
-    // Early return for styled-components with no other attributes
-    if (
-      mode === "styled-components" &&
-      !this.data.length &&
-      this.styles.length > 0 &&
-      this.cssClassName
-    ) {
-      this.storeStyles();
-      return ""; // Return empty string as we're using the component directly
-    }
 
     let classNames: string[] = [];
     if (this.name) {
       this.addData("layer", this.name.trim());
 
-      if (mode !== "svelte" && mode !== "styled-components") {
-        const layerNameClass = stringToClassName(this.name.trim());
-        if (layerNameClass !== "") {
-          classNames.push(layerNameClass);
-        }
-      }
     }
 
     if ("componentProperties" in this.node && this.node.componentProperties) {
@@ -466,69 +388,15 @@ export class HtmlDefaultBuilder {
         .forEach((d) => this.data.push(d));
     }
 
-    // For Svelte mode, we use classes
-    if (mode === "svelte" && this.styles.length > 0 && this.cssClassName) {
-      classNames.push(this.cssClassName);
-      this.storeStyles();
-      this.styles = []; // Clear inline styles for Svelte
-    }
-    // For styled-components, we need the class but keep styles for the component
-    else if (
-      mode === "styled-components" &&
-      this.styles.length > 0 &&
-      this.cssClassName
-    ) {
-      classNames.push(this.cssClassName);
-      this.storeStyles();
-      // Keep styles for styled-components
-    }
 
     const dataAttributes = this.data.join("");
 
     // Class attributes
-    const classAttribute =
-      mode === "styled-components"
-        ? formatClassAttribute(
-            classNames.filter((c) => c !== this.cssClassName),
-            this.isJSX,
-          )
-        : formatClassAttribute(classNames, this.isJSX);
+    const classAttribute = formatClassAttribute(classNames);
 
     // Style attribute
-    const styleAttribute = formatStyleAttribute(this.styles, this.isJSX);
+    const styleAttribute = formatStyleAttribute(this.styles);
 
     return `${dataAttributes}${classAttribute}${styleAttribute}`;
-  }
-
-  // Extract style storage into a method to avoid duplication
-  private storeStyles(): void {
-    if (!this.cssClassName || this.styles.length === 0) return;
-
-    // Convert to CSS format if needed
-    const cssStyles = stylesToCSS(this.styles, this.isJSX);
-
-    // Both modes use the standard div/span elements, no need for semantic HTML inference
-    // which causes conflicts with duplicate tag selectors
-    let element = this.node.type === "TEXT" ? "p" : "div";
-
-    // Only override for really obvious cases
-    if ((this.node as any).name?.toLowerCase().includes("button")) {
-      element = "button";
-    } else if (
-      (this.node as any).name?.toLowerCase().includes("img") ||
-      (this.node as any).name?.toLowerCase().includes("image")
-    ) {
-      element = "img";
-    }
-
-    cssCollection[this.cssClassName] = {
-      styles: cssStyles,
-      nodeName:
-        (this.node as any).uniqueName ||
-        this.node.name?.replace(/[^a-zA-Z0-9]/g, "") ||
-        undefined,
-      nodeType: this.node.type,
-      element: element,
-    };
   }
 }

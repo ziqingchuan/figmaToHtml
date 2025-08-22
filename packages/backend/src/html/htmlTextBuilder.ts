@@ -1,4 +1,4 @@
-import { formatMultipleJSX, formatWithJSX } from "../common/parseJSX";
+import { formatMultipleStyle, format } from "../common/formatTool";
 import { HtmlDefaultBuilder } from "./htmlDefaultBuilder";
 import { htmlColorFromFills } from "./builderImpl/htmlColor";
 import {
@@ -6,12 +6,7 @@ import {
   commonLineHeight,
 } from "../common/commonTextHeightSpacing";
 import { HTMLSettings, StyledTextSegmentSubset } from "types";
-import {
-  cssCollection,
-  generateUniqueClassName,
-  stylesToCSS,
-  getComponentName,
-} from "./htmlMain";
+
 
 export class HtmlTextBuilder extends HtmlDefaultBuilder {
   constructor(node: TextNode, settings: HTMLSettings) {
@@ -36,7 +31,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
       return [];
     }
 
-    return segments.map((segment, index) => {
+    return segments.map((segment) => {
       // Prepare additional CSS properties from layer blur and drop shadow effects.
       const additionalStyles: { [key: string]: string } = {};
 
@@ -49,11 +44,12 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
         additionalStyles["text-shadow"] = textShadowStyle;
       }
 
-      const styleAttributes = formatMultipleJSX(
+      const styleAttributes = formatMultipleStyle(
         {
           color: htmlColorFromFills(segment.fills as any),
           "font-size": segment.fontSize,
-          "font-family": segment.fontName.family,
+          "font-family": "-apple-system, BlinkMacSystemFont, sans-serif",
+          // "font-family": `${segment.fontName.family},serif`,
           "font-style": this.getFontStyle(segment.fontName.style),
           "font-weight": `${segment.fontWeight}`,
           "text-decoration": this.textDecoration(segment.textDecoration),
@@ -66,9 +62,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
           // "text-indent": segment.indentation,
           "word-wrap": "break-word",
           ...additionalStyles,
-        },
-        this.isJSX,
-      );
+        });
 
       const charsWithLineBreak = segment.characters.split("\n").join("<br/>");
       const result: any = {
@@ -76,51 +70,6 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
         text: charsWithLineBreak,
         openTypeFeatures: segment.openTypeFeatures,
       };
-
-      // Add class name and component name for Svelte or styled-components modes
-      const mode = this.settings.htmlGenerationMode;
-      if (
-        (mode === "svelte" || mode === "styled-components") &&
-        styleAttributes
-      ) {
-        // Use the pre-assigned uniqueId from the segment if available,
-        // or generate one if not (as a fallback)
-        const segmentName =
-          (segment as any).uniqueId ||
-          `${((node as any).uniqueName || node.name || "text").replace(/[^a-zA-Z0-9_-]/g, "").toLowerCase()}_text_${(index + 1).toString().padStart(2, "0")}`;
-
-        const className = generateUniqueClassName(segmentName);
-        result.className = className;
-
-        // Convert styles to CSS format
-        const cssStyles = stylesToCSS(
-          styleAttributes
-            .split(this.isJSX ? "," : ";")
-            .map((style) => style.trim())
-            .filter((style) => style),
-          this.isJSX,
-        );
-
-        // In both modes, use span for text segments to avoid selector conflicts
-        const elementTag = "span";
-
-        // Store in cssCollection with consistent metadata
-        cssCollection[className] = {
-          styles: cssStyles,
-          nodeName: segmentName,
-          nodeType: "TEXT",
-          element: elementTag,
-        };
-
-        if (mode === "styled-components") {
-          result.componentName = getComponentName(
-            { name: segmentName },
-            className,
-            elementTag,
-          );
-        }
-      }
-
       return result;
     });
   }
@@ -135,9 +84,9 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
 
   textTrim(): this {
     if ("leadingTrim" in this.node && this.node.leadingTrim === "CAP_HEIGHT") {
-      this.addStyles(formatWithJSX("text-box-trim", this.isJSX, "trim-both"));
+      this.addStyles(format("text-box-trim", "trim-both"));
       this.addStyles(
-        formatWithJSX("text-box-edge", this.isJSX, "cap alphabetic"),
+        format("text-box-edge", "cap alphabetic"),
       );
     }
     return this;
@@ -217,7 +166,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
           textAlign = "justify";
           break;
       }
-      this.addStyles(formatWithJSX("text-align", this.isJSX, textAlign));
+      this.addStyles(format("text-align", textAlign));
     }
     return this;
   }
@@ -236,10 +185,10 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
       }
       if (alignItems) {
         this.addStyles(
-          formatWithJSX("justify-content", this.isJSX, alignItems),
+          format("justify-content", alignItems),
         );
-        this.addStyles(formatWithJSX("display", this.isJSX, "flex"));
-        this.addStyles(formatWithJSX("flex-direction", this.isJSX, "column"));
+        this.addStyles(format("display", "flex"));
+        this.addStyles(format("flex-direction", "column"));
       }
     }
     return this;

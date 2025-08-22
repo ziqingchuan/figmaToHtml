@@ -1,5 +1,4 @@
-import { HTMLSettings } from "types";
-import { formatMultipleJSXArray } from "../../common/parseJSX";
+import { formatMultipleArray } from "../../common/formatTool";
 
 const getFlexDirection = (node: InferredAutoLayoutResult): string =>
   node.layoutMode === "HORIZONTAL" ? "" : "column";
@@ -68,11 +67,8 @@ const getFlex = (
     ? "flex"
     : "inline-flex";
 
-export const htmlAutoLayoutProps = (
-  node: SceneNode & InferredAutoLayoutResult,
-  settings: HTMLSettings,
-): string[] =>
-  formatMultipleJSXArray(
+export const htmlAutoLayoutProps = (node: SceneNode & InferredAutoLayoutResult): string[] =>
+  formatMultipleArray(
     {
       "flex-direction": getFlexDirection(node),
       "justify-content": getJustifyContent(node),
@@ -82,5 +78,4 @@ export const htmlAutoLayoutProps = (
       "flex-wrap": getFlexWrap(node),
       "align-content": getAlignContent(node),
     },
-    settings.htmlGenerationMode === "jsx",
   );

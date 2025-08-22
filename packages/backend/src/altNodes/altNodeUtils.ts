@@ -1,9 +1,7 @@
-// import { AltNode } from "types";
 import { curry } from "../common/curry";
 import { exportAsyncProxy } from "../common/exportAsyncProxy";
 import { addWarning } from "../common/commonConversionWarnings";
-// import { getVariableNameFromColor } from "./jsonNodeConversion";
-// import { htmlColor } from "../html/builderImpl/htmlColor";
+
 
 export const overrideReadonlyProperty = curry(
   <T, K extends keyof T>(prop: K, value: any, obj: T): T =>
@@ -49,10 +47,6 @@ export const isTypeOrGroupOfTypes = curry(
   },
 );
 
-// export const isSVGNode = (node: SceneNode) => {
-//   const altNode = node as AltNode<typeof node>;
-//   return altNode.canBeFlattened;
-// };
 
 export const renderAndAttachSVG = async (node: any) => {
   if (node.canBeFlattened) {

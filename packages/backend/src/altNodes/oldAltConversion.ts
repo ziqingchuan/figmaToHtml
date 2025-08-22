@@ -69,7 +69,6 @@ export const convertNodeToAltNode =
         // if a Group is visible and has only one child, the Group should be ungrouped.
         if (type === "GROUP" && node.children.length === 1 && node.visible)
           return convertNodeToAltNode(parent)(node.children[0]);
-      // goto SECTION
 
       case "SECTION":
         const group = cloneNode(node, parent);

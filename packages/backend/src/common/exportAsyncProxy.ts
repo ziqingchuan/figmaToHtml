@@ -35,8 +35,6 @@ export const exportAsyncProxy = async <
   let result;
   if (settings.format === "SVG_STRING") {
     result = await figmaNode.exportAsync(settings as ExportSettingsSVGString);
-    // } else if (settings.format === "JSON_REST_V1") {
-    //   result = await node.exportAsync(settings as ExportSettingsREST);
   } else {
     result = await figmaNode.exportAsync(settings as ExportSettings);
   }

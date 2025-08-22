@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { HTMLSettings, TailwindSettings } from "types";
+import { HTMLSettings } from "types";
 
 export const getCommonPositionValue = (
   node: SceneNode,
-  settings?: HTMLSettings | TailwindSettings,
+  settings?: HTMLSettings,
 ): { x: number; y: number } => {
   if (node.parent && node.parent.absoluteBoundingBox) {
     if (settings?.embedVectors && node.svg) {
@@ -13,7 +13,6 @@ export const getCommonPositionValue = (
         y: node.absoluteBoundingBox.y - node.parent.absoluteBoundingBox.y,
       };
     }
-
     return { x: node.x, y: node.y };
   }
 
@@ -23,7 +22,6 @@ export const getCommonPositionValue = (
       y: node.y - node.parent.y,
     };
   }
-
   return {
     x: node.x,
     y: node.y,

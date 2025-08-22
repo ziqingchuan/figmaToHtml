@@ -3,13 +3,10 @@ import {
   retrieveGenericSolidUIColors,
 } from "./common/retrieveUI/retrieveColors";
 import {
-  // addWarning,
   clearWarnings,
   warnings,
 } from "./common/commonConversionWarnings";
 import { postConversionComplete, postEmptyMessage } from "./messaging";
-import { PluginSettings } from "types";
-import { convertToCode } from "./common/retrieveUI/convertToCode";
 import { generateHTMLPreview } from "./html/htmlMain";
 import { oldConvertNodesToAltNodes } from "./altNodes/oldAltConversion";
 import {
@@ -22,12 +19,22 @@ import {
   processColorVariablesTime,
   resetPerformanceCounters,
 } from "./altNodes/jsonNodeConversion";
+import { PluginSettings } from "types";
+import { htmlMain } from "./html/htmlMain";
+
+export const convertToCode = async (
+  nodes: SceneNode[],
+  settings: PluginSettings,
+) => {
+  return (await htmlMain(nodes, settings)).html;
+};
+
 
 export const run = async (settings: PluginSettings) => {
   resetPerformanceCounters();
   clearWarnings();
 
-  const { framework, useOldPluginVersion2025 } = settings;
+  const { useOldPluginVersion2025 } = settings;
   const selection = figma.currentPage.selection;
 
   if (selection.length === 0) {
@@ -46,21 +53,6 @@ export const run = async (settings: PluginSettings) => {
     convertedSelection = await nodesToJSON(selection, settings);
     console.log(`[benchmark] nodesToJSON: ${Date.now() - nodeToJSONStart}ms`);
     console.log("nodeJson", convertedSelection);
-    // const removeParentRecursive = (obj: any): any => {
-    //   if (Array.isArray(obj)) {
-    //     return obj.map(removeParentRecursive);
-    //   }
-    //   if (obj && typeof obj === 'object') {
-    //     const newObj = { ...obj };
-    //     delete newObj.parent;
-    //     for (const key in newObj) {
-    //       newObj[key] = removeParentRecursive(newObj[key]);
-    //     }
-    //     return newObj;
-    //   }
-    //   return obj;
-    // };
-    // console.log("nodeJson without parent refs:", removeParentRecursive(convertedSelection));
   }
 
   console.log("[debug] convertedSelection", { ...convertedSelection[0] });
@@ -85,8 +77,8 @@ export const run = async (settings: PluginSettings) => {
   );
 
   const colorPanelStart = Date.now();
-  const colors = await retrieveGenericSolidUIColors(framework);
-  const gradients = await retrieveGenericLinearGradients(framework);
+  const colors = await retrieveGenericSolidUIColors();
+  const gradients = await retrieveGenericLinearGradients();
   console.log(
     `[benchmark] color and gradient panel: ${Date.now() - colorPanelStart}ms`,
   );

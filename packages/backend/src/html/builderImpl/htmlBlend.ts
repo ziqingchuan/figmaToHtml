@@ -1,5 +1,5 @@
 import { numberToFixedString } from "../../common/numToAutoFixed";
-import { formatWithJSX } from "../../common/parseJSX";
+import { format } from "../../common/formatTool";
 import { AltNode } from "../../alt_api_types";
 
 /**
@@ -10,23 +10,16 @@ import { AltNode } from "../../alt_api_types";
  */
 export const htmlOpacity = (
   node: MinimalBlendMixin,
-  isJsx: boolean,
 ): string => {
   // [when testing] node.opacity can be undefined
   if (node.opacity !== undefined && node.opacity !== 1) {
-    // formatWithJSX is not called here because opacity unit doesn't end in px.
-    if (isJsx) {
-      return `opacity: ${numberToFixedString(node.opacity)}`;
-    } else {
-      return `opacity: ${numberToFixedString(node.opacity)}`;
-    }
+    return `opacity: ${numberToFixedString(node.opacity)}`;
   }
   return "";
 };
 
 export const htmlBlendMode = (
   node: MinimalBlendMixin,
-  isJsx: boolean,
 ): string => {
   if (node.blendMode !== "NORMAL" && node.blendMode !== "PASS_THROUGH") {
     let blendMode = "";
@@ -79,7 +72,7 @@ export const htmlBlendMode = (
     }
 
     if (blendMode) {
-      return formatWithJSX("mix-blend-mode", isJsx, blendMode);
+      return format("mix-blend-mode", blendMode);
     }
   }
   return "";
@@ -91,7 +84,6 @@ export const htmlBlendMode = (
  */
 export const htmlVisibility = (
   node: SceneNodeMixin,
-  isJsx: boolean,
 ): string => {
   // [when testing] node.visible can be undefined
 
@@ -99,7 +91,7 @@ export const htmlVisibility = (
   // Therefore, instead of changing the visibility (which causes bugs in nested divs),
   // this plugin is going to ignore color and stroke
   if (node.visible !== undefined && !node.visible) {
-    return formatWithJSX("visibility", isJsx, "hidden");
+    return format("visibility", "hidden");
   }
   return "";
 };
@@ -109,18 +101,17 @@ export const htmlVisibility = (
  * default is [-180, -90, -45, 0, 45, 90, 180], but '0' will be ignored:
  * if rotation was changed, let it be perceived. Therefore, 1 => 45
  */
-export const htmlRotation = (node: AltNode, isJsx: boolean): string[] => {
+export const htmlRotation = (node: AltNode): string[] => {
   const rotation =
     -Math.round((node.rotation || 0) + (node.cumulativeRotation || 0)) || 0;
 
   if (rotation !== 0) {
     return [
-      formatWithJSX(
+      format(
         "transform",
-        isJsx,
         `rotate(${numberToFixedString(rotation)}deg)`,
       ),
-      formatWithJSX("transform-origin", isJsx, "top left"),
+      format("transform-origin", "top left"),
     ];
   }
   return [];
