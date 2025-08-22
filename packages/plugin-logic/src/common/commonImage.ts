@@ -1,7 +1,7 @@
 import { AltNode, ExportableNode } from "types";
 import { btoa } from "js-base64";
 import { addWarning } from "./commonConversionWarnings";
-import { exportAsyncProxy } from "./exportAsyncProxy";
+import { exportAsyncProxy } from "./utils/exportAsyncProxy";
 
 export const PLACEHOLDER_IMAGE_DOMAIN = "https://placehold.co";
 

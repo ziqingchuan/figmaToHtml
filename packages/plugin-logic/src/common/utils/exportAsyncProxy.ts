@@ -1,4 +1,4 @@
-import { postConversionStart } from "../messaging";
+import { postConversionStart } from "../../messaging";
 
 let isRunning = false;
 

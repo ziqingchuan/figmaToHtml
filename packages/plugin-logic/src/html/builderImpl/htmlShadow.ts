@@ -1,9 +1,5 @@
 import { htmlColor } from "./htmlColor";
 
-/**
- * https://tailwindcss.com/docs/box-shadow/
- * example: shadow
- */
 export const htmlShadow = (node: BlendMixin): string => {
   // [when testing] node.effects can be undefined
   if (node.effects && node.effects.length > 0) {

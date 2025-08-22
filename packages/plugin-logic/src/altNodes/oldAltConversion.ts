@@ -6,7 +6,7 @@ import {
   assignRectangleType,
   assignChildren,
 } from "./altNodeUtils";
-import { curry } from "../common/curry";
+import { curry } from "./curry";
 
 export const isTypeOrGroupOfTypes = curry(
   (matchTypes: NodeType[], node: SceneNode): boolean => {
@@ -84,11 +84,11 @@ export const convertNodeToAltNode =
       // Unsupported Nodes
       case "SLICE":
         throw new Error(
-          `Sorry, Slices are not supported. Type:${node.type} id:${node.id}`,
+          `抱歉，暂不支持SLICE节点 Type:${node.type} id:${node.id}`,
         );
       default:
         throw new Error(
-          `Sorry, an unsupported node type was selected. Type:${node.type} id:${node.id}`,
+          `抱歉，检测到未知节点 Type:${node.type} id:${node.id}`,
         );
     }
   };
@@ -129,9 +129,7 @@ export const cloneNode = <T extends BaseNode>(
 
   // Set parent explicitly in addition to using assignParent
   assignParent(parent, cloned);
-  //   if (parent) {
-  //     (cloned as any).parent = parent;
-  //   }
+
   const altNode = {
     ...cloned,
     parent: cloned.parent,
@@ -143,7 +141,7 @@ export const cloneNode = <T extends BaseNode>(
     altNode.styledTextSegments = globalTextStyleSegments[node.id];
   }
 
-  console.log("altnode:", altNode.parent, cloned.parent);
+  // console.log("altnode:", altNode.parent, cloned.parent);
 
   return altNode;
 };

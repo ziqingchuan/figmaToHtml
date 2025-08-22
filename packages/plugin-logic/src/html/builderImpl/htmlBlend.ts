@@ -1,13 +1,7 @@
-import { numberToFixedString } from "../../common/numToAutoFixed";
-import { format } from "../../common/formatTool";
+import { numberToFixedString } from "../../common/utils/numToAutoFixed";
+import { format } from "../../common/utils/formatTool";
 import { AltNode } from "../../alt_api_types";
 
-/**
- * https://tailwindcss.com/docs/opacity/
- * default is [0, 25, 50, 75, 100], but '100' will be ignored:
- * if opacity was changed, let it be visible. Therefore, 98% => 75
- * node.opacity is between [0, 1]; output will be [0, 100]
- */
 export const htmlOpacity = (
   node: MinimalBlendMixin,
 ): string => {
@@ -78,10 +72,6 @@ export const htmlBlendMode = (
   return "";
 };
 
-/**
- * https://tailwindcss.com/docs/visibility/
- * example: invisible
- */
 export const htmlVisibility = (
   node: SceneNodeMixin,
 ): string => {
@@ -96,11 +86,7 @@ export const htmlVisibility = (
   return "";
 };
 
-/**
- * https://tailwindcss.com/docs/rotate/
- * default is [-180, -90, -45, 0, 45, 90, 180], but '0' will be ignored:
- * if rotation was changed, let it be perceived. Therefore, 1 => 45
- */
+
 export const htmlRotation = (node: AltNode): string[] => {
   const rotation =
     -Math.round((node.rotation || 0) + (node.cumulativeRotation || 0)) || 0;

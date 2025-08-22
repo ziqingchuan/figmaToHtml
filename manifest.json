@@ -1,5 +1,5 @@
 {
-  "name": "figma-to-code",
+  "name": "figma2html",
   "id": "1539124463849863689",
   "api": "1.0.0",
   "main": "apps/plugin/dist/code.js",

@@ -1,4 +1,4 @@
-import { Paint } from "../api_types";
+import { Paint } from "../../api_types";
 
 /**
  * Retrieve the first visible color that is being used by the layer, in case there are more than one.

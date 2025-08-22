@@ -27,7 +27,6 @@ export interface ConversionData {
 }
 
 export type Warning = string;
-// export type Warnings = Set<Warning>;
 
 export interface Message {
   type: string;

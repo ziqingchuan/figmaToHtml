@@ -1,8 +1,8 @@
-import { indentString } from "../common/indentString";
+import { indentString } from "../common/utils/indentString";
 import { HtmlTextBuilder } from "./htmlTextBuilder";
 import { HtmlDefaultBuilder } from "./htmlDefaultBuilder";
 import { htmlAutoLayoutProps } from "./builderImpl/htmlAutoLayout";
-import { format } from "../common/formatTool";
+import { format } from "../common/utils/formatTool";
 import {
   AltNode,
   ExportableNode,
@@ -11,12 +11,11 @@ import {
   PluginSettings,
 } from "types";
 import { renderAndAttachSVG } from "../altNodes/altNodeUtils";
-import { getVisibleNodes } from "../common/nodeVisibility";
 import {
   exportNodeAsBase64PNG,
   getPlaceholderImage,
   nodeHasImageFill,
-} from "../common/images";
+} from "../common/commonImage";
 import { addWarning } from "../common/commonConversionWarnings";
 import { parseHTMLToNodes } from "./htmlToJSON";
 import { parseNodesToHTML } from "./jsonToHTML";
@@ -122,6 +121,9 @@ export const generateHTMLPreview = async (
     content: result.html,
   };
 };
+const getVisibleNodes = (nodes: readonly SceneNode[]) =>
+  nodes.filter((d) => d.visible ?? true);
+
 
 const htmlWidgetGenerator = async (
   sceneNode: ReadonlyArray<SceneNode>,

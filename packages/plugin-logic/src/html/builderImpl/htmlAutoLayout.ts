@@ -1,4 +1,4 @@
-import { formatMultipleArray } from "../../common/formatTool";
+import { formatMultipleArray } from "../../common/utils/formatTool";
 
 const getFlexDirection = (node: InferredAutoLayoutResult): string =>
   node.layoutMode === "HORIZONTAL" ? "" : "column";

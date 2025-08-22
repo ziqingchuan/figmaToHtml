@@ -1,5 +1,5 @@
 import { getCommonRadius } from "../../common/commonRadius";
-import { format } from "../../common/formatTool";
+import { format } from "../../common/utils/formatTool";
 
 export const htmlBorderRadius = (node: SceneNode): string[] => {
   let comp: string[] = [];

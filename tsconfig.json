@@ -2,7 +2,7 @@
   "files": [],
   "references": [
     { "path": "./packages/types" },
-    { "path": "./packages/backend" },
+    { "path": "./packages/plugin-logic"},
     { "path": "./packages/plugin-ui" },
     { "path": "./apps/plugin" },
     { "path": "./apps/debug" }

@@ -139,17 +139,6 @@ function checkChildrenRecursively(children: ReadonlyArray<SceneNode>): {
 //                  Main Icon Recognition Function
 // ========================================================================
 
-/**
- * Analyzes a Figma SceneNode using simplified structural rules to determine if it's likely an icon.
- * v5.1: Added rule to always consider nodes with SVG export settings as icons.
- * v5.2: Always consider VECTOR nodes as icons, regardless of size.
- * v5.3: Always consider VECTOR, BOOLEAN_OPERATION, POLYGON, STAR as icons regardless of size. Simplified size check to max dimension only.
- * v5.4: Check for disallowed types *before* checking SVG export settings.
- *
- * @param node The Figma SceneNode to evaluate.
- * @param logDetails Set to true to print debug information to the console.
- * @returns True if the node is likely an icon, false otherwise.
- */
 export function isLikelyIcon(node: SceneNode, logDetails = false): boolean {
   const info: string[] = [`Node: ${node.name} (${node.type}, ID: ${node.id})`];
   let result: boolean;

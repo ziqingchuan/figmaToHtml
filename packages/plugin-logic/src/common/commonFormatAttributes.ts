@@ -1,4 +1,4 @@
-import { lowercaseFirstLetter } from "./lowercaseFirstLetter";
+import { lowercaseFirstLetter } from "./utils/lowercaseFirstLetter";
 
 export const joinStyles = (styles: string[]) =>
   styles.map((s) => s.trim()).join("; ");

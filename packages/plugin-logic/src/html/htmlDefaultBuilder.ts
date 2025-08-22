@@ -1,4 +1,4 @@
-import { format } from "../common/formatTool";
+import { format } from "../common/utils/formatTool";
 import { htmlShadow } from "./builderImpl/htmlShadow";
 import {
   htmlVisibility,
@@ -19,7 +19,7 @@ import {
 } from "../common/commonPosition";
 import {
   numberToFixedString,
-} from "../common/numToAutoFixed";
+} from "../common/utils/numToAutoFixed";
 import { commonStroke } from "../common/commonStroke";
 import {
   formatClassAttribute,
@@ -294,8 +294,6 @@ export class HtmlDefaultBuilder {
         case "WIDTH_AND_HEIGHT":
           break;
         case "HEIGHT":
-          // console.log("width", width);
-          // console.log("height", height);
           this.addStyles(width);
           break;
         case "NONE":

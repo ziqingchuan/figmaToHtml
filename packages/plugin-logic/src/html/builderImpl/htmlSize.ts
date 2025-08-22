@@ -1,5 +1,5 @@
-import { nodeSize } from "../../common/nodeWidthHeight";
-import { format } from "../../common/formatTool";
+import { nodeSize } from "../../common/commonSize";
+import { format } from "../../common/utils/formatTool";
 import { isPreviewGlobal } from "../htmlMain";
 
 export const htmlSizePartial = (

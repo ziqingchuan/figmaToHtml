@@ -203,7 +203,6 @@ const standardMode = async () => {
 
 const codegenMode = async () => {
   console.log("[DEBUG] codegenMode - Starting codegen mode initialization");
-  // figma.showUI(__html__, { visible: false });
   await getUserSettings();
 
   figma.codegen.on(

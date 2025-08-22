@@ -1,5 +1,5 @@
 import { commonPadding } from "../../common/commonPadding";
-import { format } from "../../common/formatTool";
+import { format } from "../../common/utils/formatTool";
 
 export const htmlPadding = (node: InferredAutoLayoutResult): string[] => {
   const padding = commonPadding(node);
@@ -42,7 +42,6 @@ export const htmlPadding = (node: InferredAutoLayoutResult): string[] => {
   if (padding.right !== 0) {
     comp.push(format("padding-right", padding.right));
   }
-  // todo use REM
 
   return comp;
 };

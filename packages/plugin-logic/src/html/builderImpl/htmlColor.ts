@@ -1,5 +1,5 @@
-import { numberToFixedString } from "../../common/numToAutoFixed";
-import { retrieveTopFill } from "../../common/retrieveFill";
+import { numberToFixedString } from "../../common/utils/numToAutoFixed";
+import { retrieveTopFill } from "../../common/retrieveUI/retrieveFill";
 import { GradientPaint, Paint } from "../../api_types";
 
 /**

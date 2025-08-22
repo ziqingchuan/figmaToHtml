@@ -1,4 +1,4 @@
-import { formatMultipleStyle, format } from "../common/formatTool";
+import { formatMultipleStyle, format } from "../common/utils/formatTool";
 import { HtmlDefaultBuilder } from "./htmlDefaultBuilder";
 import { htmlColorFromFills } from "./builderImpl/htmlColor";
 import {
@@ -13,10 +13,6 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
     super(node, settings);
   }
 
-  // Override htmlElement to ensure text nodes use paragraph elements
-  // get htmlElement(): string {
-  //   return "p";
-  // }
 
   getTextSegments(node: TextNode): {
     style: string;
@@ -74,13 +70,6 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
     });
   }
 
-  // fontSize(node: TextNode, isUI = false): this {
-  //   if (node.fontSize !== figma.mixed) {
-  //     const value = isUI ? Math.min(node.fontSize, 24) : node.fontSize;
-  //     this.addStyles(formatWithJSX("font-size", this.isJSX, value));
-  //   }
-  //   return this;
-  // }
 
   textTrim(): this {
     if ("leadingTrim" in this.node && this.node.leadingTrim === "CAP_HEIGHT") {
@@ -135,11 +124,6 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
     return null;
   }
 
-  /**
-   * https://tailwindcss.com/docs/font-style/
-   * example: font-extrabold
-   * example: italic
-   */
   getFontStyle(style: string): string {
     if (style.toLowerCase().match("italic")) {
       return "italic";
