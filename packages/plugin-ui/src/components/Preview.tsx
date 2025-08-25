@@ -22,7 +22,7 @@ const Preview: React.FC<{
 
   // Calculate content dimensions based on view mode
   const contentWidth = htmlPreview.size.width * scaleFactor + 2; // I don't know why I need the 2, but it works always. I guess rounding error for zoom.
-  console.log('preview', htmlPreview.content);
+  // console.log('preview', htmlPreview.content);
   return (
     <div className="flex flex-col w-full bg-card rounded-lg border border-border">
       {/* Header with view mode controls */}

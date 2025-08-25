@@ -13,3 +13,14 @@ export type AltNode = Node & {
   x: number;
   y: number;
 };
+
+export type HtmlNode = {
+  tag: 'div' | 'span' | 'img';
+  style: string;
+  isSVG: boolean;
+  className: string;
+  SVGContent?: string;
+  children?: HtmlNode[];
+  content?: string;
+  src?: string;
+}

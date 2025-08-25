@@ -1,20 +1,11 @@
-interface Node {
-  tag: 'div' | 'span' | 'img';
-  content?: string;
-  style: string;
-  isSVG: boolean;
-  SVGContent?: string;
-  children: Node[];
-  className: string;
-  src?: string;
-}
+import { HtmlNode } from "../../node_types";
 
-export const parseNodesToHTML = (nodes: Node[]): string => {
+export const parseNodesToHTML = (nodes: HtmlNode[]): string => {
   // 收集所有样式用于生成style标签，使用className作为键
   const styleMap = new Map<string, string>();
 
   // 递归生成HTML字符串，带缩进
-  const generateHTML = (node: Node, depth: number = 0): string => {
+  const generateHTML = (node: HtmlNode, depth: number = 0): string => {
     const { tag, content, style, isSVG, SVGContent, children, className, src } = node;
     const indent = '  '.repeat(depth);
 

@@ -1,4 +1,4 @@
-import { curry } from "./curry";
+import { curry } from "../common/utils/curry";
 import { exportAsyncProxy } from "../common/utils/exportAsyncProxy";
 import { addWarning } from "../common/commonConversionWarnings";
 

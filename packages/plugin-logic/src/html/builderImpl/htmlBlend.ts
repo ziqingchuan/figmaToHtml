@@ -1,6 +1,6 @@
 import { numberToFixedString } from "../../common/utils/numToAutoFixed";
 import { format } from "../../common/utils/formatTool";
-import { AltNode } from "../../alt_api_types";
+import { AltNode } from "../../node_types";
 
 export const htmlOpacity = (
   node: MinimalBlendMixin,

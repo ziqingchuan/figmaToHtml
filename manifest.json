@@ -9,7 +9,10 @@
   "permissions": [],
   "documentAccess": "dynamic-page",
   "networkAccess": {
-    "allowedDomains": ["none"]
+    "allowedDomains": [
+      "https://api.deepseek.com/chat/completions",
+      "https://api.coze.cn/v1/workflow/run"
+    ]
   },
   "codegenLanguages": [
     { "label": "HTML", "value": "html" }

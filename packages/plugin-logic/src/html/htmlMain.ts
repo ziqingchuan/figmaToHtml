@@ -17,8 +17,11 @@ import {
   nodeHasImageFill,
 } from "../common/commonImage";
 import { addWarning } from "../common/commonConversionWarnings";
-import { parseHTMLToNodes } from "./htmlToJSON";
-import { parseNodesToHTML } from "./jsonToHTML";
+import { parseHTMLToNodes } from "./tools/htmlToJSON";
+import { parseNodesToHTML } from "./tools/jsonToHTML";
+import { DSTotal } from "./tools/DeepSeekTotal";
+import { cozeGenTotal } from "./tools/cozeForTotal";
+import { isStructureIdentical } from "./tools/structureCompare";
 
 export let isPreviewGlobal = false;
 
@@ -42,14 +45,6 @@ interface CSSCollection {
 
 export let cssCollection: CSSCollection = {};
 
-// Instance counters for class name generation - we keep this but primarily as a fallback
-const classNameCounters: Map<string, number> = new Map();
-
-// Reset all class name counters - call this at the start of processing
-export function resetClassNameCounters(): void {
-  classNameCounters.clear();
-}
-
 // Get the collected CSS as a string with improved formatting
 export function getCollectedCSS(): string {
   if (Object.keys(cssCollection).length === 0) {
@@ -65,7 +60,6 @@ export function getCollectedCSS(): string {
     .join("\n\n");
 }
 
-
 export const htmlMain = async (
   sceneNode: Array<SceneNode>,
   settings: PluginSettings,
@@ -74,29 +68,56 @@ export const htmlMain = async (
   isPreviewGlobal = isPreview;
   previousExecutionCache = [];
   cssCollection = {};
-  resetClassNameCounters(); // Reset counters for each new generation
   let htmlContent = await htmlWidgetGenerator(sceneNode, settings);
-
-  // remove the initial \n that is made in Container.
   if (htmlContent.length > 0 && htmlContent.startsWith("\n")) {
     htmlContent = htmlContent.slice(1, htmlContent.length);
   }
-
-  // Always return an object with html property
   const output: HtmlOutput = { html: htmlContent };
 
   if (Object.keys(cssCollection).length > 0) {
-    // For plain HTML with CSS, include CSS separately
     output.css = getCollectedCSS();
   }
-  console.log("代码：", output);
-  // TODO: 添加代码优化功能
-  const jsonNodes = parseHTMLToNodes(output.html);
-  console.log("jsonNodes：", jsonNodes);
-  output.html = parseNodesToHTML(jsonNodes);
+  // console.log("代码：", output);
+  let jsonNodes; // 传入的Nodes
+  let processedNodes; // AI处理后的Nodes
+  // 先尝试用AI，这时className初始化为空，后续如果AI生成的结构出问题，就用人工生成的className，此时useAI为false
+  jsonNodes = parseHTMLToNodes(output.html, true);
+  console.log("完成jsonNodes：", jsonNodes);
+  // output.html = parseNodesToHTML(jsonNodes);
+  try {
+    processedNodes = await mockTimeOut(jsonNodes);
+    // processedNodes = await DSTotal(jsonNodes);
+    console.log("processedNodes的内容：", processedNodes);
+    // todo: 增加比对json结构的函数，如果大模型生成失败，就重新调用parseHTMLToNodes使用人工生成的类名
+    console.log("jsonNodes & processedNodes 结构比对结果：", isStructureIdentical(jsonNodes, processedNodes))
+    if(!isStructureIdentical(jsonNodes, processedNodes)) {
+      processedNodes = parseHTMLToNodes(output.html, false);
+    }
+  } catch(error: any) {
+    console.error(error);
+  } finally {
+    output.html = parseNodesToHTML(processedNodes);
+  }
   return output;
 };
+export const mockTimeOut = async (data: any): Promise<any> => {
+  // 返回一个Promise，在20秒后resolve
+  return new Promise((resolve) => {
+    console.log('开始模拟延迟，将在5秒后返回结果...');
+    setTimeout(() => {
+      console.log('延迟结束，返回结果');
+      // 可以根据需要修改返回内容，这里直接返回输入数据
+      resolve(data);
 
+      // 如果需要模拟处理后的数据，可以这样写：
+      // resolve({
+      //     processed: true,
+      //     data: data,
+      //     timestamp: new Date().toISOString()
+      // });
+    }, 1000);
+  });
+};
 export const generateHTMLPreview = async (
   nodes: SceneNode[],
   settings: PluginSettings,

@@ -12,7 +12,6 @@ import {
   SettingsChangedMessage,
   Warning,
 } from "types";
-import { postUISettingsChangingMessage } from "./messaging";
 import copy from "copy-to-clipboard";
 
 interface AppState {
@@ -117,28 +116,6 @@ export default function App() {
     };
   }, []);
 
-  const handleFrameworkChange = (updatedFramework: Framework) => {
-    if (updatedFramework !== state.selectedFramework) {
-      setState((prevState) => ({
-        ...prevState,
-        // code: "// Loading...",
-        selectedFramework: updatedFramework,
-      }));
-      postUISettingsChangingMessage("framework", updatedFramework, {
-        targetOrigin: "*",
-      });
-    }
-  };
-  const handlePreferencesChange = (
-    key: keyof PluginSettings,
-    value: boolean | string | number,
-  ) => {
-    if (state.settings && state.settings[key] === value) {
-      // do nothing
-    } else {
-      postUISettingsChangingMessage(key, value, { targetOrigin: "*" });
-    }
-  };
 
   const darkMode = figmaColorBgValue !== "#ffffff";
 
@@ -147,14 +124,7 @@ export default function App() {
       <PluginUI
         isLoading={state.isLoading}
         code={state.code}
-        warnings={state.warnings}
-        selectedFramework={state.selectedFramework}
-        setSelectedFramework={handleFrameworkChange}
-        onPreferenceChanged={handlePreferencesChange}
         htmlPreview={state.htmlPreview}
-        settings={state.settings}
-        colors={state.colors}
-        gradients={state.gradients}
       />
     </div>
   );

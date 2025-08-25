@@ -32,14 +32,7 @@ export default function Web() {
               <PluginUI
                 code={"code goes hereeeee"}
                 isLoading={false}
-                selectedFramework={selectedFramework}
-                setSelectedFramework={setSelectedFramework}
                 htmlPreview={null}
-                settings={undefined}
-                onPreferenceChanged={() => {}}
-                colors={[]}
-                gradients={[]}
-                warnings={testWarnings}
               />
             </div>
           </div>
@@ -55,14 +48,7 @@ export default function Web() {
               <PluginUI
                 code={"code goes hereeeee"}
                 isLoading={false}
-                selectedFramework={selectedFramework}
-                setSelectedFramework={setSelectedFramework}
                 htmlPreview={null}
-                settings={undefined}
-                onPreferenceChanged={() => {}}
-                colors={[]}
-                gradients={[]}
-                warnings={testWarnings}
               />
             </div>
           </div>
