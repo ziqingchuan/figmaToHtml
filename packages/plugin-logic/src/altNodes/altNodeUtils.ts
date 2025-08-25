@@ -1,6 +1,6 @@
 import { curry } from "../common/utils/curry";
 import { exportAsyncProxy } from "../common/utils/exportAsyncProxy";
-import { addWarning } from "../common/commonConversionWarnings";
+import { addWarning } from "../common/commonWarning";
 
 // 使用柯里化创建一个函数，用于覆盖对象的只读属性
 export const overrideReadonlyProperty = curry(
@@ -115,8 +115,8 @@ export const renderAndAttachSVG = async (node: any) => {
       }
     } catch (error) {
       // SVG渲染失败时添加警告并记录错误
-      addWarning(`Failed rendering SVG for ${node.name}`);
-      console.error(`Error rendering SVG for ${node.type}:${node.id}`);
+      addWarning(`SVG渲染失败： ${node.name}`);
+      console.error(`SVG渲染失败： ${node.type}:${node.id}`);
       console.error(error);
     }
   }

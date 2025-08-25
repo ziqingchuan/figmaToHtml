@@ -68,15 +68,15 @@ let isLoading = false;
 // 安全运行函数
 const safeRun = async (settings: PluginSettings) => {
   console.log(
-    "[调试] safeRun调用 - isLoading =",
+    "[调试] safeRun调用 - isLoading = ",
     isLoading,
-    "当前选择 =",
+    "当前选择 = ",
     figma.currentPage.selection,
   );
   if (!isLoading) {
     try {
       isLoading = true;
-      console.log("[调试] 开始执行run, isLoading =" + isLoading);
+      console.log("[调试] 开始执行run, isLoading = " + isLoading);
 
       // 移除选择变化事件监听器
       figma.off("selectionchange", () => {
@@ -113,7 +113,7 @@ const safeRun = async (settings: PluginSettings) => {
     }
   } else {
     console.log(
-      "[调试] 跳过执行，因为isLoading =",
+      "[调试] 跳过执行，因为isLoading = ",
       isLoading,
     );
   }

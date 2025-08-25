@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { addWarning } from "../common/commonConversionWarnings";
+import { addWarning } from "../common/commonWarning";
 import { PluginSettings } from "types";
 import { HasGeometryTrait, Node, Paint } from "../api_types";
 import { calculateRectangleFromBoundingBox } from "../common/commonPosition";

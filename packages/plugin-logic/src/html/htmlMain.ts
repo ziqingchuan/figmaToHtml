@@ -16,36 +16,46 @@ import {
   getPlaceholderImage,
   nodeHasImageFill,
 } from "../common/commonImage";
-import { addWarning } from "../common/commonConversionWarnings";
+import { addWarning } from "../common/commonWarning";
 import { parseHTMLToNodes } from "./tools/htmlToJSON";
 import { parseNodesToHTML } from "./tools/jsonToHTML";
 import { DSTotal } from "./tools/DeepSeekTotal";
 import { cozeGenTotal } from "./tools/cozeForTotal";
 import { isStructureIdentical } from "./tools/structureCompare";
 
+// 全局预览标志
 export let isPreviewGlobal = false;
 
+// 用于缓存上一次执行的样式和文本
 let previousExecutionCache: { style: string; text: string }[];
 
-// Define better type for the output
+/**
+ * HTML输出接口定义
+ */
 export interface HtmlOutput {
-  html: string;
-  css?: string;
+  html: string;  // HTML内容
+  css?: string;  // 可选的CSS样式
 }
 
-// CSS Collection for external stylesheet or styled-components
+/**
+ * CSS集合类型定义
+ */
 interface CSSCollection {
   [className: string]: {
-    styles: string[];
-    nodeName?: string;
-    nodeType?: string;
-    element?: string; // Base HTML element to use
+    styles: string[];    // 样式规则数组
+    nodeName?: string;   // 节点名称
+    nodeType?: string;   // 节点类型
+    element?: string;    // 基础HTML元素
   };
 }
 
+// 全局CSS集合
 export let cssCollection: CSSCollection = {};
 
-// Get the collected CSS as a string with improved formatting
+/**
+ * 获取收集的CSS样式字符串
+ * @returns 格式化后的CSS字符串
+ */
 export function getCollectedCSS(): string {
   if (Object.keys(cssCollection).length === 0) {
     return "";
@@ -60,6 +70,13 @@ export function getCollectedCSS(): string {
     .join("\n\n");
 }
 
+/**
+ * 主HTML生成函数
+ * @param sceneNode 场景节点数组
+ * @param settings 插件设置
+ * @param isPreview 是否为预览模式
+ * @returns 包含HTML和CSS的输出对象
+ */
 export const htmlMain = async (
   sceneNode: Array<SceneNode>,
   settings: PluginSettings,
@@ -68,56 +85,71 @@ export const htmlMain = async (
   isPreviewGlobal = isPreview;
   previousExecutionCache = [];
   cssCollection = {};
+
+  // 生成HTML内容
   let htmlContent = await htmlWidgetGenerator(sceneNode, settings);
+
+  // 去除开头的换行符
   if (htmlContent.length > 0 && htmlContent.startsWith("\n")) {
     htmlContent = htmlContent.slice(1, htmlContent.length);
   }
+
   const output: HtmlOutput = { html: htmlContent };
 
+  // 如果有收集的CSS样式，添加到输出
   if (Object.keys(cssCollection).length > 0) {
     output.css = getCollectedCSS();
   }
-  // console.log("代码：", output);
-  let jsonNodes; // 传入的Nodes
-  let processedNodes; // AI处理后的Nodes
-  // 先尝试用AI，这时className初始化为空，后续如果AI生成的结构出问题，就用人工生成的className，此时useAI为false
+
+  let jsonNodes;  // 解析后的节点数据
+  let processedNodes; // AI处理后的节点数据
+
+  // 解析HTML为节点结构
   jsonNodes = parseHTMLToNodes(output.html, true);
-  console.log("完成jsonNodes：", jsonNodes);
-  // output.html = parseNodesToHTML(jsonNodes);
+  console.log("[调试] 解析完成的节点数据:", jsonNodes);
+
   try {
+    // 模拟AI处理过程
     processedNodes = await mockTimeOut(jsonNodes);
-    // processedNodes = await DSTotal(jsonNodes);
-    console.log("processedNodes的内容：", processedNodes);
-    // todo: 增加比对json结构的函数，如果大模型生成失败，就重新调用parseHTMLToNodes使用人工生成的类名
-    console.log("jsonNodes & processedNodes 结构比对结果：", isStructureIdentical(jsonNodes, processedNodes))
+    console.log("[调试] AI处理后的节点数据:", processedNodes);
+
+    // 检查结构是否一致
+    console.log("[调试] 节点结构比对结果:", isStructureIdentical(jsonNodes, processedNodes))
     if(!isStructureIdentical(jsonNodes, processedNodes)) {
+      // 如果结构不一致，使用人工生成的类名
       processedNodes = parseHTMLToNodes(output.html, false);
     }
   } catch(error: any) {
-    console.error(error);
+    console.error("[错误] 节点处理出错:", error);
   } finally {
+    // 最终将处理后的节点转换为HTML
     output.html = parseNodesToHTML(processedNodes);
   }
+
   return output;
 };
-export const mockTimeOut = async (data: any): Promise<any> => {
-  // 返回一个Promise，在20秒后resolve
-  return new Promise((resolve) => {
-    console.log('开始模拟延迟，将在5秒后返回结果...');
-    setTimeout(() => {
-      console.log('延迟结束，返回结果');
-      // 可以根据需要修改返回内容，这里直接返回输入数据
-      resolve(data);
 
-      // 如果需要模拟处理后的数据，可以这样写：
-      // resolve({
-      //     processed: true,
-      //     data: data,
-      //     timestamp: new Date().toISOString()
-      // });
+/**
+ * 模拟AI处理延迟
+ * @param data 输入数据
+ * @returns 返回处理后的数据
+ */
+export const mockTimeOut = async (data: any): Promise<any> => {
+  return new Promise((resolve) => {
+    console.log('[调试] 开始模拟AI处理延迟...');
+    setTimeout(() => {
+      console.log('[调试] AI处理完成');
+      resolve([{  }]);
     }, 1000);
   });
 };
+
+/**
+ * 生成HTML预览
+ * @param nodes 场景节点数组
+ * @param settings 插件设置
+ * @returns HTML预览对象
+ */
 export const generateHTMLPreview = async (
   nodes: SceneNode[],
   settings: PluginSettings,
@@ -131,6 +163,7 @@ export const generateHTMLPreview = async (
     nodes.length <= 1,
   );
 
+  // 多个节点时添加外层div
   if (nodes.length > 1) {
     result.html = `<div style="width: 100%; height: 100%">${result.html}</div>`;
   }
@@ -143,22 +176,39 @@ export const generateHTMLPreview = async (
     content: result.html,
   };
 };
+
+/**
+ * 获取可见节点
+ * @param nodes 节点数组
+ * @returns 可见节点数组
+ */
 const getVisibleNodes = (nodes: readonly SceneNode[]) =>
   nodes.filter((d) => d.visible ?? true);
 
-
+/**
+ * HTML组件生成器
+ * @param sceneNode 场景节点数组
+ * @param settings HTML设置
+ * @returns 生成的HTML字符串
+ */
 const htmlWidgetGenerator = async (
   sceneNode: ReadonlyArray<SceneNode>,
   settings: HTMLSettings,
 ): Promise<string> => {
-  // filter non visible nodes. This is necessary at this step because conversion already happened.
+  // 过滤不可见节点并转换每个节点
   const promiseOfConvertedCode = getVisibleNodes(sceneNode).map(
     convertNode(settings),
   );
   return (await Promise.all(promiseOfConvertedCode)).join("");
 };
 
+/**
+ * 节点转换函数
+ * @param settings HTML设置
+ * @returns 返回转换节点的函数
+ */
 const convertNode = (settings: HTMLSettings) => async (node: SceneNode) => {
+  // 处理矢量图形
   if (settings.embedVectors && (node as any).canBeFlattened) {
     const altNode = await renderAndAttachSVG(node);
     if (altNode.svg) {
@@ -166,6 +216,7 @@ const convertNode = (settings: HTMLSettings) => async (node: SceneNode) => {
     }
   }
 
+  // 根据节点类型调用不同的转换方法
   switch (node.type) {
     case "RECTANGLE":
     case "ELLIPSE":
@@ -185,7 +236,7 @@ const convertNode = (settings: HTMLSettings) => async (node: SceneNode) => {
       return htmlLine(node, settings);
     case "VECTOR":
       if (!settings.embedVectors && !isPreviewGlobal) {
-        addWarning("Vector is not supported");
+        addWarning("矢量图形不支持");
       }
       return await htmlContainer(
         { ...node, type: "RECTANGLE" } as any,
@@ -194,11 +245,17 @@ const convertNode = (settings: HTMLSettings) => async (node: SceneNode) => {
         settings,
       );
     default:
-      addWarning(`${node.type} node is not supported`);
+      addWarning(`${node.type} 类型节点不支持`);
       return "";
   }
 };
 
+/**
+ * 包装SVG内容
+ * @param node 节点
+ * @param settings HTML设置
+ * @returns 包装后的SVG HTML字符串
+ */
 const htmlWrapSVG = (
   node: AltNode<SceneNode>,
   settings: HTMLSettings,
@@ -209,26 +266,24 @@ const htmlWrapSVG = (
     .addData("svg-wrapper")
     .position();
 
-  // The SVG content already has the var() references, so we don't need
-  // to add inline CSS variables in most cases. The browser will use the fallbacks
-  // if the variables aren't defined in the CSS.
-
   return `\n<div${builder.build()}>\n${indentString(node.svg ?? "")}</div>`;
 };
 
+/**
+ * 处理组节点
+ * @param node 组节点
+ * @param settings HTML设置
+ * @returns 生成的HTML字符串
+ */
 const htmlGroup = async (
   node: GroupNode,
   settings: HTMLSettings,
 ): Promise<string> => {
-  // ignore the view when size is zero or less
-  // while technically it shouldn't get less than 0, due to rounding errors,
-  // it can get to values like: -0.000004196293048153166
-  // also ignore if there are no children inside, which makes no sense
+  // 忽略无效尺寸的节点
   if (node.width < 0 || node.height <= 0 || node.children.length === 0) {
     return "";
   }
 
-  // this needs to be called after CustomNode because widthHeight depends on it
   const builder = new HtmlDefaultBuilder(node, settings).commonPositionStyles();
 
   if (builder.styles) {
@@ -239,7 +294,12 @@ const htmlGroup = async (
   return await htmlWidgetGenerator(node.children, settings);
 };
 
-// For htmlText and htmlContainer, use the htmlGenerationMode to determine styling approach
+/**
+ * 处理文本节点
+ * @param node 文本节点
+ * @param settings HTML设置
+ * @returns 生成的HTML字符串
+ */
 const htmlText = (node: TextNode, settings: HTMLSettings): string => {
   let layoutBuilder = new HtmlTextBuilder(node, settings)
     .commonPositionStyles()
@@ -250,13 +310,13 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
   const styledHtml = layoutBuilder.getTextSegments(node);
   previousExecutionCache.push(...styledHtml);
 
-  // Standard HTML/CSS approach for HTML, React or Svelte
+  // 处理单个文本段
   let content: string;
   if (styledHtml.length === 1) {
     layoutBuilder.addStyles(styledHtml[0].style);
-
     content = styledHtml[0].text;
 
+    // 处理上下标
     const additionalTag =
       styledHtml[0].openTypeFeatures.SUBS
         ? "sub"
@@ -268,9 +328,9 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
       content = `<${additionalTag}>${content}</${additionalTag}>`;
     }
   } else {
+    // 处理多文本段
     content = styledHtml
       .map((style) => {
-        // Always use span for multi-segment text in Svelte mode
         const tag =
           style.openTypeFeatures.SUBS
             ? "sub"
@@ -282,11 +342,17 @@ const htmlText = (node: TextNode, settings: HTMLSettings): string => {
       })
       .join("");
   }
-// 输出: "Hello world&nbsp;&nbsp;with&nbsp;&nbsp;multiple&nbsp;&nbsp;&nbsp;spaces"
-  // Always use div as container to be consistent with styled-components
+
+  // 替换连续空格为HTML实体
   return `\n<span${layoutBuilder.build()}>${content.replace(/\s\s/g, "&nbsp;&nbsp;")}</span>`;
 };
 
+/**
+ * 处理框架节点
+ * @param node 框架节点
+ * @param settings HTML设置
+ * @returns 生成的HTML字符串
+ */
 const htmlFrame = async (
   node: SceneNode & BaseFrameMixin,
   settings: HTMLSettings,
@@ -298,13 +364,17 @@ const htmlFrame = async (
     return await htmlContainer(node, childrenStr, rowColumn, settings);
   }
 
-  // node.layoutMode === "NONE" && node.children.length > 1
-  // children needs to be absolute
   return await htmlContainer(node, childrenStr, [], settings);
 };
 
-// properties named propSomething always take care of ","
-// sometimes a property might not exist, so it doesn't add ","
+/**
+ * 处理容器节点
+ * @param node 节点
+ * @param children 子节点HTML
+ * @param additionalStyles 附加样式
+ * @param settings HTML设置
+ * @returns 生成的HTML字符串
+ */
 const htmlContainer = async (
   node: SceneNode &
     SceneNodeMixin &
@@ -316,7 +386,7 @@ const htmlContainer = async (
   additionalStyles: string[] = [],
   settings: HTMLSettings,
 ): Promise<string> => {
-  // ignore the view when size is zero or less
+  // 忽略无效尺寸的节点
   if (node.width <= 0 || node.height <= 0) {
     return children;
   }
@@ -329,6 +399,7 @@ const htmlContainer = async (
     let tag = "div";
     let src = "";
 
+    // 处理图片填充
     if (nodeHasImageFill(node)) {
       const altNode = node as AltNode<ExportableNode>;
       const hasChildren = "children" in node && node.children.length > 0;
@@ -341,7 +412,7 @@ const htmlContainer = async (
         imgUrl = (await exportNodeAsBase64PNG(altNode, hasChildren)) ?? "";
       } else {
         imgUrl = getPlaceholderImage(node.width, node.height);
-        console.log("imgUrl", imgUrl);
+        console.log("[调试] 图片占位URL:", imgUrl);
       }
 
       if (hasChildren) {
@@ -359,7 +430,6 @@ const htmlContainer = async (
 
     const build = builder.build(additionalStyles);
 
-    // Standard HTML approach for HTML, React, or Svelte
     if (children) {
       return `\n<${tag}${build}${src}>${indentString(children)}\n</${tag}>`;
     } else {
@@ -370,6 +440,12 @@ const htmlContainer = async (
   return children;
 };
 
+/**
+ * 处理区域节点
+ * @param node 区域节点
+ * @param settings HTML设置
+ * @returns 生成的HTML字符串
+ */
 const htmlSection = async (
   node: SectionNode,
   settings: HTMLSettings,
@@ -387,6 +463,12 @@ const htmlSection = async (
   }
 };
 
+/**
+ * 处理线条节点
+ * @param node 线条节点
+ * @param settings HTML设置
+ * @returns 生成的HTML字符串
+ */
 const htmlLine = (node: LineNode, settings: HTMLSettings): string => {
   const builder = new HtmlDefaultBuilder(node, settings)
     .commonPositionStyles()
@@ -395,6 +477,10 @@ const htmlLine = (node: LineNode, settings: HTMLSettings): string => {
   return `\n<div${builder.build()}></div>`;
 };
 
+/**
+ * 生成文本样式代码
+ * @returns 文本样式代码字符串
+ */
 export const htmlCodeGenTextStyles = () => {
   const result = previousExecutionCache
     .map(
@@ -404,7 +490,7 @@ export const htmlCodeGenTextStyles = () => {
     .join("\n---\n");
 
   if (!result) {
-    return "// No text styles in this selection";
+    return "// 当前选择中没有文本样式";
   }
   return result;
 };

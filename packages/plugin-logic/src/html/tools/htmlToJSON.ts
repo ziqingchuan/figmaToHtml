@@ -1,4 +1,4 @@
-import { generateSemanticClassName } from "../classNameGenerate";
+import { generateSemanticClassName } from "./localGenerate";
 import { DSSingle } from "./DeepSeekSingle";
 import { cozeGenSingle } from "./cozeForSingle";
 import { HtmlNode } from "../../node_types";

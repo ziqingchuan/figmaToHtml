@@ -64,11 +64,6 @@ const SEMANTIC_CONFIG = {
     'order': ['order', 'purchase'],
     'payment': ['payment', 'checkout'],
     'card': ['card', 'creditcard'],
-    'apple': ['apple', 'ios'],
-    'google': ['google', 'android'],
-    'alipay': ['alipay', 'payment'],
-    'special': ['special', 'offer', 'promo'],
-    'subscription': ['subscription', 'recurring']
   },
 
   // 位置映射
