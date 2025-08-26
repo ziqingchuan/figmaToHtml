@@ -11,9 +11,9 @@ import { twMerge } from "tailwind-merge";
  * 2. 使用twMerge处理Tailwind类名冲突
  */
 export function cn(...inputs: ClassValue[]): string {
-  console.log('[类名处理] 开始合并类名');
+  // console.log('[类名处理] 开始合并类名');
   const mergedClasses = twMerge(clsx(inputs));
-  console.log('[类名处理] 合并后的类名:', mergedClasses);
+  // console.log('[类名处理] 合并后的类名:', mergedClasses);
   return mergedClasses;
 }
 
@@ -29,7 +29,7 @@ export function cn(...inputs: ClassValue[]): string {
  * 3. 添加尺寸文字标注
  */
 const createCanvasPlaceholder = (width: number, height: number): string => {
-  console.log(`[占位图生成] 开始创建 ${width}x${height} 的占位图`);
+  // console.log(`[占位图生成] 开始创建 ${width}x${height} 的占位图`);
 
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -44,13 +44,13 @@ const createCanvasPlaceholder = (width: number, height: number): string => {
   // 绘制背景
   ctx.fillStyle = "#f5f5f5";
   ctx.fillRect(0, 0, width, height);
-  console.log('[占位图生成] 背景绘制完成');
+  // console.log('[占位图生成] 背景绘制完成');
 
   // 计算文字大小（自适应宽度）
   const fontSize = Math.max(12, Math.floor(width * 0.15));
   ctx.font = `bold ${fontSize}px Inter, Arial, Helvetica, sans-serif`;
   ctx.fillStyle = "#888888";
-  console.log(`[占位图生成] 设置文字样式: 大小${fontSize}px, 颜色#888888`);
+  // console.log(`[占位图生成] 设置文字样式: 大小${fontSize}px, 颜色#888888`);
 
   // 绘制文字
   const text = `${width} x ${height}`;
@@ -58,10 +58,10 @@ const createCanvasPlaceholder = (width: number, height: number): string => {
   const x = (width - textWidth) / 2;
   const y = (height + fontSize) / 2;
   ctx.fillText(text, x, y);
-  console.log('[占位图生成] 文字绘制完成', { text, x, y });
+  // console.log('[占位图生成] 文字绘制完成', { text, x, y });
 
   const dataUrl = canvas.toDataURL();
-  console.log('[占位图生成] 生成Base64图片URL');
+  // console.log('[占位图生成] 生成Base64图片URL');
   return dataUrl;
 };
 
@@ -75,16 +75,16 @@ const createCanvasPlaceholder = (width: number, height: number): string => {
  * 2. 替换为本地生成的Canvas图片
  */
 export function replacePlaceholderImages(html: string): string {
-  console.log('[HTML处理] 开始替换占位图');
+  // console.log('[HTML处理] 开始替换占位图');
 
   const result = html.replace(
     /https:\/\/placehold\.co\/(\d+)x(\d+)/g,
     (match, width, height) => {
-      console.log(`[HTML处理] 替换匹配到的图片: ${match}`);
+      // console.log(`[HTML处理] 替换匹配到的图片: ${match}`);
       return createCanvasPlaceholder(parseInt(width), parseInt(height));
     }
   );
 
-  console.log('[HTML处理] 占位图替换完成');
+  // console.log('[HTML处理] 占位图替换完成');
   return result;
 }

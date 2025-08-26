@@ -13,18 +13,18 @@ export const commonLineHeight = (
   lineHeight: LineHeight,
   fontSize: number,
 ): number => {
-  console.log('[文字排版] 开始计算行高值');
+  // console.log('[文字排版] 开始计算行高值');
 
   switch (lineHeight.unit) {
     case "AUTO":
-      console.log('[文字排版] 使用自动行高');
+      // console.log('[文字排版] 使用自动行高');
       return 0;
     case "PIXELS":
-      console.log(`[文字排版] 使用固定行高: ${lineHeight.value}px`);
+      // console.log(`[文字排版] 使用固定行高: ${lineHeight.value}px`);
       return lineHeight.value;
     case "PERCENT":
       const calculatedHeight = (fontSize * lineHeight.value) / 100;
-      console.log(`[文字排版] 计算百分比行高: 字体${fontSize}px * ${lineHeight.value}% = ${calculatedHeight}px`);
+      // console.log(`[文字排版] 计算百分比行高: 字体${fontSize}px * ${lineHeight.value}% = ${calculatedHeight}px`);
       return calculatedHeight;
   }
 };
@@ -43,15 +43,15 @@ export const commonLetterSpacing = (
   letterSpacing: LetterSpacing,
   fontSize: number,
 ): number => {
-  console.log('[文字排版] 开始计算字间距');
+  // console.log('[文字排版] 开始计算字间距');
 
   switch (letterSpacing.unit) {
     case "PIXELS":
-      console.log(`[文字排版] 使用固定字间距: ${letterSpacing.value}px`);
+      // console.log(`[文字排版] 使用固定字间距: ${letterSpacing.value}px`);
       return letterSpacing.value;
     case "PERCENT":
       const calculatedSpacing = (fontSize * letterSpacing.value) / 100;
-      console.log(`[文字排版] 计算百分比字间距: 字体${fontSize}px * ${letterSpacing.value}% = ${calculatedSpacing}px`);
+      // console.log(`[文字排版] 计算百分比字间距: 字体${fontSize}px * ${letterSpacing.value}% = ${calculatedSpacing}px`);
       return calculatedSpacing;
   }
 };

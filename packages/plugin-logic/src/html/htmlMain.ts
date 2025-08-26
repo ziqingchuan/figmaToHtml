@@ -21,7 +21,7 @@ import { parseHTMLToNodes } from "./tools/htmlToJSON";
 import { parseNodesToHTML } from "./tools/jsonToHTML";
 import { DSTotal } from "./tools/DeepSeekTotal";
 import { cozeGenTotal } from "./tools/cozeForTotal";
-import { isStructureIdentical } from "./tools/structureCompare";
+// import { isStructureIdentical } from "./tools/structureCompare";
 
 // 全局预览标志
 export let isPreviewGlobal = false;
@@ -102,28 +102,53 @@ export const htmlMain = async (
   }
 
   let jsonNodes;  // 解析后的节点数据
-  let processedNodes; // AI处理后的节点数据
+  let svgMap;  // 矢量图形内容映射
+  let styleContentMap; // 样式内容映射
+  let classMap; // 类名映射
+  let AIclassNameMap; // AI处理后的类名映射
 
   // 解析HTML为节点结构
-  jsonNodes = parseHTMLToNodes(output.html, true);
-  console.log("[调试] 解析完成的节点数据:", jsonNodes);
+  const { nodes, svgContentMap, styleMap, classNameMap } = parseHTMLToNodes(output.html, true);
+  jsonNodes = nodes;
+  svgMap = svgContentMap;
+  styleContentMap = styleMap;
+  console.log("[调试] parseHTMLToNodes解析完成的节点数据:", jsonNodes);
 
   try {
     // 模拟AI处理过程
-    processedNodes = await mockTimeOut(jsonNodes);
-    console.log("[调试] AI处理后的节点数据:", processedNodes);
+    // AIclassNameMap = await mockTimeOut(jsonNodes);
+    // processedNodes = await DSTotal(jsonNodes);
+    AIclassNameMap = await cozeGenTotal(jsonNodes);
+    console.log("[调试] AI处理后的结果:", AIclassNameMap);
 
-    // 检查结构是否一致
-    console.log("[调试] 节点结构比对结果:", isStructureIdentical(jsonNodes, processedNodes))
-    if(!isStructureIdentical(jsonNodes, processedNodes)) {
-      // 如果结构不一致，使用人工生成的类名
-      processedNodes = parseHTMLToNodes(output.html, false);
+    // TODO: AI 生成结果的检测与处理
+    const aiCount = Object.keys(AIclassNameMap).length;
+    const manualCount = Object.keys(classNameMap).length;
+
+    if (aiCount !== manualCount) {
+      console.log(`[警告] AI处理结果与人工生成结果不一致: 
+    AI键数量: ${aiCount} vs 人工键数量: ${manualCount}`);
+      classMap = classNameMap;
+    } else {
+      // 这里你可能想用AI结果？根据你的业务逻辑决定
+      classMap = AIclassNameMap;
     }
+    // // 检查json结构是否一致
+    // console.log("[调试] 节点结构比对结果:", isStructureIdentical(jsonNodes, processedNodes))
+    //
+    // if(!isStructureIdentical(jsonNodes, processedNodes)) {
+    //   // 如果结构不一致，使用人工生成的类名
+    //   const { nodes, svgContentMap, styleMap } = parseHTMLToNodes(output.html, false);
+    //   processedNodes = nodes;
+    //   svgMap = svgContentMap;
+    //   styleContentMap = styleMap;
+    // }
+
   } catch(error: any) {
     console.error("[错误] 节点处理出错:", error);
   } finally {
     // 最终将处理后的节点转换为HTML
-    output.html = parseNodesToHTML(processedNodes);
+    output.html = parseNodesToHTML(jsonNodes, svgMap, styleContentMap, classMap);
   }
 
   return output;
@@ -136,9 +161,9 @@ export const htmlMain = async (
  */
 export const mockTimeOut = async (data: any): Promise<any> => {
   return new Promise((resolve) => {
-    console.log('[调试] 开始模拟AI处理延迟...');
+    // console.log('[调试] 开始模拟AI处理延迟...');
     setTimeout(() => {
-      console.log('[调试] AI处理完成');
+      // console.log('[调试] AI处理完成');
       resolve([{  }]);
     }, 1000);
   });
@@ -412,7 +437,7 @@ const htmlContainer = async (
         imgUrl = (await exportNodeAsBase64PNG(altNode, hasChildren)) ?? "";
       } else {
         imgUrl = getPlaceholderImage(node.width, node.height);
-        console.log("[调试] 图片占位URL:", imgUrl);
+        // console.log("[调试] 图片占位URL:", imgUrl);
       }
 
       if (hasChildren) {

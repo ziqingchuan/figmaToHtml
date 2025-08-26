@@ -24,7 +24,7 @@ function isKeyOfPluginSettings(key: string): key is keyof PluginSettings {
 
 // 获取用户设置
 const getUserSettings = async () => {
-  console.log("[调试] 开始获取用户设置");
+  // console.log("[调试] 开始获取用户设置");
   const possiblePluginSrcSettings =
     (await figma.clientStorage.getAsync("userPluginSettings")) ?? {};
   console.log(
@@ -49,16 +49,16 @@ const getUserSettings = async () => {
   };
 
   userPluginSettings = updatedPluginSrcSettings as PluginSettings;
-  console.log("[调试] 最终用户设置:", userPluginSettings);
+  // console.log("[调试] 最终用户设置:", userPluginSettings);
   return userPluginSettings;
 };
 
 // 初始化设置
 const initSettings = async () => {
-  console.log("[调试] 正在初始化插件设置");
+  // console.log("[调试] 正在初始化插件设置");
   await getUserSettings();
   postSettingsChanged(userPluginSettings);
-  console.log("[调试] 使用设置调用safeRun");
+  // console.log("[调试] 使用设置调用safeRun");
   safeRun(userPluginSettings);
 };
 
@@ -76,23 +76,23 @@ const safeRun = async (settings: PluginSettings) => {
   if (!isLoading) {
     try {
       isLoading = true;
-      console.log("[调试] 开始执行run, isLoading = " + isLoading);
+      // console.log("[调试] 开始执行run, isLoading = " + isLoading);
 
       // 移除选择变化事件监听器
       figma.off("selectionchange", () => {
-        console.log("[调试] 检测到selectionchange事件，已忽略");
+        // console.log("[调试] 检测到selectionchange事件，已忽略");
       });
 
       await run(settings);
-      console.log("[调试] run执行完成");
+      // console.log("[调试] run执行完成");
 
       // 延迟重置isLoading，确保在下一帧执行
       setTimeout(() => {
-        console.log("[调试] 重置isLoading为false");
+        // console.log("[调试] 重置isLoading为false");
         isLoading = false;
       }, 1);
     } catch (e) {
-      console.log("[调试] 执行过程中捕获错误");
+      // console.log("[调试] 执行过程中捕获错误");
       isLoading = false; // 确保出错时重置标志
       if (e && typeof e === "object" && "message" in e) {
         const error = e as Error;
@@ -101,7 +101,7 @@ const safeRun = async (settings: PluginSettings) => {
       } else {
         // 处理非标准错误或未知错误类型
         const errorMessage = String(e);
-        console.log("未知错误: ", errorMessage);
+        // console.log("未知错误: ", errorMessage);
         figma.ui.postMessage({
           type: "error",
           error: errorMessage || "发生未知错误",
@@ -121,7 +121,7 @@ const safeRun = async (settings: PluginSettings) => {
 
 // 标准模式
 const standardMode = async () => {
-  console.log("[调试] 正在初始化标准模式");
+  // console.log("[调试] 正在初始化标准模式");
   figma.showUI(__html__, { width: 450, height: 700, themeColors: true });
   await initSettings();
 
@@ -137,7 +137,7 @@ const standardMode = async () => {
   // 加载所有页面并监听文档变化
   figma.loadAllPagesAsync();
   figma.on("documentchange", () => {
-    console.log("[调试] 触发documentchange事件");
+    // console.log("[调试] 触发documentchange事件");
     // 注意：当尝试从包含子元素的组导出背景图像时，这会导致无限加载。
     // 原因是代码会临时隐藏组的子元素以导出干净的图像，然后恢复子元素的可见性。
     // 这构成了文档更改，因此会重新开始整个转换过程。
@@ -147,16 +147,16 @@ const standardMode = async () => {
 
   // 处理UI消息
   figma.ui.onmessage = async (msg) => {
-    console.log("[调试] 收到UI消息", msg);
+    // console.log("[调试] 收到UI消息", msg);
 
     if (msg.type === "pluginSettingWillChange") {
       const { key, value } = msg as SettingWillChangeMessage<unknown>;
-      console.log(`[调试] 设置变更: ${key} = ${value}`);
+      // console.log(`[调试] 设置变更: ${key} = ${value}`);
       (userPluginSettings as any)[key] = value;
       figma.clientStorage.setAsync("userPluginSettings", userPluginSettings);
       safeRun(userPluginSettings);
     } else if (msg.type === "get-selection-json") {
-      console.log("[调试] 收到get-selection-json消息");
+      // console.log("[调试] 收到get-selection-json消息");
 
       const nodes = figma.currentPage.selection;
       if (nodes.length === 0) {
@@ -208,7 +208,7 @@ const standardMode = async () => {
 
       const nodeJson = result;
 
-      console.log("[调试] 导出的节点JSON:", nodeJson);
+      // console.log("[调试] 导出的节点JSON:", nodeJson);
 
       // 将JSON数据发送回UI
       figma.ui.postMessage({
@@ -221,7 +221,7 @@ const standardMode = async () => {
 
 // 代码生成模式
 const codegenMode = async () => {
-  console.log("[调试] 正在初始化代码生成模式");
+  // console.log("[调试] 正在初始化代码生成模式");
   await getUserSettings();
 
   // 监听代码生成事件
@@ -265,14 +265,14 @@ const codegenMode = async () => {
 switch (figma.mode) {
   case "default":
   case "inspect":
-    console.log("[调试] 以", figma.mode, "模式启动插件");
+    // console.log("[调试] 以", figma.mode, "模式启动插件");
     standardMode();
     break;
   case "codegen":
-    console.log("[调试] 以代码生成模式启动插件");
+    // console.log("[调试] 以代码生成模式启动插件");
     codegenMode();
     break;
   default:
-    console.log("[调试] 未知插件模式:", figma.mode);
+    // console.log("[调试] 未知插件模式:", figma.mode);
     break;
 }

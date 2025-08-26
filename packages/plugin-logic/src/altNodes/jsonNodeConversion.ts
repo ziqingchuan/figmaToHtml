@@ -666,7 +666,7 @@ export const nodesToJSON = async (
     }),
   );
 
-  console.log("[调试] 初始化节点：", { ...nodes[0] });
+  // console.log("[调试] 初始化节点：", { ...nodes[0] });
 
   console.log(
     `[性能监控][nodesToJSON内部] JSON_REST_V1格式导出耗时: ${Date.now() - exportJsonStart}ms`,

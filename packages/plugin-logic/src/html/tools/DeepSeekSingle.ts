@@ -2,7 +2,7 @@ import { HtmlNode } from "../../node_types";
 
 export const DSSingle = async (singlenode: any): Promise<string> => {
   // try {
-  console.log("DeepSeekGen");
+  // console.log("DeepSeekGen");
   // 1. 将body对象转换为JSON字符串
   const requestBody = JSON.stringify({
     model: "deepseek-chat",
@@ -18,17 +18,17 @@ export const DSSingle = async (singlenode: any): Promise<string> => {
     // max_tokens: 4000  // 根据内容长度调整
   });
 
-  console.log("发送请求到DeepSeek API...: ",  requestBody);
+  // console.log("发送请求到DeepSeek API...: ",  requestBody);
   //
   const response = await fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer sk-46c6a183026741e0800814b267f0490a`
+      'Authorization': `Bearer `
     },
     body: requestBody // 这里必须是字符串
   });
-  console.log('API响应:', response);
+  // console.log('API响应:', response);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -36,14 +36,14 @@ export const DSSingle = async (singlenode: any): Promise<string> => {
     }
 
     const data = await response.json();
-    console.log("API响应:", data);
+    // console.log("API响应:", data);
 
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       throw new Error("API返回格式不正确");
     }
 
     const result = data.choices[0].message.content;
-    console.log("原始响应内容:", result);
+    // console.log("原始响应内容:", result);
   //
   //   // 处理返回的JSON字符串 - 可能包含代码块标记
   //   try {

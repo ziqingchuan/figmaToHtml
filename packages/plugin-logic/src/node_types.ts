@@ -16,10 +16,10 @@ export type AltNode = Node & {
 
 export type HtmlNode = {
   tag: 'div' | 'span' | 'img';
-  style: string;
+  styleID: string;
   isSVG: boolean;
-  className: string;
-  SVGContent?: string;
+  classID: string;
+  svgID?: string;
   children?: HtmlNode[];
   content?: string;
   src?: string;

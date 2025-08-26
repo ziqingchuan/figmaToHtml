@@ -11,14 +11,14 @@ const COZE_WORKFLOW_ID = '7540216444618588206' // 工作流ID，可在Coze控制
  */
 export const cozeGenTotal = async (html: HtmlNode[]): Promise<any> => {
     try {
-        // console.log('调用Coze工作流, 参数：', html);
+        // // console.log('调用Coze工作流, 参数：', html);
         const body = JSON.stringify({
             workflow_id: COZE_WORKFLOW_ID,
             parameters: {
                 input: html,
             }
         });
-        console.log("调用Coze工作流, 参数：",body);
+        // console.log("调用Coze工作流, 参数：",body);
         const response = await fetch(COZE_API_WORKFLOW, {
             method: 'POST',
             headers: {

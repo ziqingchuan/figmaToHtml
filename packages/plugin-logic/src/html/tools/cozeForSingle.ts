@@ -11,14 +11,14 @@ const COZE_WORKFLOW_ID = '7542204795991654415' // 工作流ID，可在Coze控制
  */
 export const cozeGenSingle = async (html: any): Promise<string> => {
   try {
-    console.log("调用Coze工作流, 参数：", html);
+    // console.log("调用Coze工作流, 参数：", html);
     const body = JSON.stringify({
       workflow_id: COZE_WORKFLOW_ID,
       parameters: {
         input: html,
       },
     });
-    console.log("调用Coze工作流, 参数：", body);
+    // console.log("调用Coze工作流, 参数：", body);
     const response = await fetch(COZE_API_WORKFLOW, {
       method: "POST",
       headers: {
@@ -36,19 +36,19 @@ export const cozeGenSingle = async (html: any): Promise<string> => {
     }
 
     const result = await response.json();
-    console.log("Coze工作流调用成功，结果：", result);
+    // console.log("Coze工作流调用成功，结果：", result);
     let parsedData;
     if (typeof result.data === "string") {
       try {
         parsedData = JSON.parse(result.data); // 将字符串解析为对象
-        console.log("data 字段是字符串，尝试解析", parsedData);
+        // console.log("data 字段是字符串，尝试解析", parsedData);
       } catch (parseError: any) {
         throw new Error(`data 解析失败: ${parseError.message}`);
       }
     } else {
       // 如果 data 不是字符串，直接使用（兼容可能的格式变化）
       parsedData = result.data;
-      console.log("data 字段不是字符串，直接使用", parsedData);
+      // console.log("data 字段不是字符串，直接使用", parsedData);
     }
     if (parsedData.output) {
       return parsedData.output;

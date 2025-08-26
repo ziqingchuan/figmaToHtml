@@ -28,16 +28,16 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
     className?: string;
     componentName?: string;
   }[] {
-    console.log('[文本处理] 开始处理文本段落');
+    // console.log('[文本处理] 开始处理文本段落');
     const segments = (node as any)
       .styledTextSegments as StyledTextSegmentSubset[];
     if (!segments) {
-      console.log('[文本处理] 无文本段落数据');
+      // console.log('[文本处理] 无文本段落数据');
       return [];
     }
 
     return segments.map((segment) => {
-      console.log(`[文本处理] 处理段落: ${segment.characters.substring(0, 10)}...`);
+      // console.log(`[文本处理] 处理段落: ${segment.characters.substring(0, 10)}...`);
 
       // 准备额外的CSS属性
       const additionalStyles: { [key: string]: string } = {};
@@ -45,14 +45,14 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
       // 添加图层模糊效果
       const layerBlurStyle = this.getLayerBlurStyle();
       if (layerBlurStyle) {
-        console.log(`[文本处理] 添加模糊效果: ${layerBlurStyle}`);
+        // console.log(`[文本处理] 添加模糊效果: ${layerBlurStyle}`);
         additionalStyles.filter = layerBlurStyle;
       }
 
       // 添加文本阴影效果
       const textShadowStyle = this.getTextShadowStyle();
       if (textShadowStyle) {
-        console.log(`[文本处理] 添加阴影效果: ${textShadowStyle}`);
+        // console.log(`[文本处理] 添加阴影效果: ${textShadowStyle}`);
         additionalStyles["text-shadow"] = textShadowStyle;
       }
 
@@ -83,7 +83,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
         text: charsWithLineBreak,
         openTypeFeatures: segment.openTypeFeatures,
       };
-      console.log('[文本处理] 段落处理完成', result);
+      // console.log('[文本处理] 段落处理完成', result);
       return result;
     });
   }
@@ -93,7 +93,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
    */
   textTrim(): this {
     if ("leadingTrim" in this.node && this.node.leadingTrim === "CAP_HEIGHT") {
-      console.log('[文本处理] 应用文本修剪样式');
+      // console.log('[文本处理] 应用文本修剪样式');
       this.addStyles(format("text-box-trim", "trim-both"));
       this.addStyles(format("text-box-edge", "cap alphabetic"));
     }
@@ -104,7 +104,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
    * 转换文本装饰样式
    */
   textDecoration(textDecoration: TextDecoration): string {
-    console.log(`[文本处理] 转换文本装饰: ${textDecoration}`);
+    // console.log(`[文本处理] 转换文本装饰: ${textDecoration}`);
     switch (textDecoration) {
       case "STRIKETHROUGH":
         return "line-through";
@@ -119,7 +119,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
    * 转换文本大小写样式
    */
   textTransform(textCase: TextCase): string {
-    console.log(`[文本处理] 转换文本大小写: ${textCase}`);
+    // console.log(`[文本处理] 转换文本大小写: ${textCase}`);
     switch (textCase) {
       case "UPPER":
         return "uppercase";
@@ -141,7 +141,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
   letterSpacing(letterSpacing: LetterSpacing, fontSize: number): number | null {
     const letterSpacingProp = commonLetterSpacing(letterSpacing, fontSize);
     if (letterSpacingProp > 0) {
-      console.log(`[文本处理] 字母间距: ${letterSpacingProp}`);
+      // console.log(`[文本处理] 字母间距: ${letterSpacingProp}`);
       return letterSpacingProp;
     }
     return null;
@@ -153,7 +153,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
   lineHeight(lineHeight: LineHeight, fontSize: number): number | null {
     const lineHeightProp = commonLineHeight(lineHeight, fontSize);
     if (lineHeightProp > 0) {
-      console.log(`[文本处理] 行高: ${lineHeightProp}`);
+      // console.log(`[文本处理] 行高: ${lineHeightProp}`);
       return lineHeightProp;
     }
     return null;
@@ -164,7 +164,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
    */
   getFontStyle(style: string): string {
     const isItalic = style.toLowerCase().match("italic");
-    console.log(`[文本处理] 字体样式: ${isItalic ? 'italic' : 'normal'}`);
+    // console.log(`[文本处理] 字体样式: ${isItalic ? 'italic' : 'normal'}`);
     return isItalic ? "italic" : "";
   }
 
@@ -186,7 +186,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
           textAlign = "justify";
           break;
       }
-      console.log(`[文本处理] 水平对齐: ${textAlign}`);
+      // console.log(`[文本处理] 水平对齐: ${textAlign}`);
       this.addStyles(format("text-align", textAlign));
     }
     return this;
@@ -208,7 +208,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
           break;
       }
       if (alignItems) {
-        console.log(`[文本处理] 垂直对齐: ${alignItems}`);
+        // console.log(`[文本处理] 垂直对齐: ${alignItems}`);
         this.addStyles(format("justify-content", alignItems));
         this.addStyles(format("display", "flex"));
         this.addStyles(format("flex-direction", "column"));
@@ -257,7 +257,7 @@ export class HtmlTextBuilder extends HtmlDefaultBuilder {
         const b = Math.round(ds.color.b * 255);
         const a = ds.color.a.toFixed(2);
         const shadow = `${offsetX}px ${offsetY}px ${blurRadius}px rgba(${r}, ${g}, ${b}, ${a})`;
-        console.log(`[文本处理] 文本阴影: ${shadow}`);
+        // console.log(`[文本处理] 文本阴影: ${shadow}`);
         return shadow;
       }
     }

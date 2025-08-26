@@ -17,7 +17,7 @@ export const processColorWithVariable = (fill: {
   if (fill.variableColorName) {
     const varName = fill.variableColorName;
     const fallbackColor = htmlColor(fill.color, opacity);
-    console.log(`[颜色处理] 使用颜色变量: var(--${varName}, ${fallbackColor})`);
+    // console.log(`[颜色处理] 使用颜色变量: var(--${varName}, ${fallbackColor})`);
     return `var(--${varName}, ${fallbackColor})`;
   }
   return htmlColor(fill.color, opacity);
@@ -34,7 +34,7 @@ const getColorAndVariable = (
   variableColorName?: string;
 } => {
   if (fill.type === "SOLID") {
-    console.log('[颜色提取] 提取纯色填充');
+    // console.log('[颜色提取] 提取纯色填充');
     return {
       color: fill.color,
       opacity: fill.opacity ?? 1,
@@ -47,7 +47,7 @@ const getColorAndVariable = (
       fill.type === "GRADIENT_DIAMOND") &&
     fill.gradientStops.length > 0
   ) {
-    console.log('[颜色提取] 提取渐变填充的首个色标');
+    // console.log('[颜色提取] 提取渐变填充的首个色标');
     const firstStop = fill.gradientStops[0];
     return {
       color: firstStop.color,
@@ -55,7 +55,7 @@ const getColorAndVariable = (
       variableColorName: (firstStop as any).variableColorName,
     };
   }
-  console.log('[颜色提取] 无有效颜色，返回默认值');
+  // console.log('[颜色提取] 无有效颜色，返回默认值');
   return { color: { r: 0, g: 0, b: 0 }, opacity: 0 };
 };
 
@@ -67,11 +67,11 @@ export const htmlColorFromFills = (
 ): string => {
   const fill = retrieveTopFill(fills);
   if (fill) {
-    console.log('[颜色转换] 从填充数组转换颜色');
+    // console.log('[颜色转换] 从填充数组转换颜色');
     const colorInfo = getColorAndVariable(fill);
     return processColorWithVariable(colorInfo);
   }
-  console.log('[颜色转换] 无有效填充，返回空字符串');
+  // console.log('[颜色转换] 无有效填充，返回空字符串');
   return "";
 };
 
@@ -79,7 +79,7 @@ export const htmlColorFromFills = (
  * 从单个填充生成HTML颜色字符串
  */
 export const htmlColorFromFill = (fill: Paint): string => {
-  console.log('[颜色转换] 从单个填充转换颜色');
+  // console.log('[颜色转换] 从单个填充转换颜色');
   return processColorWithVariable(fill as any);
 };
 
@@ -89,11 +89,11 @@ export const htmlColorFromFill = (fill: Paint): string => {
 export const htmlColor = (color: RGB, alpha: number = 1): string => {
   // 处理常见颜色简写
   if (color.r === 1 && color.g === 1 && color.b === 1 && alpha === 1) {
-    console.log('[颜色转换] 使用白色简写');
+    // console.log('[颜色转换] 使用白色简写');
     return "white";
   }
   if (color.r === 0 && color.g === 0 && color.b === 0 && alpha === 1) {
-    console.log('[颜色转换] 使用黑色简写');
+    // console.log('[颜色转换] 使用黑色简写');
     return "black";
   }
 
@@ -104,7 +104,7 @@ export const htmlColor = (color: RGB, alpha: number = 1): string => {
     const b = Math.round(color.b * 255);
     const toHex = (num: number): string => num.toString(16).padStart(2, "0");
     const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
-    console.log(`[颜色转换] HEX颜色: ${hexColor}`);
+    // console.log(`[颜色转换] HEX颜色: ${hexColor}`);
     return hexColor;
   }
 
@@ -114,7 +114,7 @@ export const htmlColor = (color: RGB, alpha: number = 1): string => {
   const b = numberToFixedString(color.b * 255);
   const a = numberToFixedString(alpha);
   const rgbaColor = `rgba(${r}, ${g}, ${b}, ${a})`;
-  console.log(`[颜色转换] RGBA颜色: ${rgbaColor}`);
+  // console.log(`[颜色转换] RGBA颜色: ${rgbaColor}`);
   return rgbaColor;
 };
 
@@ -136,7 +136,7 @@ const processGradientStop = (
 
   const color = processColorWithVariable(fillInfo);
   const position = `${(stop.position * positionMultiplier).toFixed(0)}${unit}`;
-  console.log(`[渐变处理] 色标处理: ${color} ${position}`);
+  // console.log(`[渐变处理] 色标处理: ${color} ${position}`);
   return `${color} ${position}`;
 };
 
@@ -149,7 +149,7 @@ const processGradientStops = (
   positionMultiplier: number = 100,
   unit: string = "%",
 ): string => {
-  console.log('[渐变处理] 处理渐变色标数组');
+  // console.log('[渐变处理] 处理渐变色标数组');
   return stops
     .map((stop) =>
       processGradientStop(stop, fillOpacity, positionMultiplier, unit),
@@ -162,11 +162,11 @@ const processGradientStops = (
  */
 export const htmlGradientFromFills = (fill: Paint): string => {
   if (!fill) {
-    console.log('[渐变处理] 无有效填充');
+    // console.log('[渐变处理] 无有效填充');
     return "";
   }
 
-  console.log(`[渐变处理] 填充类型: ${fill.type}`);
+  // console.log(`[渐变处理] 填充类型: ${fill.type}`);
   switch (fill.type) {
     case "GRADIENT_LINEAR":
       return htmlLinearGradient(fill);
@@ -177,7 +177,7 @@ export const htmlGradientFromFills = (fill: Paint): string => {
     case "GRADIENT_DIAMOND":
       return htmlDiamondGradient(fill);
     default:
-      console.log('[渐变处理] 不支持的渐变类型');
+      // console.log('[渐变处理] 不支持的渐变类型');
       return "";
   }
 };
@@ -186,7 +186,7 @@ export const htmlGradientFromFills = (fill: Paint): string => {
  * 生成线性渐变CSS
  */
 export const htmlLinearGradient = (fill: GradientPaint) => {
-  console.log('[渐变处理] 生成线性渐变');
+  // console.log('[渐变处理] 生成线性渐变');
   const [start, end] = fill.gradientHandlePositions;
   const dx = end.x - start.x;
   const dy = end.y - start.y;
@@ -198,7 +198,7 @@ export const htmlLinearGradient = (fill: GradientPaint) => {
     fill.opacity ?? 1,
   );
   const gradient = `linear-gradient(${cssAngle.toFixed(0)}deg, ${mappedFill})`;
-  console.log(`[渐变处理] 线性渐变结果: ${gradient}`);
+  // console.log(`[渐变处理] 线性渐变结果: ${gradient}`);
   return gradient;
 };
 
@@ -206,7 +206,7 @@ export const htmlLinearGradient = (fill: GradientPaint) => {
  * 生成径向渐变CSS
  */
 export const htmlRadialGradient = (fill: GradientPaint) => {
-  console.log('[渐变处理] 生成径向渐变');
+  // console.log('[渐变处理] 生成径向渐变');
   const [center, h1, h2] = fill.gradientHandlePositions;
   const cx = center.x * 100;
   const cy = center.y * 100;
@@ -217,7 +217,7 @@ export const htmlRadialGradient = (fill: GradientPaint) => {
     fill.opacity ?? 1,
   );
   const gradient = `radial-gradient(ellipse ${rx.toFixed(2)}% ${ry.toFixed(2)}% at ${cx.toFixed(2)}% ${cy.toFixed(2)}%, ${mappedStops})`;
-  console.log(`[渐变处理] 径向渐变结果: ${gradient}`);
+  // console.log(`[渐变处理] 径向渐变结果: ${gradient}`);
   return gradient;
 };
 
@@ -225,7 +225,7 @@ export const htmlRadialGradient = (fill: GradientPaint) => {
  * 生成锥形渐变CSS
  */
 export const htmlAngularGradient = (fill: GradientPaint) => {
-  console.log('[渐变处理] 生成锥形渐变');
+  // console.log('[渐变处理] 生成锥形渐变');
   const [center, _, startDirection] = fill.gradientHandlePositions;
   const cx = center.x * 100;
   const cy = center.y * 100;
@@ -240,7 +240,7 @@ export const htmlAngularGradient = (fill: GradientPaint) => {
     "deg",
   );
   const gradient = `conic-gradient(from ${angle.toFixed(0)}deg at ${cx.toFixed(2)}% ${cy.toFixed(2)}%, ${mappedFill})`;
-  console.log(`[渐变处理] 锥形渐变结果: ${gradient}`);
+  // console.log(`[渐变处理] 锥形渐变结果: ${gradient}`);
   return gradient;
 };
 
@@ -248,7 +248,7 @@ export const htmlAngularGradient = (fill: GradientPaint) => {
  * 生成菱形渐变CSS（近似实现）
  */
 export const htmlDiamondGradient = (fill: GradientPaint) => {
-  console.log('[渐变处理] 生成菱形渐变');
+  // console.log('[渐变处理] 生成菱形渐变');
   const stops = processGradientStops(
     fill.gradientStops,
     fill.opacity ?? 1,
@@ -267,7 +267,7 @@ export const htmlDiamondGradient = (fill: GradientPaint) => {
         `linear-gradient(${direction}, ${stops}) ${position} / 50% 50% no-repeat`,
     )
     .join(", ");
-  console.log(`[渐变处理] 菱形渐变结果: ${gradient}`);
+  // console.log(`[渐变处理] 菱形渐变结果: ${gradient}`);
   return gradient;
 };
 
@@ -278,14 +278,14 @@ export const buildBackgroundValues = (
   paintArray: ReadonlyArray<Paint> | PluginAPI["mixed"],
 ): string => {
   if (paintArray === figma.mixed) {
-    console.log('[背景构建] 混合填充类型，返回空字符串');
+    // console.log('[背景构建] 混合填充类型，返回空字符串');
     return "";
   }
 
   // 单个填充处理
   if (paintArray.length === 1) {
     const paint = paintArray[0];
-    console.log('[背景构建] 处理单个填充');
+    // console.log('[背景构建] 处理单个填充');
     if (paint.type === "SOLID") {
       return htmlColorFromFills(paintArray);
     } else if (
@@ -300,7 +300,7 @@ export const buildBackgroundValues = (
   }
 
   // 多个填充处理（反转顺序匹配CSS层叠）
-  console.log('[背景构建] 处理多个填充');
+  // console.log('[背景构建] 处理多个填充');
   const styles = [...paintArray].reverse().map((paint, index) => {
     if (paint.type === "SOLID") {
       const color = htmlColorFromFills([paint]);
@@ -320,6 +320,6 @@ export const buildBackgroundValues = (
   });
 
   const result = styles.filter((value) => value !== "").join(", ");
-  console.log(`[背景构建] 最终背景值: ${result}`);
+  // console.log(`[背景构建] 最终背景值: ${result}`);
   return result;
 };

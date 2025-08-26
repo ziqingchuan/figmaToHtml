@@ -18,25 +18,25 @@ export const getCommonPositionValue = (
 ): { x: number; y: number } => {
   if (node.parent && node.parent.absoluteBoundingBox) {
     if (settings?.embedVectors && node.svg) {
-      console.log("[位置计算] 使用绝对位置（包含旋转）");
+      // console.log("[位置计算] 使用绝对位置（包含旋转）");
       return {
         x: node.absoluteBoundingBox.x - node.parent.absoluteBoundingBox.x,
         y: node.absoluteBoundingBox.y - node.parent.absoluteBoundingBox.y,
       };
     }
-    console.log("[位置计算] 使用基础坐标");
+    // console.log("[位置计算] 使用基础坐标");
     return { x: node.x, y: node.y };
   }
 
   if (node.parent && node.parent.type === "GROUP") {
-    console.log("[位置计算] 计算相对于GROUP父节点的位置");
+    // console.log("[位置计算] 计算相对于GROUP父节点的位置");
     return {
       x: node.x - node.parent.x,
       y: node.y - node.parent.y,
     };
   }
 
-  console.log("[位置计算] 使用节点原始坐标");
+  // console.log("[位置计算] 使用节点原始坐标");
   return {
     x: node.x,
     y: node.y,
@@ -80,11 +80,11 @@ export function calculateRectangleFromBoundingBox(
   boundingBox: BoundingBox,
   figmaRotationDegrees: number,
 ): RectangleStyle {
-  console.log("[矩形计算] 开始计算旋转矩形样式");
+  // console.log("[矩形计算] 开始计算旋转矩形样式");
 
   // 转换旋转角度（Figma → CSS）
   const cssRotationDegrees = -figmaRotationDegrees;
-  console.log(`[矩形计算] 旋转角度转换: Figma ${figmaRotationDegrees}° → CSS ${cssRotationDegrees}°`);
+  // console.log(`[矩形计算] 旋转角度转换: Figma ${figmaRotationDegrees}° → CSS ${cssRotationDegrees}°`);
 
   // 计算三角函数值
   const theta = (cssRotationDegrees * Math.PI) / 180;
@@ -94,13 +94,13 @@ export function calculateRectangleFromBoundingBox(
   const absSinTheta = Math.abs(sinTheta);
 
   const { width: w_b, height: h_b, x: x_b, y: y_b } = boundingBox;
-  console.log(`[矩形计算] 边界框参数: width=${w_b}, height=${h_b}, x=${x_b}, y=${y_b}`);
+  // console.log(`[矩形计算] 边界框参数: width=${w_b}, height=${h_b}, x=${x_b}, y=${y_b}`);
 
   // 计算原始宽高
   const denominator = absCosTheta * absCosTheta - absSinTheta * absSinTheta;
   const h = (w_b * absSinTheta - h_b * absCosTheta) / -denominator;
   const w = (w_b - h * absSinTheta) / absCosTheta;
-  console.log(`[矩形计算] 原始尺寸: width=${w.toFixed(2)}, height=${h.toFixed(2)}`);
+  // console.log(`[矩形计算] 原始尺寸: width=${w.toFixed(2)}, height=${h.toFixed(2)}`);
 
   // 计算旋转后的角点
   const corners = [
@@ -119,7 +119,7 @@ export function calculateRectangleFromBoundingBox(
   const minY = Math.min(...rotatedCorners.map((c) => c.y));
   const left = x_b - minX;
   const top = y_b - minY;
-  console.log(`[矩形计算] 最终定位: left=${left.toFixed(2)}, top=${top.toFixed(2)}`);
+  // console.log(`[矩形计算] 最终定位: left=${left.toFixed(2)}, top=${top.toFixed(2)}`);
 
   return {
     width: parseFloat(w.toFixed(2)),
@@ -143,18 +143,18 @@ export function calculateRectangleFromBoundingBox(
  */
 export const commonIsAbsolutePosition = (node: SceneNode) => {
   if ("layoutPositioning" in node && node.layoutPositioning === "ABSOLUTE") {
-    console.log("[定位判断] 节点明确设置为绝对定位");
+    // console.log("[定位判断] 节点明确设置为绝对定位");
     return true;
   }
 
   if (!node.parent) {
-    console.log("[定位判断] 无父节点，非绝对定位");
+    // console.log("[定位判断] 无父节点，非绝对定位");
     return false;
   }
 
   const isAbsolute = ("layoutMode" in node.parent && node.parent.layoutMode === "NONE") ||
     !("layoutMode" in node.parent);
 
-  console.log(`[定位判断] 根据父节点布局判断结果: ${isAbsolute}`);
+  // console.log(`[定位判断] 根据父节点布局判断结果: ${isAbsolute}`);
   return isAbsolute;
 };

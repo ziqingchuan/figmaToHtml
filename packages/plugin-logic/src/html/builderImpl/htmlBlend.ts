@@ -13,10 +13,10 @@ export const htmlOpacity = (
   // 测试环境下node.opacity可能为undefined
   if (node.opacity !== undefined && node.opacity !== 1) {
     const opacityValue = numberToFixedString(node.opacity);
-    console.log(`[样式生成] 生成透明度样式: opacity=${opacityValue}`);
+    // console.log(`[样式生成] 生成透明度样式: opacity=${opacityValue}`);
     return `opacity: ${opacityValue}`;
   }
-  console.log('[样式生成] 透明度为1或未定义，跳过生成');
+  // console.log('[样式生成] 透明度为1或未定义，跳过生成');
   return "";
 };
 
@@ -66,11 +66,11 @@ export const htmlBlendMode = (
     }
 
     if (blendMode) {
-      console.log(`[样式生成] 生成混合模式样式: mix-blend-mode=${blendMode}`);
+      // console.log(`[样式生成] 生成混合模式样式: mix-blend-mode=${blendMode}`);
       return format("mix-blend-mode", blendMode);
     }
   }
-  console.log('[样式生成] 无特殊混合模式，跳过生成');
+  // console.log('[样式生成] 无特殊混合模式，跳过生成');
   return "";
 };
 
@@ -86,10 +86,10 @@ export const htmlVisibility = (
 ): string => {
   // 测试环境下node.visible可能为undefined
   if (node.visible !== undefined && !node.visible) {
-    console.log('[样式生成] 生成可见性样式: visibility=hidden');
+    // console.log('[样式生成] 生成可见性样式: visibility=hidden');
     return format("visibility", "hidden");
   }
-  console.log('[样式生成] 元素可见，跳过生成');
+  // console.log('[样式生成] 元素可见，跳过生成');
   return "";
 };
 
@@ -104,12 +104,12 @@ export const htmlRotation = (node: AltNode): string[] => {
 
   if (rotation !== 0) {
     const rotationValue = numberToFixedString(rotation);
-    console.log(`[样式生成] 生成旋转样式: 旋转${rotationValue}度`);
+    // console.log(`[样式生成] 生成旋转样式: 旋转${rotationValue}度`);
     return [
       format("transform", `rotate(${rotationValue}deg)`),
       format("transform-origin", "top left") // 设置变换原点为左上角
     ];
   }
-  console.log('[样式生成] 无旋转角度，跳过生成');
+  // console.log('[样式生成] 无旋转角度，跳过生成');
   return [];
 };

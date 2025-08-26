@@ -60,7 +60,7 @@ export class HtmlDefaultBuilder {
    * 添加通用位置相关样式
    */
   commonPositionStyles(): this {
-    console.log('[样式构建] 添加位置相关样式');
+    // console.log('[样式构建] 添加位置相关样式');
     this.size();
     this.autoLayoutPadding();
     this.position();
@@ -72,7 +72,7 @@ export class HtmlDefaultBuilder {
    * 添加通用形状相关样式
    */
   commonShapeStyles(): this {
-    console.log('[样式构建] 添加形状相关样式');
+    // console.log('[样式构建] 添加形状相关样式');
     if ("fills" in this.node) {
       this.applyFillsToStyle(
         this.node.fills,
@@ -91,7 +91,7 @@ export class HtmlDefaultBuilder {
   addStyles = (...newStyles: string[]) => {
     const validStyles = newStyles.filter((style) => style);
     if (validStyles.length > 0) {
-      console.log('[样式构建] 添加样式:', validStyles);
+      // console.log('[样式构建] 添加样式:', validStyles);
       this.styles.push(...validStyles);
     }
   };
@@ -101,7 +101,7 @@ export class HtmlDefaultBuilder {
    */
   blend(): this {
     const { node } = this;
-    console.log('[样式构建] 处理混合模式');
+    // console.log('[样式构建] 处理混合模式');
     this.addStyles(
       htmlVisibility(node),
       ...htmlRotation(node as LayoutMixin),
@@ -116,19 +116,19 @@ export class HtmlDefaultBuilder {
    */
   border(): this {
     const { node } = this;
-    console.log('[样式构建] 处理边框样式');
+    // console.log('[样式构建] 处理边框样式');
     this.addStyles(...htmlBorderRadius(node));
 
     const commonBorder = commonStroke(node);
     if (!commonBorder) {
-      console.log('[样式构建] 无边框设置');
+      // console.log('[样式构建] 无边框设置');
       return this;
     }
 
     const strokes = ("strokes" in node && node.strokes) || undefined;
     const color = htmlColorFromFills(strokes as any);
     if (!color) {
-      console.log('[样式构建] 无边框颜色');
+      // console.log('[样式构建] 无边框颜色');
       return this;
     }
 
@@ -144,7 +144,7 @@ export class HtmlDefaultBuilder {
 
     if ("all" in commonBorder) {
       if (commonBorder.all === 0) {
-        console.log('[样式构建] 边框宽度为0，跳过');
+        // console.log('[样式构建] 边框宽度为0，跳过');
         return this;
       }
       const weight = commonBorder.all;
@@ -156,7 +156,7 @@ export class HtmlDefaultBuilder {
         node.type === "INSTANCE" ||
         node.type === "COMPONENT"
       ) {
-        console.log('[样式构建] 使用outline实现边框');
+        // console.log('[样式构建] 使用outline实现边框');
         this.addStyles(format("outline", consolidateBorders(weight)));
         if (strokeAlign === "CENTER") {
           this.addStyles(format("outline-offset", `${numberToFixedString(-weight / 2)}px`));
@@ -164,11 +164,11 @@ export class HtmlDefaultBuilder {
           this.addStyles(format("outline-offset", `${numberToFixedString(-weight)}px`));
         }
       } else {
-        console.log('[样式构建] 使用标准border属性');
+        // console.log('[样式构建] 使用标准border属性');
         this.addStyles(format("border", consolidateBorders(weight)));
       }
     } else {
-      console.log('[样式构建] 处理非均匀边框');
+      // console.log('[样式构建] 处理非均匀边框');
       if (commonBorder.left !== 0) {
         this.addStyles(format("border-left", consolidateBorders(commonBorder.left)));
       }
@@ -191,7 +191,7 @@ export class HtmlDefaultBuilder {
   position(): this {
     const { node } = this;
     const isAbsolutePosition = commonIsAbsolutePosition(node);
-    console.log(`[样式构建] 定位处理: ${isAbsolutePosition ? '绝对定位' : '相对定位'}`);
+    // console.log(`[样式构建] 定位处理: ${isAbsolutePosition ? '绝对定位' : '相对定位'}`);
 
     if (isAbsolutePosition) {
       const { x, y } = getCommonPositionValue(node, this.settings);
@@ -230,7 +230,7 @@ export class HtmlDefaultBuilder {
     paintArray: ReadonlyArray<Paint> | PluginAPI["mixed"],
     property: "text" | "background",
   ): this {
-    console.log(`[样式构建] 应用填充样式: ${property}`);
+    // console.log(`[样式构建] 应用填充样式: ${property}`);
     if (property === "text") {
       this.addStyles(format("color", htmlColorFromFills(paintArray as any)));
       return this;
@@ -238,13 +238,13 @@ export class HtmlDefaultBuilder {
 
     const backgroundValues = buildBackgroundValues(paintArray as any);
     if (backgroundValues) {
-      console.log('[样式构建] 设置背景样式:', backgroundValues);
+      // console.log('[样式构建] 设置背景样式:', backgroundValues);
       this.addStyles(format("background", backgroundValues));
 
       if (paintArray !== figma.mixed) {
         const blendModes = this.buildBackgroundBlendModes(paintArray);
         if (blendModes) {
-          console.log('[样式构建] 设置背景混合模式:', blendModes);
+          // console.log('[样式构建] 设置背景混合模式:', blendModes);
           this.addStyles(format("background-blend-mode", blendModes));
         }
       }
@@ -266,7 +266,7 @@ export class HtmlDefaultBuilder {
       return "";
     }
 
-    console.log('[样式构建] 构建背景混合模式');
+    // console.log('[样式构建] 构建背景混合模式');
     const blendModes = [...paintArray].reverse().map((paint) => {
       if (paint.blendMode === "PASS_THROUGH") {
         return "normal";
@@ -285,7 +285,7 @@ export class HtmlDefaultBuilder {
     if ("effects" in node) {
       const shadow = htmlShadow(node);
       if (shadow) {
-        console.log('[样式构建] 添加阴影样式:', shadow);
+        // console.log('[样式构建] 添加阴影样式:', shadow);
         this.addStyles(format("box-shadow", shadow));
       }
     }
@@ -297,7 +297,7 @@ export class HtmlDefaultBuilder {
    */
   size(): this {
     const { node } = this;
-    console.log('[样式构建] 处理尺寸样式');
+    // console.log('[样式构建] 处理尺寸样式');
     const { width, height, constraints } = htmlSizePartial(node);
 
     if (node.type === "TEXT") {
@@ -317,7 +317,7 @@ export class HtmlDefaultBuilder {
     }
 
     if (constraints.length > 0) {
-      console.log('[样式构建] 添加尺寸约束:', constraints);
+      // console.log('[样式构建] 添加尺寸约束:', constraints);
       this.addStyles(...constraints);
     }
 
@@ -331,7 +331,7 @@ export class HtmlDefaultBuilder {
     const { node } = this;
     if ("paddingLeft" in node) {
       const paddingStyles = htmlPadding(node);
-      console.log('[样式构建] 添加内边距样式:', paddingStyles);
+      // console.log('[样式构建] 添加内边距样式:', paddingStyles);
       this.addStyles(...paddingStyles);
     }
     return this;
@@ -364,7 +364,7 @@ export class HtmlDefaultBuilder {
    */
   addData(label: string, value?: string): this {
     const attribute = formatDataAttribute(label, value);
-    console.log('[属性构建] 添加数据属性:', attribute);
+    // console.log('[属性构建] 添加数据属性:', attribute);
     this.data.push(attribute);
     return this;
   }
@@ -373,17 +373,17 @@ export class HtmlDefaultBuilder {
    * 构建最终HTML属性字符串
    */
   build(additionalStyle: Array<string> = []): string {
-    console.log('[构建器] 开始构建最终HTML属性');
+    // console.log('[构建器] 开始构建最终HTML属性');
     this.addStyles(...additionalStyle);
 
     let classNames: string[] = [];
     if (this.name) {
-      console.log('[属性构建] 添加图层名称属性');
+      // console.log('[属性构建] 添加图层名称属性');
       this.addData("layer", this.name.trim());
     }
 
     if ("componentProperties" in this.node && this.node.componentProperties) {
-      console.log('[属性构建] 处理组件属性');
+      // console.log('[属性构建] 处理组件属性');
       Object.entries(this.node.componentProperties)
         ?.map((prop) => {
           if (prop[1].type === "VARIANT" || prop[1].type === "BOOLEAN") {
@@ -404,11 +404,11 @@ export class HtmlDefaultBuilder {
     const classAttribute = formatClassAttribute(classNames);
     const styleAttribute = formatStyleAttribute(this.styles);
 
-    console.log('[构建器] 构建完成', {
-      dataAttributes,
-      classAttribute,
-      styleAttribute
-    });
+    // console.log('[构建器] 构建完成', {
+    //   dataAttributes,
+    //   classAttribute,
+    //   styleAttribute
+    // });
 
     return `${dataAttributes}${classAttribute}${styleAttribute}`;
   }

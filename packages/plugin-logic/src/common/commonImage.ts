@@ -73,7 +73,7 @@ export const exportNodeAsBase64PNG = async <T extends ExportableNode>(
 ) => {
   // 如果已有缓存，直接返回
   if (node.base64 !== undefined && node.base64 !== "") {
-    console.log("[图片导出] 使用缓存的Base64图片");
+    // console.log("[图片导出] 使用缓存的Base64图片");
     return node.base64;
   }
 
@@ -86,7 +86,7 @@ export const exportNodeAsBase64PNG = async <T extends ExportableNode>(
   const originalVisibility = new Map<SceneNode, boolean>();
 
   if (temporarilyHideChildren) {
-    console.log("[图片导出] 临时隐藏子节点");
+    // console.log("[图片导出] 临时隐藏子节点");
     // 保存子节点原始可见状态
     parent.children.map((child: SceneNode) =>
       originalVisibility.set(child, child.visible),
@@ -103,19 +103,19 @@ export const exportNodeAsBase64PNG = async <T extends ExportableNode>(
     constraint: { type: "SCALE", value: 1 },
   };
 
-  console.log("[图片导出] 开始导出PNG图片");
+  // console.log("[图片导出] 开始导出PNG图片");
   const bytes = await exportAsyncProxy(n, exportSettings);
 
   // 恢复子节点可见性
   if (temporarilyHideChildren) {
-    console.log("[图片导出] 恢复子节点可见性");
+    // console.log("[图片导出] 恢复子节点可见性");
     parent.children.forEach((child) => {
       child.visible = originalVisibility.get(child) ?? false;
     });
   }
 
   addWarning("部分图片已导出为Base64 PNG格式");
-  console.log("[图片导出] 图片导出成功，转换为Base64");
+  // console.log("[图片导出] 图片导出成功，转换为Base64");
 
   // 转换为Base64并缓存结果
   const base64 = imageBytesToBase64(bytes);

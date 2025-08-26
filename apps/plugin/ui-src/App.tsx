@@ -59,7 +59,7 @@ export default function App() {
   useEffect(() => {
     window.onmessage = (event: MessageEvent) => {
       const untypedMessage = event.data.pluginMessage as Message;
-      console.log("[界面] 收到消息:", untypedMessage);
+      // console.log("[界面] 收到消息:", untypedMessage);
 
       switch (untypedMessage.type) {
         case "conversionStart":  // 转换开始

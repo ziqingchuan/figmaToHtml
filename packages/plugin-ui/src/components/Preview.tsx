@@ -1,6 +1,6 @@
 import React from "react";
 import { HTMLPreview } from "types";
-import { cn, replaceExternalImagesWithCanvas } from "../lib/utils";
+import { cn, replacePlaceholderImages } from "../lib/utils";
 
 // Update the component props to receive state from parent
 const Preview: React.FC<{
@@ -74,7 +74,7 @@ const Preview: React.FC<{
                     transition: "all 0.3s ease",
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: replaceExternalImagesWithCanvas(htmlPreview.content),
+                    __html: replacePlaceholderImages(htmlPreview.content),
                   }}
                 />
               </div>

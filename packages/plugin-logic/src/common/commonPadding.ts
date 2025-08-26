@@ -15,7 +15,7 @@ export const commonPadding = (
 ): PaddingType | null => {
   // 检查是否为自动布局节点
   if ("layoutMode" in node && node.layoutMode !== "NONE") {
-    console.log("[布局处理] 开始提取内边距设置");
+    // console.log("[布局处理] 开始提取内边距设置");
 
     // 格式化内边距值（保留2位小数）
     const paddingLeft = parseFloat((node.paddingLeft ?? 0).toFixed(2));
@@ -23,7 +23,7 @@ export const commonPadding = (
     const paddingTop = parseFloat((node.paddingTop ?? 0).toFixed(2));
     const paddingBottom = parseFloat((node.paddingBottom ?? 0).toFixed(2));
 
-    console.log(`[布局处理] 提取的内边距值: 左=${paddingLeft}, 右=${paddingRight}, 上=${paddingTop}, 下=${paddingBottom}`);
+    // console.log(`[布局处理] 提取的内边距值: 左=${paddingLeft}, 右=${paddingRight}, 上=${paddingTop}, 下=${paddingBottom}`);
 
     // 判断内边距模式并返回对应格式
     if (
@@ -31,16 +31,16 @@ export const commonPadding = (
       paddingLeft === paddingBottom &&
       paddingTop === paddingBottom
     ) {
-      console.log("[布局处理] 四边内边距相同，返回all格式");
+      // console.log("[布局处理] 四边内边距相同，返回all格式");
       return { all: paddingLeft };
     } else if (paddingLeft === paddingRight && paddingTop === paddingBottom) {
-      console.log("[布局处理] 左右/上下内边距相同，返回horizontal/vertical格式");
+      // console.log("[布局处理] 左右/上下内边距相同，返回horizontal/vertical格式");
       return {
         horizontal: paddingLeft,
         vertical: paddingTop,
       };
     } else {
-      console.log("[布局处理] 四边内边距不同，返回完整格式");
+      // console.log("[布局处理] 四边内边距不同，返回完整格式");
       return {
         left: paddingLeft,
         right: paddingRight,
@@ -50,6 +50,6 @@ export const commonPadding = (
     }
   }
 
-  console.log("[布局处理] 非自动布局节点，返回null");
+  // console.log("[布局处理] 非自动布局节点，返回null");
   return null;
 };

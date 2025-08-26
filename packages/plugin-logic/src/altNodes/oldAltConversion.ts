@@ -185,7 +185,7 @@ export const cloneNode = <T extends BaseNode>(
     altNode.styledTextSegments = globalTextStyleSegments[node.id];
   }
 
-  // console.log("altnode:", altNode.parent, cloned.parent);
+  // // console.log("altnode:", altNode.parent, cloned.parent);
 
   return altNode;
 };

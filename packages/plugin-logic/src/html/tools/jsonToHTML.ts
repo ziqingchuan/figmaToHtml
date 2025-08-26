@@ -1,24 +1,26 @@
 import { HtmlNode } from "../../node_types";
 
-export const parseNodesToHTML = (nodes: HtmlNode[]): string => {
+export const parseNodesToHTML = (nodes: HtmlNode[], svgContentMap: any, styleContentMap: any, classNameMap: any): string => {
+
+  // console.log("parseNodesToHTML接受到的数据：",nodes, svgContentMap, styleContentMap, classNameMap);
   // 收集所有样式用于生成style标签，使用className作为键
   const styleMap = new Map<string, string>();
-
+  // console.log("parseNodesToHTML接受到的数据：",nodes, svgContentMap);
   // 递归生成HTML字符串，带缩进
   const generateHTML = (node: HtmlNode, depth: number = 0): string => {
-    const { tag, content, style, isSVG, SVGContent, children, className, src } = node;
+    const { tag, content, styleID, isSVG, svgID, children, classID, src } = node;
     const indent = '  '.repeat(depth);
 
     // 将样式添加到映射表，使用className作为键
-    if (style && className) {
-      styleMap.set(className, style);
+    if (styleID && classID) {
+      styleMap.set(classNameMap[classID], styleContentMap[styleID]);
     }
 
     let html = `${indent}<${tag}`;
 
     // 添加class属性
-    if (className) {
-      html += ` class="${className}"`;
+    if (classID) {
+      html += ` class="${classNameMap[classID]}"`;
     }
 
     if(src) {
@@ -33,9 +35,10 @@ export const parseNodesToHTML = (nodes: HtmlNode[]): string => {
     html += '>\n';
 
     // 添加SVG内容或普通内容
-    if (isSVG && SVGContent) {
+    if (isSVG && svgID) {
       // 对SVG内容进行缩进处理
-      const svgLines = SVGContent.split('\n')
+      const content: string = svgContentMap[svgID];
+      const svgLines = content.split('\n')
         .map(line => line.trim())
         .filter(line => line.length > 0);
 

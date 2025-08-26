@@ -7,7 +7,7 @@ import { formatMultipleArray } from "../../common/utils/formatTool";
  */
 const getFlexDirection = (node: InferredAutoLayoutResult): string => {
   const direction = node.layoutMode === "HORIZONTAL" ? "" : "column";
-  console.log(`[自动布局] 布局方向: ${direction || '水平(默认)'}`);
+  // console.log(`[自动布局] 布局方向: ${direction || '水平(默认)'}`);
   return direction;
 };
 
@@ -33,7 +33,7 @@ const getJustifyContent = (node: InferredAutoLayoutResult): string => {
       alignment = "space-between";
       break;
   }
-  console.log(`[自动布局] 主轴对齐方式: ${alignment}`);
+  // console.log(`[自动布局] 主轴对齐方式: ${alignment}`);
   return alignment;
 };
 
@@ -59,7 +59,7 @@ const getAlignItems = (node: InferredAutoLayoutResult): string => {
       alignment = "baseline";
       break;
   }
-  console.log(`[自动布局] 交叉轴对齐方式: ${alignment}`);
+  // console.log(`[自动布局] 交叉轴对齐方式: ${alignment}`);
   return alignment;
 };
 
@@ -72,7 +72,7 @@ const getGap = (node: InferredAutoLayoutResult): string | number => {
   const gap = node.itemSpacing > 0 && node.primaryAxisAlignItems !== "SPACE_BETWEEN"
     ? node.itemSpacing
     : "";
-  console.log(`[自动布局] 子元素间距: ${gap || '无'}`);
+  // console.log(`[自动布局] 子元素间距: ${gap || '无'}`);
   return gap;
 };
 
@@ -83,7 +83,7 @@ const getGap = (node: InferredAutoLayoutResult): string | number => {
  */
 const getFlexWrap = (node: InferredAutoLayoutResult): string => {
   const wrap = node.layoutWrap === "WRAP" ? "wrap" : "";
-  console.log(`[自动布局] 换行方式: ${wrap || '不换行'}`);
+  // console.log(`[自动布局] 换行方式: ${wrap || '不换行'}`);
   return wrap;
 };
 
@@ -94,7 +94,7 @@ const getFlexWrap = (node: InferredAutoLayoutResult): string => {
  */
 const getAlignContent = (node: InferredAutoLayoutResult): string => {
   if (node.layoutWrap !== "WRAP") {
-    console.log('[自动布局] 多行对齐: 不适用(单行布局)');
+    // console.log('[自动布局] 多行对齐: 不适用(单行布局)');
     return "";
   }
 
@@ -116,7 +116,7 @@ const getAlignContent = (node: InferredAutoLayoutResult): string => {
     default:
       alignment = "normal";
   }
-  console.log(`[自动布局] 多行对齐方式: ${alignment}`);
+  // console.log(`[自动布局] 多行对齐方式: ${alignment}`);
   return alignment;
 };
 
@@ -135,7 +135,7 @@ const getFlex = (
   node.parent.layoutMode === autoLayout.layoutMode
     ? "flex"
     : "inline-flex";
-  console.log(`[自动布局] 显示类型: ${display}`);
+  // console.log(`[自动布局] 显示类型: ${display}`);
   return display;
 };
 
@@ -145,7 +145,7 @@ const getFlex = (
  * @returns 返回格式化后的CSS属性数组
  */
 export const htmlAutoLayoutProps = (node: SceneNode & InferredAutoLayoutResult): string[] => {
-  console.log('[自动布局] 开始生成CSS属性');
+  // console.log('[自动布局] 开始生成CSS属性');
   const props = {
     "flex-direction": getFlexDirection(node),
     "justify-content": getJustifyContent(node),
@@ -156,6 +156,6 @@ export const htmlAutoLayoutProps = (node: SceneNode & InferredAutoLayoutResult):
     "align-content": getAlignContent(node),
   };
 
-  console.log('[自动布局] 生成的CSS属性:', props);
+  // console.log('[自动布局] 生成的CSS属性:', props);
   return formatMultipleArray(props);
 };

@@ -12,7 +12,7 @@ import { format } from "../../common/utils/formatTool";
  * 3. 普通节点根据圆角设置生成对应样式
  */
 export const htmlBorderRadius = (node: SceneNode): string[] => {
-  console.log('[边框圆角] 开始处理节点圆角样式');
+  // console.log('[边框圆角] 开始处理节点圆角样式');
   let comp: string[] = [];
 
   // 处理需要裁剪内容的容器
@@ -22,28 +22,28 @@ export const htmlBorderRadius = (node: SceneNode): string[] => {
     "clipsContent" in node &&
     node.clipsContent
   ) {
-    console.log('[边框圆角] 添加overflow: hidden（裁剪子内容）');
+    // console.log('[边框圆角] 添加overflow: hidden（裁剪子内容）');
     comp.push(format("overflow", "hidden"));
   }
 
   // 处理椭圆节点（使用超大圆角值模拟）
   if (node.type === "ELLIPSE") {
-    console.log('[边框圆角] 椭圆节点，使用超大圆角值');
+    // console.log('[边框圆角] 椭圆节点，使用超大圆角值');
     comp.push(format("border-radius", 9999));
     return comp;
   }
 
   // 获取标准化圆角值
   const radius = getCommonRadius(node);
-  console.log('[边框圆角] 获取到的圆角配置:', radius);
+  // console.log('[边框圆角] 获取到的圆角配置:', radius);
 
   // 处理统一圆角的情况
   if ("all" in radius) {
     if (radius.all === 0) {
-      console.log('[边框圆角] 无圆角设置，跳过生成');
+      // console.log('[边框圆角] 无圆角设置，跳过生成');
       return comp;
     }
-    console.log(`[边框圆角] 统一圆角: ${radius.all}`);
+    // console.log(`[边框圆角] 统一圆角: ${radius.all}`);
     comp.push(format("border-radius", radius.all));
   }
   // 处理独立四角圆角的情况
@@ -61,17 +61,17 @@ export const htmlBorderRadius = (node: SceneNode): string[] => {
       "border-bottom-left-radius",
     ];
 
-    console.log('[边框圆角] 独立四角圆角值:', cornerValues);
+    // console.log('[边框圆角] 独立四角圆角值:', cornerValues);
 
     // 为每个非零圆角生成样式
     for (let i = 0; i < 4; i++) {
       if (cornerValues[i] > 0) {
-        console.log(`[边框圆角] 添加 ${cornerProperties[i]}: ${cornerValues[i]}`);
+        // console.log(`[边框圆角] 添加 ${cornerProperties[i]}: ${cornerValues[i]}`);
         comp.push(format(cornerProperties[i], cornerValues[i]));
       }
     }
   }
 
-  console.log('[边框圆角] 最终生成的样式:', comp);
+  // console.log('[边框圆角] 最终生成的样式:', comp);
   return comp;
 };
